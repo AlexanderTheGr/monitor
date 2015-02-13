@@ -1,0 +1,134 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    background:transparent;
+    font-size: 13px !important;
+    color: #555;
+    font-family:"lucida grande",tahoma,verdana,arial,sans-serif
+}
+
+a:hover {
+    text-decoration: underline;
+}
+#tooltip {
+    /* overlay is hidden before loading */
+    /* standard decorations */
+    display: none;
+    width:300px;
+    background:#fff;
+    position: absolute;
+}
+
+#tooltip div.body {
+    padding:10px;
+    border:1px solid #3B5998;
+    background:#fff;
+    font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 17px;
+}
+
+#tooltip h2 {
+    margin:-11px;
+    margin-bottom:0px;
+    color:#fff;
+    background-color:#6D84B4;
+    padding:5px 10px;
+    border:1px solid #3B5998;
+    font-size:20px;
+}
+#tooltip h2 span{
+    float: right;
+    cursor: pointer;
+}
+
+#tooltip h4 {
+    margin: 0px;
+    padding-bottom: 5px;    
+
+}
+#tooltip ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    padding-bottom: 10px;  
+}
+#tooltip li {
+    margin-left: 5px;
+}
+#progressbar {
+    position: fixed;
+    width: 400px;
+    height: 20px;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+
+#tooltipboody {
+    min-width:400px;
+    min-height: 100px;
+    border:1px #aaaaaa solid;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background:#fff;
+    position: absolute;
+    -moz-box-shadow: 0 0 12px 1px #999999;
+    -webkit-box-shadow: 0 0 12px 1px #999999;
+    box-shadow: 0 0 12px 1px #999999;
+}
+
+#tooltipboody h2 {
+    margin: 0px;
+    background: #f2f2f2;
+    padding: 5px;
+    font-weight: bold;
+    color: #4d4d4d ;
+    white-space: nowrap;
+    -moz-border-top-left-radius: 15px;
+    border-top-left-radius: 15px;
+    -moz-border-top-right-radius: 15px;
+    border-top-right-radius: 15px;
+    border:2px #ffffff solid;
+    padding:5px 10px;
+    font-size:20px;
+}
+#tooltipboody h2 span{
+    float: right;
+    cursor: pointer;
+    padding-left: 10px;
+    color:#4d4d4d;
+}
+
+#tooltipboody h4 {
+    padding: 10px;
+    padding-bottom: 5px;
+    margin: 4px;
+    color: #4d4d4d ;
+    padding-top: 2px;
+    padding-bottom: 5px;  
+    font-size: 19px;
+}
+
+#tooltipboody div.content {
+    padding:10px;
+    padding-top:4px;
+    color: #666;
+    font-size: 18px;
+}
+#tooltipboody div.buttons {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f7f7f7'); /* for IE */
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f7f7f7)); /* for webkit browsers */
+    background: -moz-linear-gradient(top,  #ffffff,  #f7f7f7); /* for firefox 3.6+ */ 
+    -moz-border-bottom-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    -moz-border-bottom-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+
+.step {
+    cursor: pointer;
+}
