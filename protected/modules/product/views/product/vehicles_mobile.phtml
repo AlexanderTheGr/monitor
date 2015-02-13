@@ -1,0 +1,270 @@
+<?php
+/**
+ * Alexander Dimeas
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to a.dimeas@gmail.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ * @category   Autoparts
+ * @package    Autoparts_Tecdoc
+ * @copyright  Copyright (c) 2014 Alexander Dimeas (http://www.alexanderdimeas.gr)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Alexander Dimeas <a.dimeas@gmail.com>
+ */
+?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-ui.min.js') ?>"></script>
+<?php echo $catalogSearchHelper =  $this->helper('catalogsearch');?>
+
+
+<div class="search-form vehicles_left" style="margin:10px 0;">
+  <h3>Αναζήτηση <b>με Όχημα</b></h3>
+  <div>
+		<div class="form-search">
+			<div  class="block-content">			
+				<div class='plaisio'>
+				<select style="width:100%" name="brand_id" class="brand-select" class="brand-select" title="" onchange="">
+					<option value="0"><?php echo $this->__("Select Brand"); ?></option>
+					<?php foreach ($this->getBrands() as $brand): ?>
+						<option value="<?php echo $brand->id ?>"><?php echo $brand->brand ?></option>
+					<?php endforeach; ?>
+				</select>
+				</div>
+				
+				<div class='plaisio'>
+
+					<select style="width:100%" name="brand_model_id" class="brand_model-select inactive" class="brand_model-select" title="" onchange="">
+
+					</select>   
+				</div>
+
+				<div class='plaisio'>
+
+				<select  style="width:100%" name="brand_model_type_id" class="brand_model_type-select inactive" class="brand_model-select" title="" onchange="">
+				
+				</select>  
+				</div>				
+			</div>        
+		</div>
+		<div class="actions">
+			<button type="button" id="gogo" title="Αναζήτηση" class="gogo button"><span class='inactive'><span><?php //echo $this->__('Search') ?></span></span></button>    
+		</div>
+
+  </div>
+  
+  <h3>Αναζήτηση <b>με Κωδικό</b></h3>
+  <div>
+  		
+
+		<form action="<?php echo $this->getBaseUrl()."antallaktika/search"?>" method="get">
+			<div class="form-search">
+
+			<div style="" class="block-content">
+									Παρακαλώ πληκτρολογήστε τον κωδικό του ανταλλακτικού<BR><BR>
+					Π.χ. CHU710<BR>
+				<input id="search" placeholder="Γράψτε τον Κωδικό" type="text" name="s" value="<?php echo $this->getRequest()->getParam('s') ?>" class="input-text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" />
+			</div>
+			<div class="actions">
+			<button type="submit" title="<?php //echo $this->__('Search') ?>" class="button"><span class='active'><span><?php //echo $this->__('Search') ?></span></span></button>
+			</div>
+			
+			<div id="search_autocomplete" class="search-autocomplete"></div>
+			</div>
+		</form>
+  </div>
+  <h3>Αναζήτηση <b>με Κινητήρα</b></h3>
+  <div>
+
+			<div style="font-size:18px;" class="block-content">
+				Παρακαλώ πληκτρολογήστε τον κωδικό του Κινητήρα<BR>
+				Π.χ. KFU<BR>
+				<input placeholder="Γράψτε τον Κωδικό" id="searchmotor" type="text" name="s" value="<?php echo $this->getRequest()->getParam('s') ?>" class="searchmotor input-text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" />
+			</div>
+  </div>  
+</div>
+
+
+<script>
+	jQuery( ".searchmotor" ).autocomplete({
+      source: "<?php echo $this->getBaseUrl() ?>antallaktika/init/motorsearch",
+      minLength: 2,
+      select: function( event, ui ) {
+		var data = {}
+        data.car = ui.item.id;
+		if (data.car > 0) {
+			jQuery.post("<?php echo $this->getBaseUrl() ?>antallaktika/init/getLinkingTargetUrl", data, function(result) {
+				location.href = result
+			})
+		}
+		}
+    });
+	jQuery( ".vehicles_left" ).accordion({
+		heightStyle: "content",
+		collapsible: true,
+	});
+
+jQuery('.brand_model-select').append(jQuery('<option>').text("<?php echo $this->__("Select Model"); ?>").attr('value', 0));
+jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+<?php if (Mage::getSingleton('core/session')->getBrandModels()): ?>
+    <?php if (Mage::getSingleton('core/session')->getBrand()): ?>
+            jQuery(".brand-select").val(<?php echo Mage::getSingleton('core/session')->getBrand() ?>);
+			var json = jQuery.parseJSON('<?php echo str_replace("'", "\'", Mage::getSingleton('core/session')->getBrandModels()) ?>');
+    <?php endif; ?>
+        
+        jQuery('.brand_model-select').text("");
+        jQuery('.brand_model-select').append(jQuery('<option>').text("<?php echo $this->__("Select Model"); ?>").attr('value', 0));
+		jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+        var a = 0;
+        var group_name = "";
+		if (json)
+        jQuery.each(json, function(i, optionHtml) {
+            var opt = jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id);
+            jQuery('.brand_model-select').append(jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id));
+            /*
+             if (optionHtml.group_name != group_name) {
+             a = a + 1;
+             var optgroup = jQuery('<optgroup class="c_' + a + '">').attr('label', optionHtml.group_name);
+             jQuery('.brand_model-select').append(optgroup);
+             group_name = optionHtml.group_name;
+             }
+             jQuery(".c_" + a).append(opt);
+             */
+        });
+<?php endif; ?>
+<?php if (Mage::getSingleton('core/session')->getBrandModelTypes()): ?>
+        jQuery(".brand_model-select").val(<?php echo Mage::getSingleton('core/session')->getBrandModel() ?>)
+		<?php if (Mage::getSingleton('core/session')->getBrandModel() ):?>
+		jQuery(".bb").attr("src","<?php echo $this->getSkinUrl("images")?>/2-active.png");
+		jQuery('.brand_model-select').removeClass("inactive");
+		jQuery('.search-form button.button span').addClass("active");
+		var json = jQuery.parseJSON('<?php echo str_replace("'", "\'", Mage::getSingleton('core/session')->getBrandModelTypes()) ?>')
+		<?php endif;?>
+        
+        jQuery('.brand_model_type-select').text("");
+        jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+        var motor_type = "";
+        var sop = "";
+        var a = 0;
+		if (json)
+        jQuery.each(json, function(i, optionHtml) {
+            var opt = jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id);
+
+            if (optionHtml.motor_type != motor_type) {
+                a = a + 1;
+                var optgroup = jQuery('<optgroup class="m_' + a + '">').attr('label', optionHtml.motor_type);
+                sop = jQuery('.brand_model_type-select').append(optgroup);
+                motor_type = optionHtml.motor_type;
+            }
+            jQuery(".m_" + a).append(opt);
+        });
+        jQuery(".brand_model_type-select").val(<?php echo Mage::getSingleton('core/session')->getBrandModelType() ?>)
+		<?php if (Mage::getSingleton('core/session')->getBrandModelType() ):?>
+		jQuery(".cc").attr("src","<?php echo $this->getSkinUrl("images")?>/3-active.png");
+		jQuery('.brand_model_type-select').removeClass("inactive");
+		<?php endif;?>
+<?php endif; ?>
+    jQuery(".brand-select").change(function() {
+        var data = {}
+        data.brand = jQuery(this).val();
+        var group_name = "";
+		jQuery(".bb").attr("src","<?php echo $this->getSkinUrl("images")?>/2-inactive.png");
+		jQuery(".cc").attr("src","<?php echo $this->getSkinUrl("images")?>/3-inactive.png");
+		jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+		jQuery('.brand_model-select').addClass("inactive");
+		jQuery('.brand_model_type-select').addClass("inactive");
+		jQuery('.search-form button.button span').removeClass("active");
+        jQuery.post("<?php echo $this->getBaseUrl() ?>antallaktika/init/getmodels", data, function(result) {
+            var json = jQuery.parseJSON(result)
+			if (json) {
+				jQuery(".bb").attr("src","<?php echo $this->getSkinUrl("images")?>/2-active.png");
+				jQuery('.brand_model-select').removeClass("inactive");
+			}
+			
+            jQuery('.brand_model-select').text("");
+            jQuery('.brand_model_type-select').text("");
+            jQuery('.brand_model-select').append(jQuery('<option>').text("<?php echo $this->__("Select Model"); ?>").attr('value', 0));
+			jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+            var sop = "";
+            var a = 0;
+            jQuery.each(json, function(i, optionHtml) {
+
+                jQuery('.brand_model-select').append(jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id));
+                /*
+                 var opt = jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id);
+                 if (optionHtml.group_name != group_name) {
+                 a = a + 1;
+                 var optgroup = jQuery('<optgroup class="c_' + a + '">').attr('label', optionHtml.group_name);
+                 jQuery('.brand_model-select').append(optgroup);
+                 group_name = optionHtml.group_name;
+                 }
+                 jQuery(".c_" + a).append(opt);
+                 */
+
+            });
+        });
+    })
+    jQuery(".brand_model-select").change(function() {
+        var data = {}
+        data.brand = jQuery(".brand-select").val();
+        data.model = jQuery(this).val();
+        var motor_type = "";
+        var sop = "";
+		jQuery(".cc").attr("src","<?php echo $this->getSkinUrl("images")?>/3-inactive.png");
+		jQuery('.brand_model_type-select').addClass("inactive");
+		jQuery('.search-form button.button span').removeClass("active");
+        jQuery.post("<?php echo $this->getBaseUrl() ?>antallaktika/init/getmodeltypes", data, function(result) {
+		
+			var json = jQuery.parseJSON(result)
+			if (json) {
+				jQuery(".cc").attr("src","<?php echo $this->getSkinUrl("images")?>/3-active.png");
+				jQuery('.brand_model_type-select').removeClass("inactive");
+            }
+            jQuery('.brand_model_type-select').text("");
+            jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->__("Select Engine"); ?>").attr('value', 0));
+            var a = 0;
+            jQuery.each(json, function(i, optionHtml) {
+
+                var opt = jQuery('<option>').text(optionHtml.name).attr('value', optionHtml.id);
+
+                if (optionHtml.motor_type != motor_type) {
+                    a=a+1;
+                    var optgroup = jQuery('<optgroup class="m_' + a + '">').attr('label', optionHtml.motor_type);
+                    sop = jQuery('.brand_model_type-select').append(optgroup);
+                    motor_type = optionHtml.motor_type;
+                }
+                jQuery(".m_" + a).append(opt);
+
+            });
+        });
+    })
+    jQuery(".brand_model_type-select").change(function() {
+        var data = {}
+        data.car = jQuery(this).val();
+		jQuery(".brand_model_type-select").val(data.car);
+		jQuery('.search-form button.button span').removeClass("active");
+		if (data.car > 0) {
+			jQuery('.search-form button.button span').addClass("active");
+		}
+
+    })
+    jQuery(".gogo").click(function() {
+        var data = {}
+        data.car = jQuery(".brand_model_type-select").val();
+		if (data.car > 0) {
+			jQuery.post("<?php echo $this->getBaseUrl() ?>antallaktika/init/getLinkingTargetUrl", data, function(result) {
+				location.href = result
+			})
+		}
+    })
+</script>
