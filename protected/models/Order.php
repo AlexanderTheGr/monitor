@@ -124,8 +124,8 @@ class Order extends Eav {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('reference, customer_name,customer,user, tfprms, fprms, insdate, seriesnum, series, fincode, status, created, modified', 'required'),
-            array('reference, customer_name, customer,,user tfprms, fprms, seriesnum, series, status, actioneer', 'numerical', 'integerOnly' => true),
+            array('reference, customer_name,comments,customer,user, tfprms, fprms, insdate, seriesnum, series, fincode, status, created, modified', 'required'),
+            array('reference, customer_name,comments, customer,,user tfprms, fprms, seriesnum, series, status, actioneer', 'numerical', 'integerOnly' => true),
             array('fincode', 'length', 'max' => 255),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -155,7 +155,7 @@ class Order extends Eav {
             'customer' => 'Customer',
             'customer_name' => 'Customer Name',
             'insdate' => 'Insdate',
-            
+            'comments'=>'comments',
             'status' => 'Status',
             'actioneer' => 'Actioneer',
             'created' => 'Created',
@@ -183,6 +183,7 @@ class Order extends Eav {
         $criteria->compare('id', $this->id);
         $criteria->compare('customer', $this->customer);
         $criteria->compare('insdate', $this->insdate);
+        $criteria->compare('comments', $this->comments);
         $criteria->compare('customer_name', $this->customer_name);
         $criteria->compare('status', $this->status);
         $criteria->compare('actioneer', $this->actioneer);

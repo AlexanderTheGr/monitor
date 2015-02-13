@@ -377,7 +377,7 @@ class OrderController extends Controller {
 
         $this->addFormField("datetime", $this->translate("Ημερ.εισαγωγής"), "insdate", "", "width:500px");
 
-        $this->addFormField("text", $this->translate("Αιτιολογία"), "comments");
+        $this->addFormField("select", $this->translate("Αιτιολογία"), "comments",array("Για Τιμολόγιο"=>"Για Τιμολόγιο","Για Απόδειξη"=>"Για Απόδειξη","Για Δελτίο Αποστολής"=>"Για Δελτίο Αποστολής"));
         //$this->addFormField("text", $this->translate("Παραστατικό"), "fincode");
 
 
@@ -623,9 +623,9 @@ class OrderController extends Controller {
             $objectArr[0]["PAYMENT"] = 1000;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
-            $objectArr[0]["SERIES"] = 7023; //$model->series;
+            $objectArr[0]["SERIES"] = 7021; //$model->series;
             $objectArr[0]["DISC1PRC"] = $model->disc1prc;
-			$objectArr[0]["COMMENTS"] = $model->comments;
+            $objectArr[0]["COMMENTS1"] = $model->comments;
 
             $dataOut[$object] = (array) $objectArr;
             //$k = 9000001;
@@ -644,9 +644,9 @@ class OrderController extends Controller {
             $objectArr[0]["PAYMENT"] = 1000;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
-            $objectArr[0]["SERIES"] = 7023; //$model->series;
+            $objectArr[0]["SERIES"] = 7021; //$model->series;
             $objectArr[0]["DISC1PRC"] = $model->disc1prc;
-			$objectArr[0]["COMMENTS"] = $model->comments;
+            $objectArr[0]["COMMENTS1"] = $model->comments;
 
             $dataOut[$object] = (array) $objectArr;
             //$k = 9000001;
