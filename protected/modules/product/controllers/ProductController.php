@@ -410,6 +410,11 @@ class ProductController extends Controller {
             if ($data["flat_data"] == "") {
                 
                 
+                
+                
+                
+                
+                
                 $model = $this->loadModel($data["id"]);
                 $model->load();            
                 
