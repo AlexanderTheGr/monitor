@@ -71,6 +71,9 @@ class ProductController extends Controller {
             unset($data["zoominfo"]);
             unset($data["fld-1"]);
             $model->reference = $info[1];
+            
+
+            
             foreach ($data as $identifier => $dt) {
                 $imporetedData[$identifier] = addslashes($dt);
             }
@@ -373,6 +376,7 @@ class ProductController extends Controller {
         };
 
 
+        
 
         if (count($articleIds)) {
             $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
@@ -395,6 +399,7 @@ class ProductController extends Controller {
         if (count($queryarr)) {
             $query = " where " . implode(" AND ", $queryarr);
         }
+        $softone = new Softone();
         //echo "(Select product from webservice_product where webservice = '".$this->settings["webservice"]."' AND article_id in (".implode(",",$articleIds)."))";
         $user = $this->loadModel(Yii::app()->user->id);
         $cnt = Yii::app()->db->createCommand($sqlcnt . " " . $query)->queryRow();
@@ -407,6 +412,7 @@ class ProductController extends Controller {
                 $model = $this->loadModel($data["id"]);
                 $model->load();            
                 
+                /*
                 if ($data["flat_data"] == "") {
                     $model->erp_code = $model->item_code;
                     $model->tecdoc_code = $model->item_cccfxreltdcode;
@@ -418,6 +424,27 @@ class ProductController extends Controller {
                 if ($data["flat_data"] == "") {
                     $model->setFlat();
                 }
+                
+                $locateinfo = "MTRSUBSTITUTE:MTRL;";
+                $ITEM = $softone->getData("ITEM", $model->reference,"",$locateinfo);
+                //print_r($data);
+                */
+                //$locateinfo = "MTRSUBSTITUTE:VARCHAR01;";
+                /*
+                $ITEM = $softone->getData("ITEM", $model->reference,"");
+                $sql = "Delete from sisxetiseis where product = '".$model->id."'";
+                Yii::app()->db->createCommand($sql)->execute(); 
+                foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
+                    echo $item->VARCHAR01;
+                    
+                    $sisxetisi = Product::model()->findByAttributes(array('reference' => $item->VARCHAR01));
+                    $sql = "insert sisxetiseis set product = '".$model->id."', sisxetisi = '".$sisxetisi->id."'";
+                    Yii::app()->db->createCommand($sql)->execute();
+                }
+                 * 
+                 */
+                
+                
                 $model = json_decode($model->flat_data);
             } else {
                 $model = json_decode($data["flat_data"]);
@@ -444,6 +471,7 @@ class ProductController extends Controller {
             $json["DT_RowId"] = 'product_' . $model->id;
             $json["DT_RowClass"] = 'productpage';
             $jsonArr[] = $json;
+
         }
         echo json_encode(array('iTotalRecords' => $cnt["cnt"], 'iTotalDisplayRecords' => $cnt["cnt"], 'aaData' => $jsonArr));
     }
@@ -473,6 +501,16 @@ class ProductController extends Controller {
 
     public function actionEdit($id = 0) {
         $model = $this->loadModel($id);
+        
+        
+        $model->reference;
+        
+        //$locateinfo = "MTRSUBSTITUTE:MTRL;";
+        $softone = new Softone();
+        $data = $softone->getData("ITEM", $model->reference,"");
+        //print_r($data);
+        
+        
         $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
         $this->addFormField("text", $this->translate("Κωδικός Είδους"), "item_code", "", "width:500px");
         $this->addFormField("text", $this->translate("Erp Supplier"), "item_mtrmanfctr", "", "width:500px");
