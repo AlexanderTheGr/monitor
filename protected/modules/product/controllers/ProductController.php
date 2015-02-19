@@ -45,7 +45,7 @@ class ProductController extends Controller {
         $params["eav_model"];
         $params["model"];
         $softone = new Softone();
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"],"ITEM.UPDDATE=2015-01-19&ITEM.UPDDATE_TO=2015-02-19");
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"],"ITEM.UPDDATE=2015-02-19&ITEM.UPDDATE_TO=2015-02-19");
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
             $attribute = Attributes::model()->findByAttributes(array('identifier' => $field));
