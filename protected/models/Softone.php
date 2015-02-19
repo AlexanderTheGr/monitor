@@ -249,6 +249,7 @@ class Softone {
     }
 
     function doRequest($data) {
+        ini_set('memory_limit', '2048M');
         $data_string = json_encode($data);
         $result = file_get_contents($this->requerstUrl, null, stream_context_create(array(
             'http' => array(
