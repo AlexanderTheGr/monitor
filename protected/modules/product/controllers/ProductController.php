@@ -80,8 +80,6 @@ class ProductController extends Controller {
             
             $locateinfo = "MTRSUBSTITUTE:CODE;";
             $ITEM = $softone->getData("ITEM", $model->reference, "");
-            $sql = "Delete from sisxetiseis where product = '" . $model->id . "'";
-            Yii::app()->db->createCommand($sql)->execute();
             $codes = array();
             foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
                 $codes[] = $item->CODE;                    
@@ -91,6 +89,8 @@ class ProductController extends Controller {
             $model->tecdoc_code = $model->item_cccfxreltdcode;
             $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;            
 
+            echo $model->reference."<BR>";
+            
             $model->save(false);
             
             $model->setFlat();
