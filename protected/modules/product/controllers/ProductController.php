@@ -45,7 +45,7 @@ class ProductController extends Controller {
         $params["eav_model"];
         $params["model"];
         $softone = new Softone();
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"],"ITEM.UPDDATE=2015-02-11&ITEM.UPDDATE_TO=2015-02-19");
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"],"ITEM.UPDDATE=2015-01-19&ITEM.UPDDATE_TO=2015-02-19");
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
             $attribute = Attributes::model()->findByAttributes(array('identifier' => $field));
@@ -87,8 +87,10 @@ class ProductController extends Controller {
                 $codes[] = $item->CODE;                    
             }
             $model->search = implode("|", $codes);            
-            
-            
+            $model->erp_code = $model->item_code;
+            $model->tecdoc_code = $model->item_cccfxreltdcode;
+            $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;            
+
             $model->save(false);
             
             $model->setFlat();
@@ -182,7 +184,7 @@ class ProductController extends Controller {
     }
 
     public function actionSearch() {
-        $sql = "Select * from product where erp_code LIKE '%" . $_GET["term"] . "%' limit 0,100";
+        $sql = "Select * from product where item_code LIKE '%" . $_GET["term"] . "%' limit 0,100";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
         $out = array();
         foreach ((array) $datas as $data) {
@@ -199,8 +201,8 @@ class ProductController extends Controller {
                 $model = json_decode($data["flat_data"]);
             }
             $json["id"] = $data["id"];
-            $json["value"] = $model->attributeitems->item_name . "(" . $model->erp_code . ")";
-            $json["label"] = $model->attributeitems->item_name . "(" . $model->erp_code . ")";
+            $json["value"] = $model->attributeitems->item_name . "(" . $model->item_code . ")";
+            $json["label"] = $model->attributeitems->item_name . "(" . $model->item_code . ")";
             $out[] = $json;
         }
         echo json_encode($out);
@@ -416,7 +418,7 @@ class ProductController extends Controller {
         $datas = Yii::app()->db->createCommand($sql . " " . $query . " " . $limiter)->queryAll();
         $jsonArr = array();
         foreach ((array) $datas as $data) {
-            $data["flat_data"] = "";
+            //$data["flat_data"] = "";
             if ($data["flat_data"] == "") {
 
                 $model = $this->loadModel($data["id"]);
@@ -479,7 +481,7 @@ class ProductController extends Controller {
         $model = $this->loadModel($_POST["id"]);
 
         $this->addFormField("text", $this->translate("Title"), "title");
-        $this->addFormField("text", $this->translate("Erp Code"), "erp_code");
+        $this->addFormField("text", $this->translate("Erp Code"), "item_code");
         $this->addFormField("text", $this->translate("Erp Supplier"), "erp_supplier");
         $this->addFormField("text", $this->translate("Tecdoc Code"), "tecdoc_code");
         $this->addFormField("select", $this->translate("Tecdoc Supplier"), "tecdoc_supplier_id", CHtml::listData(TecdocSupplier::model()->findAll(), 'id', 'supplier'));
