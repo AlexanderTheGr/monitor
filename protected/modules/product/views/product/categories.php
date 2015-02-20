@@ -81,6 +81,7 @@ $articlesIds = $this->getArticlesIds();
                             resizable: false,
                             draggable: false,
                             width: 1600,
+                            height:900,
                             modal: true,
                             title: "Αποτελέσματα αναζήτησης",
                             close: function(ev, ui) { 

@@ -194,6 +194,7 @@
                             resizable: false,
                             draggable: false,
                             width: 1200,
+                            height:900,
                             modal: true,
                             title: "Αποτελεσματα για " + data.terms,
                             close: function (ev, ui) {
