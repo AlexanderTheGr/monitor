@@ -84,8 +84,8 @@ class ProductController extends Controller {
             foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
                 $codes[] = $item->CODE;
             }
-            if (count($codes) == 0)
-                continue;
+            //if (count($codes) == 0)
+            //    continue;
             
             $model->search = implode("|", $codes);
             $model->erp_code = $model->item_code;
