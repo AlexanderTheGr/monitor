@@ -1,3 +1,4 @@
+<?php if ($model->fullytrans == 0):?>
 <div class="search-form" style="margin-bottom:20px; float: left">
     <h3 class='searchbyvehicle'>Αναζήτηση <span style="font-weight:bold">με Όχημα</span></h3>
     <div>
@@ -51,7 +52,7 @@
         </div>
     </div>   
 </div>
-
+<?php endif;?>
 
 <script>
 

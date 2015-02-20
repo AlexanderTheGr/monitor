@@ -219,6 +219,13 @@ class OrderController extends Controller {
         $customer = $this->model("Customer", $model->customer);
         $this->pagename = $model->fincode . " " . $customer->customer_name;
 
+        $softone = new Softone();
+        $SALDOC = $softone->getData("SALDOC", $model->reference, "");
+        
+        //if ($ITEM->data->SALDOC[0]->FULLYTRANSF != $model->fullytrans) {
+        //$model->fullytrans = $ITEM->data->SALDOC[0]->FULLYTRANSF; 
+        //$model->save();
+        //}
         $tabs["Γενικά Στοιχεία "] = "orders/order/general/" . $model->id;
         $tabs["Είδη"] = "orders/order/orderitems/" . $model->id;
 
@@ -392,13 +399,23 @@ class OrderController extends Controller {
         $_POST["iDisplayStart"];
         $_POST["sSearch"];
         $_POST["iSortCol_0"];
-
+        $order = $this->loadModel($id);
         $sql = "Select id from `orderitem` where `order` = '" . $id . "'";
 
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
         $jsonArr = array();
 
+        
+        
+        $openorderssql = "Select id from `order` where `customer` = '" . $order->customer . "' AND fullytrans = 0";
+        $openorderdatas = Yii::app()->db->createCommand($openorderssql)->queryAll();
+        
+        
+        $list[0] = "Νέα παραγγελεία";
+        foreach($openorderdatas as $openorderdata) {
+           $list[$openorderdata["id"]] = $openorderdata["id"];
+        }
         //$monitor = new Monitor();
         foreach ((array) $datas as $data) {
 
@@ -409,13 +426,24 @@ class OrderController extends Controller {
             $json = array();
             $fields = array();
             $json[] = "<img width=100 src='".$product->media()."' />";
-            $json[] = "<button ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
-            $json[] = "<input type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
+            
+            if ($model->chk == 1) {
+                $json[] = "<button ".($order->fullytrans > 0 ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+            } elseif ($order->fullytrans  == 0) {
+                $json[] = "<button ".($order->fullytrans > 0 ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+            } else {
+                $json[] = CHtml::dropDownList('sendtoorderlist', $select,$list). "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Αποστολή</button>";
+            }
+            
+            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
             $json[] = $product->item_cccfxcode1;
             $json[] = $product->item_name;
             $json[] = $product->item_mtrmanfctr;
-            $json[] = "<input style='width:100px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
-            $json[] = "<input style='width:100px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            
+            
+            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            
             $json[] = $model->price * $model->qty;
 
 
@@ -448,7 +476,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "Εκπτωση";
-            $json[] = "<input style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
+            $json[] = "<input ".($order->fullytrans >= 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $jsonArr[] = $json;
 
             $json = array();
@@ -468,6 +496,34 @@ class OrderController extends Controller {
 
         echo json_encode(array('iTotalRecords' => count($cntPrd), 'iTotalDisplayRecords' => count($cntPrd), 'aaData' => $jsonArr));
     }
+
+    
+    public function actionSendtoorder() {
+ 
+        $orderitem = $this->model("Orderitem",$_POST["id"]);
+        if ($_POST["order"] > 0) {
+            $orderitem->order = $_POST["order"];
+            $orderitem->save();
+        } else {
+            $oldorder = $orderitem->_order_;
+            $order = $this->loadModel($_POST["order"]);
+            $order->user = Yii::app()->user->id;
+            $order->customer = $oldorder->customer;
+            $order->comments = $oldorder->comments;
+            $order->customer_name = $oldorder->customer_name;
+            $order->insdate = date("Y-m-d H:i:s");
+            $order->save();
+            
+            $order->fincode = "ΠΑΡ-" . $order->id;
+            $order->seriesnum = $order->id;
+            $order->save();   
+            $orderitem->order = $order->id;
+            $orderitem->save();    
+            
+        }
+        echo $order->id;
+    }
+
 
     public function actionAjaxForm() {
         $model = $this->loadModel($_POST["id"]);

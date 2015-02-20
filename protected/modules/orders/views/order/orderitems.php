@@ -1,5 +1,5 @@
 <div style="min-height:1000px">
-  
+<?php if ($model->fullytrans == 0):?>  
 <div class="span3">
     Αναζήτηση με Κωδικό<BR>
     
@@ -14,6 +14,7 @@
     <?php ?>    
     </div>
 </div>
+<?php endif; ?>
 <div class="span9">
     <?php require Yii::app()->params['widget']."datatable.php";?>  
 </div>    
@@ -61,6 +62,13 @@
             callback.orderitem();
         })            
     })
+    $(".sendtoorder").live("click",function() {
+        data.id = $(this).attr("ref");
+        data.order = $("#sendtoorderlist").val();
+        $.post("<?php echo Yii::app()->request->baseUrl?>/orders/order/sendtoorder",data,function(result) {
+            location.href = "<?php echo Yii::app()->request->baseUrl?>/orders/order/edit/"+result;
+        })            
+    })    
     /*
     $( "#productitem" ).autocomplete({
       source: "<?php echo Yii::app()->request->baseUrl?>/product/product/search",

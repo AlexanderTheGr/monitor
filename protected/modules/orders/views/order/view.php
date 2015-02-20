@@ -1,14 +1,23 @@
-<div style="text-align: right">
-    <?php if ($this->showSave): ?>    
 
-        <button class="btn btn-success savesoftone">Αποστολή</button>
-        <button class="saveorder btn btn-success save_model_<?php echo $model->className() ?>">Αποθήκευση</button>
-    <?php endif; ?>
-    <?php if ($this->showDelete): ?> 
-        <button class="btn btn-danger delete_model_<?php echo $model->className() ?>">Διαγραφή</button>
+
+<div style="text-align: right">
+    <?php if ($model->fullytrans == 0): ?>
+        <?php if ($this->showSave): ?>    
+            <button class="btn btn-success savesoftone">Αποστολή</button>
+            <button class="saveorder btn btn-success save_model_<?php echo $model->className() ?>">Αποθήκευση</button>
+        <?php endif; ?>
+        <?php if ($this->showDelete): ?> 
+            <button class="btn btn-danger delete_model_<?php echo $model->className() ?>">Διαγραφή</button>
+        <?php endif; ?>
+    <?php else: ?>
+        <button style="float:left" class="btn btn-success">Μετασχηματισμένη</button>
+    <?php endif; ?>   
+    <?php if ($model->reference > 0): ?>
+        <button style="float:left" class="btn btn-primary">Απεσταλμένη</button>
     <?php endif; ?>
     <button class="btn return_to_main_<?php echo $model->className() ?>">Επιστροφή</button>
 </div>
+
 <?php echo HtmlWidget::tabber($tabs); ?>
 <script>
     $(document).ready(function () {
@@ -21,9 +30,9 @@
                 callback.orderitem();
             })
         })
-        <?php if ($model->id > 0):?>
-            $("#ui-id-2").click();            
-        <?php endif;?>
+<?php if ($model->id > 0): ?>
+            $("#ui-id-2").click();
+<?php endif; ?>
 
         $(".savesoftone").click(function () {
             var data = {}
