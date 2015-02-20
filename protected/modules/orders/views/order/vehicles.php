@@ -193,7 +193,7 @@
                             autoOpen: false,
                             resizable: false,
                             draggable: false,
-                            width: 900,
+                            width: 1200,
                             modal: true,
                             title: "Αποτελεσματα για " + data.terms,
                             close: function (ev, ui) {

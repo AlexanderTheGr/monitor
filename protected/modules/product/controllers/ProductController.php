@@ -342,6 +342,8 @@ class ProductController extends Controller {
         echo "<th>Κωδικός</th>";
         echo "<th>Είδος</th>";
         echo "<th>Εργοστάσιο</th>";
+        echo "<th>Χονδρ</th>";
+        echo "<th>Λιαν</th>";
         echo "<th>Τιμή</th>";
         echo "<th>Απόθεμα</th>";
         echo "<th>Ποσότητα</th>";
@@ -358,6 +360,8 @@ class ProductController extends Controller {
             echo "<td>" . $item_code . "</td>";
             echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
+            echo "<td>" . $product->item_pricew . "</td>";
+            echo "<td>" . $product->item_pricer . "</td>";
             echo "<td>" . $item->PRICE . "</td>";
             echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
             echo "<td><input price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";

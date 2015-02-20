@@ -309,6 +309,16 @@ class OrderController extends Controller {
             "type" => "text")
         );
         $this->addColumn(array(
+            "label" => $this->translate("Χονδρικής"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Λιανικής"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        );        
+        $this->addColumn(array(
             "label" => $this->translate("Τιμή"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
@@ -440,7 +450,9 @@ class OrderController extends Controller {
             $json[] = $product->item_name;
             $json[] = $product->item_mtrmanfctr;
             
-            
+            $json[] = $product->item_pricew;
+            $json[] = $product->item_pricer;
+
             $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
             $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
             
@@ -463,6 +475,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
+            $json[] = "";
             $json[] = "Σύνολο";
             $json[] = $price;
             $jsonArr[] = $json;
@@ -475,11 +489,15 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
+            $json[] = "";
             $json[] = "Εκπτωση";
             $json[] = "<input ".($order->fullytrans >= 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $jsonArr[] = $json;
 
             $json = array();
+            $json[] = "";
+            $json[] = "";
             $json[] = "";
             $json[] = "";
             $json[] = "";
@@ -503,6 +521,7 @@ class OrderController extends Controller {
         $orderitem = $this->model("Orderitem",$_POST["id"]);
         if ($_POST["order"] > 0) {
             $orderitem->order = $_POST["order"];
+            $orderitem->chk = 1;
             $orderitem->save();
         } else {
             $oldorder = $orderitem->_order_;
@@ -518,6 +537,7 @@ class OrderController extends Controller {
             $order->seriesnum = $order->id;
             $order->save();   
             $orderitem->order = $order->id;
+            $orderitem->chk = 1;
             $orderitem->save();    
             
         }

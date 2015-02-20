@@ -80,7 +80,7 @@ $articlesIds = $this->getArticlesIds();
                             autoOpen: false,
                             resizable: false,
                             draggable: false,
-                            width: 1200,
+                            width: 1600,
                             modal: true,
                             title: "Αποτελέσματα αναζήτησης",
                             close: function(ev, ui) { 
