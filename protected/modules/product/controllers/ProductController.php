@@ -45,8 +45,8 @@ class ProductController extends Controller {
         $params["eav_model"];
         $params["model"];
         $softone = new Softone();
-        $filters = "ITEM.UPDDATE=".date("Y-m-d")."&ITEM.UPDDATE_TO=".date("Y-m-d");
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
+        $filters = "ITEM.UPDDATE=" . date("Y-m-d") . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
             $attribute = Attributes::model()->findByAttributes(array('identifier' => $field));
@@ -63,12 +63,11 @@ class ProductController extends Controller {
             $model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
             $model = $this->model($params["model"], $model->id);
-            //$model->attributes = $params["attributes"];    
-            //$customer = Customer::model()->findByAttributes(array('reference' => $data["saldoc_trdr"]));
+
             $model->catalogue = 1; //$customer->id;
 
-            
-            
+            if ($model->ts >= '2015-02-19 00:00:00')
+                continue;
             
             unset($data["zoominfo"]);
             unset($data["fld-1"]);
@@ -78,22 +77,22 @@ class ProductController extends Controller {
             }
             //print_r($imporetedData);
             $model->attributes = $imporetedData;
-            
+
             $locateinfo = "MTRSUBSTITUTE:CODE;";
             $ITEM = $softone->getData("ITEM", $model->reference, "");
             $codes = array();
             foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
-                $codes[] = $item->CODE;                    
+                $codes[] = $item->CODE;
             }
-            $model->search = implode("|", $codes);            
+            if (count($codes) == 0)
+                continue;
+            
+            $model->search = implode("|", $codes);
             $model->erp_code = $model->item_code;
             $model->tecdoc_code = $model->item_cccfxreltdcode;
-            $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;            
-
-            echo $model->reference."<BR>";
-            
+            $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
+            echo $model->reference . "<BR>";
             $model->save(false);
-            
             $model->setFlat();
         }
     }
@@ -423,7 +422,7 @@ class ProductController extends Controller {
                 $model = $this->loadModel($data["id"]);
                 $model->load();
 
-                
+
                 if ($data["flat_data"] == "") {
                     $model->erp_code = $model->item_code;
                     $model->tecdoc_code = $model->item_cccfxreltdcode;
