@@ -79,7 +79,7 @@ class ProductController extends Controller {
             $model->attributes = $imporetedData;
 
             $locateinfo = "MTRSUBSTITUTE:CODE;";
-            $ITEM = $softone->getData("ITEM", $model->reference, "");
+            $ITEM = $softone->getData("ITEM", $model->reference, "",$locateinfo);
             $codes = array();
             foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
                 $codes[] = $item->CODE;
