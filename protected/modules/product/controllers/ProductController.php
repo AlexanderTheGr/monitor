@@ -46,7 +46,7 @@ class ProductController extends Controller {
         $params["model"];
         $softone = new Softone();
         $filters = "ITEM.UPDDATE=" . date("Y-m-d") . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
             $attribute = Attributes::model()->findByAttributes(array('identifier' => $field));
