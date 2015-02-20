@@ -95,7 +95,7 @@ class ProductController extends Controller {
             $model->save(false);
             $model->setFlat();
             
-            if ($i++>10) break;
+            //if ($i++>10) break;
             
         }
     }
