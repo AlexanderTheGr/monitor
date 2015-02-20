@@ -94,6 +94,9 @@ class ProductController extends Controller {
             echo $model->reference . "<BR>";
             $model->save(false);
             $model->setFlat();
+            
+            if ($i++>10) continue;
+            
         }
     }
 
