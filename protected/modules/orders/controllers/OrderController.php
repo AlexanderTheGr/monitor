@@ -308,7 +308,7 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Εργοστάσιο"),
+            "label" => $this->translate("Εργοστ"),
             "type" => "text")
         );
         $this->addColumn(array(
