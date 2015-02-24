@@ -101,7 +101,9 @@ class ProductController extends Controller {
             echo $model->reference . "<BR>";
             $model->save(false);
             
-            $this->updatetecdoc($model);
+            if ($this->flat_data == "") {
+                $this->updatetecdoc($model);
+            }
             
             $model->setFlat();
             
@@ -657,7 +659,9 @@ class ProductController extends Controller {
 
         return $data;
     }
+    
 
+    
     function getArticlesIds2($articleids) {
         if (count($articleids)) {
             $as = implode(",", $articleids);
