@@ -2,7 +2,7 @@
 <div class="search-form" style="margin-bottom:20px; float: left">
     <h3 class='searchbyvehicle'>Αναζήτηση <span style="font-weight:bold">με Όχημα</span></h3>
     <div>
-        <div class="block-content">
+        <div class="block-content"  style="height:300px;">
             <div style="float:left; padding:0 5px; width:100%" class="block-content">			
                 <div class='plaisio'>
                     <select style="width:100%" name="brand_id" class="brand-select" class="brand-select" title="" onchange="">
@@ -11,6 +11,7 @@
                             <option value="<?php echo $brand->id ?>"><?php echo $brand->brand ?></option>
                         <?php endforeach; ?>
                     </select>
+                    
                 </div>
 
                 <div class='plaisio'>
@@ -73,9 +74,13 @@
             }
         }
     });
+    jQuery(".brand-select").chosen({width:'100%'});
+    jQuery(".brand_model-select").chosen({width:'100%'});
+    jQuery(".brand_model_type-select").chosen({width:'100%'});
+    
     jQuery(".search-form").accordion({
-        heightStyle: "content",
         collapsible: true,
+        minHeight:500
     });
     jQuery('.brand_model-select').append(jQuery('<option>').text("<?php echo $this->translate("Επιλέξτε Μοντέλο"); ?>").attr('value', 0));
     jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->translate("Επιλέξτε Κινητήρα"); ?>").attr('value', 0));
@@ -114,6 +119,10 @@
                  */
 
             });
+            jQuery(".brand-select").trigger("chosen:updated")
+            jQuery(".brand_model-select").trigger("chosen:updated");
+            jQuery(".brand_model_type-select").trigger("chosen:updated");
+            
         });
     })
     jQuery(".brand_model-select").change(function () {
@@ -145,6 +154,9 @@
                 jQuery(".m_" + a).append(opt);
 
             });
+            jQuery(".brand-select").trigger("chosen:updated")
+            jQuery(".brand_model-select").trigger("chosen:updated");
+            jQuery(".brand_model_type-select").trigger("chosen:updated");
         });
     })
     jQuery(".gogo").click(function () {

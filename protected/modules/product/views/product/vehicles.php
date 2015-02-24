@@ -1,7 +1,7 @@
 <div class="search-form" style="margin-bottom:20px; float: left">
     <h3>Αναζήτηση <span style="font-weight:bold">με Όχημα</span></h3>
     <div>
-        <div class="block-content">
+        <div class="block-content" style="height:500px !important">
             <div style="float:left; padding:0 5px; width:100%" class="block-content">			
                 <div class='plaisio'>
                     <select style="width:100%" name="brand_id" class="brand-select" class="brand-select" title="" onchange="">
@@ -75,9 +75,13 @@
             }
         }
     });
+    
+    jQuery(".brand-select").chosen();
+    
     jQuery(".search-form").accordion({
-        heightStyle: "content",
+
         collapsible: true,
+        minHeight:300;
     });
     jQuery('.brand_model-select').append(jQuery('<option>').text("<?php echo $this->translate("Select Model"); ?>").attr('value', 0));
     jQuery('.brand_model_type-select').append(jQuery('<option>').text("<?php echo $this->translate("Select Engine"); ?>").attr('value', 0));
