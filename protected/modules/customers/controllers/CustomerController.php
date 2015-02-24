@@ -70,11 +70,11 @@ class CustomerController extends Controller {
         foreach ($datas as $data) {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
-            $model = $params["model"]::model()->findByAttributes(array('reference' => $info[1]));
+            $model = $params["model"]::model()->findByAttributes(array('customer_code' => $data["customer_code"]));
             $model = $this->model($params["model"], $model->id);
             //$model->attributes = $params["attributes"];    
 
-            $customer = Customer::model()->findByAttributes(array('reference' => $data["saldoc_trdr"]));
+            //$customer = Customer::model()->findByAttributes(array('reference' => $data["saldoc_trdr"]));
             //$model->catalogue = 1; //$customer->id;
 
             unset($data["zoominfo"]);
@@ -87,7 +87,7 @@ class CustomerController extends Controller {
             $model->attributes = $imporetedData;
             $model->save(false);
             //$model->setFlat();
-            if ($i++ > 10)
+            if ($i++ > 100)
                 break;
         }
     }
