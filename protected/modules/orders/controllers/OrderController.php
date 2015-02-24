@@ -496,7 +496,6 @@ class OrderController extends Controller {
 
             $json[] = $model->price * $model->qty;
 
-
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
             $jsonArr[] = $json;
