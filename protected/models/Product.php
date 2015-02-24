@@ -59,14 +59,15 @@ class Product extends Eav {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
+        
         return array(
-            array('reference, catalogue, erp_code, tecdoc_code, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search', 'required'),
+            array('reference, catalogue, erp_code, tecdoc_code, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search', 'required'),
             array('reference, catalogue, tecdoc_supplier_id, tecdoc_generic_article_id, item_cccfxrelbrand, item_vat, item_mtrunit1, item_mtrl_itemtrdata_qty1, updated, actioneer', 'numerical', 'integerOnly' => true),
             array('erp_code, tecdoc_code, supplier_code, erp_supplier, tecdoc_article_name, item_cccfxreltdcode, item_cccfxcode1, item_mtrmanfctr, item_name1, item_name, item_code', 'length', 'max' => 255),
-            array('disc1prc, item_pricer, item_pricew', 'length', 'max' => 10),
+            array('disc1prc, item_pricer, item_pricew,item_pricer02, item_pricer01, item_pricew02, item_pricew01', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, catalogue, erp_code, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search', 'safe', 'on' => 'search'),
+            array('id, reference, catalogue, erp_code, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search', 'safe', 'on' => 'search'),
         );
     }
 
@@ -108,6 +109,12 @@ class Product extends Eav {
             'item_mtrmanfctr' => 'Item Mtrmanfctr',
             'item_pricer' => 'Item Pricer',
             'item_pricew' => 'Item Pricew',
+            
+            'item_pricer01' => 'Item Pricer',
+            'item_pricew01' => 'Item Pricew',
+            'item_pricer02' => 'Item Pricer',
+            'item_pricew02' => 'Item Pricew',
+            
             'item_mtrunit1' => 'Item Mtrunit1',
             'item_name1' => 'Item Name1',
             'item_name' => 'Item Name',
@@ -159,6 +166,12 @@ class Product extends Eav {
         $criteria->compare('item_mtrmanfctr', $this->item_mtrmanfctr, true);
         $criteria->compare('item_pricer', $this->item_pricer, true);
         $criteria->compare('item_pricew', $this->item_pricew, true);
+        
+        $criteria->compare('item_pricer01', $this->item_pricer01, true);
+        $criteria->compare('item_pricew01', $this->item_pricew01, true);        
+        $criteria->compare('item_pricer02', $this->item_pricer02, true);
+        $criteria->compare('item_pricew02', $this->item_pricew02, true);
+        
         $criteria->compare('item_mtrunit1', $this->item_mtrunit1);
         $criteria->compare('item_name1', $this->item_name1, true);
         $criteria->compare('item_name', $this->item_name, true);
