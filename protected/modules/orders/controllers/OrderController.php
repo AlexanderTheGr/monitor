@@ -244,11 +244,25 @@ class OrderController extends Controller {
         if ($_POST["id"]) {
             $field = $_POST["field"];
             
-            
+
             
             $orderitem = $this->model("OrderItem", $_POST["id"]);
-            $orderitem->$field = $_POST["value"];
-            //$orderitem->save(false);
+            if ($field == "price") {
+                $orderitem->price = $_POST["value"];
+                $orderitem->lineval = $orderitem->price-($orderitem->price*$orderitem->disc1prc/100);
+            }  
+            
+            if ($field == "lineval") {
+                $orderitem->lineval = $_POST["value"];
+                $orderitem->disc1prc = 1-($orderitem->price/$orderitem->lineval);
+            }
+            
+            if ($field == "disc1prc") {
+                $orderitem->disc1prc = $_POST["value"];
+                $orderitem->lineval = $orderitem->price-($orderitem->price*$orderitem->disc1prc/100);
+            }
+            
+            $orderitem->save(false);
         }
     }
 
