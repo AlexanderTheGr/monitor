@@ -219,13 +219,16 @@ class OrderController extends Controller {
         $customer = $this->model("Customer", $model->customer);
         $this->pagename = $model->fincode . " " . $customer->customer_name;
 
-        $softone = new Softone();
-        $SALDOC = $softone->getData("SALDOC", $model->reference, "");
+        if ($model->reference > 0) {
+            $softone = new Softone();
+            $locateinfo = "SALDOC:FULLYTRANSF;";
+            $SALDOC = $softone->getData("SALDOC", $model->reference, "",$locateinfo);
+            if ($ITEM->data->SALDOC[0]->FULLYTRANSF != $model->fullytrans) {
+                $model->fullytrans = $ITEM->data->SALDOC[0]->FULLYTRANSF;
+                $model->save();
+            }
+        }
         
-        //if ($ITEM->data->SALDOC[0]->FULLYTRANSF != $model->fullytrans) {
-        //$model->fullytrans = $ITEM->data->SALDOC[0]->FULLYTRANSF; 
-        //$model->save();
-        //}
         $tabs["Γενικά Στοιχεία "] = "orders/order/general/" . $model->id;
         $tabs["Είδη"] = "orders/order/orderitems/" . $model->id;
 
