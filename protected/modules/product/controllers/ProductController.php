@@ -348,8 +348,8 @@ class ProductController extends Controller {
         echo "<th>Χονδρ</th>";
         echo "<th>Λιαν</th>";
         echo "<th>Τιμή</th>";
-        echo "<th>Εκτ</th>";
-        echo "<th>Αξία</th>";
+        echo "<th>Εκπτ</th>";
+        echo "<th>Νέτη</th>";
         echo "<th>Απόθεμα</th>";
         echo "<th>Ποσότητα</th>";
         echo "<th></th>";
