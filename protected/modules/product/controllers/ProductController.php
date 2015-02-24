@@ -100,6 +100,9 @@ class ProductController extends Controller {
             $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
             echo $model->reference . "<BR>";
             $model->save(false);
+            
+            $this->updatetecdoc($model);
+            
             $model->setFlat();
             
             //if ($i++>10) break;
