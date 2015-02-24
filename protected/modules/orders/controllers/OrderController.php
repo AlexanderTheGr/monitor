@@ -501,7 +501,7 @@ class OrderController extends Controller {
             $json["DT_RowClass"] = '';
             $jsonArr[] = $json;
             if ($model->chk == 1)
-                $price += $model->price * $model->qty;
+                $price += $model->lineval * $model->qty;
         }
 
         if (count($jsonArr)) {
