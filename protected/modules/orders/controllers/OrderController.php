@@ -446,7 +446,7 @@ class OrderController extends Controller {
             }
             
             $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
-            $json[] = $product->item_cccfxcode1;
+            $json[] = $product->item_code;
             $json[] = $product->item_name;
             $json[] = $product->item_mtrmanfctr;
             
