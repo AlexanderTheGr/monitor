@@ -341,7 +341,7 @@ class OrderController extends Controller {
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Νέτη"),
+            "label" => $this->translate("Τιμή"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
@@ -352,7 +352,7 @@ class OrderController extends Controller {
         );
 
         $this->addColumn(array(
-            "label" => $this->translate("Αξία"),
+            "label" => $this->translate("Νέτη"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
