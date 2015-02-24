@@ -83,12 +83,12 @@ class CustomerController extends Controller {
             foreach ($data as $identifier => $dt) {
                 $imporetedData[$identifier] = addslashes($dt);
             }
-            print_r($imporetedData);
+            //print_r($imporetedData);
             $model->attributes = $imporetedData;
             $model->save(false);
             //$model->setFlat();
-            //if ($i++ > 10)
-            //    break;
+            if ($i++ > 10)
+                break;
         }
     }
 
