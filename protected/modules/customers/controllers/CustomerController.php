@@ -87,8 +87,8 @@ class CustomerController extends Controller {
             $model->attributes = $imporetedData;
             $model->save(false);
             //$model->setFlat();
-            if ($i++ > 100)
-                break;
+            //if ($i++ > 100)
+            //    break;
         }
     }
 
