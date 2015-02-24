@@ -441,14 +441,14 @@ class OrderController extends Controller {
             $json[] = "<img width=100 src='".$product->media()."' />";
             
             if ($model->chk == 1) {
-                $json[] = "<button ".($order->fullytrans > 0 ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+                $json[] = "<button ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
             } elseif ($order->fullytrans  == 0) {
-                $json[] = "<button ".($order->fullytrans > 0 ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+                $json[] = "<button ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
             } else {
                 $json[] = CHtml::dropDownList('sendtoorderlist', $select,$list). "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Αποστολή</button>";
             }
             
-            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
             $json[] = $product->item_code;
             $json[] = $product->item_name;
             $json[] = $product->item_mtrmanfctr;
@@ -456,8 +456,8 @@ class OrderController extends Controller {
             $json[] = $product->item_pricew;
             $json[] = $product->item_pricer;
 
-            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
-            $json[] = "<input ".($order->fullytrans > 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
             
             $json[] = $model->price * $model->qty;
 
@@ -495,7 +495,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "Εκπτωση";
-            $json[] = "<input ".($order->fullytrans >= 0 ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $jsonArr[] = $json;
 
             $json = array();
