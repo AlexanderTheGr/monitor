@@ -79,16 +79,19 @@ class ProductController extends Controller {
             //print_r($imporetedData);
             $model->attributes = $imporetedData;
 
+            /*
             $locateinfo = "MTRSUBSTITUTE:CODE;";
             $ITEM = $softone->getData("ITEM", $model->reference, "",$locateinfo);
             $codes = array();
             foreach ((array) $ITEM->data->MTRSUBSTITUTE as $item) {
                 $codes[] = $item->CODE;
             }
+             * 
+             */
             //if (count($codes) == 0)
             //    continue;
             
-            $model->search = implode("|", $codes);
+            //$model->search = implode("|", $codes);
             $model->erp_code = $model->item_code;
             $model->tecdoc_code = $model->item_cccfxreltdcode;
             $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
