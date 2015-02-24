@@ -4,7 +4,7 @@
     <div>
         <div class="block-content"  style="height:300px;">
             <div style="float:left; padding:0 5px; width:100%" class="block-content">			
-                <div class='plaisio'>
+                <div class='plaisio' style="margin-top: 10px">
                     <select style="width:100%" name="brand_id" class="brand-select" class="brand-select" title="" onchange="">
                         <option value="0"><?php echo $this->translate("Επιλέξτε Μάρκα"); ?></option>
                         <?php foreach ($this->getBrands() as $brand): ?>
@@ -14,14 +14,14 @@
                     
                 </div>
 
-                <div class='plaisio'>
+                <div class='plaisio' style="margin-top: 10px">
 
                     <select style="width:100%" name="brand_model_id" class="brand_model-select inactive" class="brand_model-select" title="" onchange="">
 
                     </select>   
                 </div>
 
-                <div class='plaisio'>
+                <div class='plaisio' style="margin-top: 10px">
 
                     <select  style="width:100%" name="brand_model_type_id" class="brand_model_type-select inactive" class="brand_model-select" title="" onchange="">
 
