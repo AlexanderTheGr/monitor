@@ -243,9 +243,12 @@ class OrderController extends Controller {
         //$order->addOrderItem($_POST["product"]);
         if ($_POST["id"]) {
             $field = $_POST["field"];
+            
+            
+            
             $orderitem = $this->model("OrderItem", $_POST["id"]);
             $orderitem->$field = $_POST["value"];
-            $orderitem->save(false);
+            //$orderitem->save(false);
         }
     }
 
@@ -331,6 +334,18 @@ class OrderController extends Controller {
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
+        $this->addColumn(array(
+            "label" => $this->translate("Εκτπ"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        ); 
+        
+        $this->addColumn(array(
+            "label" => $this->translate("Αξία"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        );
+        
         $this->addColumn(array(
             "label" => $this->translate("Ποσότητα"),
             "aoColumns" => array("sWidth" => '100'),
@@ -462,8 +477,11 @@ class OrderController extends Controller {
             $json[] = $product->item_pricew02;
             $json[] = $product->item_pricer02;
 
-            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:40px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
-            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:40px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:30px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:30px' type='text' ref='" . $model->id . "' field='disc1prc' class='orderitem disc1prc' value='" . $model->disc1prc . "'/>";
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:30px' type='text' ref='" . $model->id . "' field='lineval' class='orderitem lineval' value='" . $model->lineval . "'/>";
+            
+            $json[] = "<input ".($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '')." style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
             
             $json[] = $model->price * $model->qty;
 
@@ -487,11 +505,15 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
+            $json[] = "";
             $json[] = "Σύνολο";
             $json[] = $price;
             $jsonArr[] = $json;
 
             $json = array();
+            $json[] = "";
+            $json[] = "";
             $json[] = "";
             $json[] = "";
             $json[] = "";

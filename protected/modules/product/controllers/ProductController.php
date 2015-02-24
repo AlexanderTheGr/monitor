@@ -348,6 +348,8 @@ class ProductController extends Controller {
         echo "<th>Χονδρ</th>";
         echo "<th>Λιαν</th>";
         echo "<th>Τιμή</th>";
+        echo "<th>Εκτ</th>";
+        echo "<th>Αξία</th>";
         echo "<th>Απόθεμα</th>";
         echo "<th>Ποσότητα</th>";
         echo "<th></th>";
@@ -365,9 +367,11 @@ class ProductController extends Controller {
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
             echo "<td>" . $product->item_pricew . "</td>";
             echo "<td>" . $product->item_pricer . "</td>";
+            echo "<td>" . $item->PRICE . "</td>";
+            echo "<td>" . $item->DISC1PRC . "</td>";
             echo "<td>" . $item->LINEVAL . "</td>";
             echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
-            echo "<td><input price='" . $item->LINEVAL . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
+            echo "<td><input lineval='" . $item->LINEVAL . "' disc1prc='" . $item->DISC1PRC . "' price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
             echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
 
             echo "<td>" . implode(",", (array) $itemstoday[$product->id]) . "</td>";

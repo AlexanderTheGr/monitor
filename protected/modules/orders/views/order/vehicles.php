@@ -172,6 +172,8 @@
             data.order = '<?php echo $model->id ?>'
             data.product = $(this).attr("ref");
             data.price = $(this).attr("price");
+            data.lineval = $(this).attr("lineval");
+            data.disc1prc = $(this).attr("disc1prc");
             data.qty = $(this).val();
             $.post("<?php echo Yii::app()->request->baseUrl ?>/orders/order/addorderitem", data, function () {
                 callback.orderitem();

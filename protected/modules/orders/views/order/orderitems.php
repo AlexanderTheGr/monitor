@@ -46,7 +46,8 @@
             callback.orderitem();
         })                  
     })
-    $(".disc1prc").live("change",function() {
+    
+    $(".isc1prc").live("change",function() {
         var data = {}
         data.id = $(this).attr("ref");
         data.field = $(this).attr("field");
@@ -55,6 +56,7 @@
             callback.orderitem();
         })                  
     }) 
+    
     $(".productitem").focus();
     $(".delete_model").live("click",function() {
         data.id = $(this).attr("ref");
