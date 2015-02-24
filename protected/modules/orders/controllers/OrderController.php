@@ -243,9 +243,6 @@ class OrderController extends Controller {
         //$order->addOrderItem($_POST["product"]);
         if ($_POST["id"]) {
             $field = $_POST["field"];
-            
-
-            
             $orderitem = $this->model("OrderItem", $_POST["id"]);
             if ($field == "price") {
                 $orderitem->price = $_POST["value"];
