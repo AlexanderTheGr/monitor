@@ -46,12 +46,12 @@ class OrderItem extends Eav {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, order, product, qty, price', 'required'),
+            array('id, order, product, qty, price,lineval,disc1prc', 'required'),
             //array('id, order, product, qty', 'numerical', 'integerOnly'=>true),
             //array('price', 'length', 'max'=>10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, order, product, qty, price', 'safe', 'on' => 'search'),
+            array('id, order, product, qty, price,lineval,disc1prc', 'safe', 'on' => 'search'),
         );
     }
 
@@ -77,6 +77,9 @@ class OrderItem extends Eav {
             'product' => 'Product',
             'qty' => 'Qty',
             'price' => 'Price',
+            'lineval' => 'Lineval',
+            'disc1prc' => 'disc1prc',
+            
         );
     }
 
@@ -102,6 +105,8 @@ class OrderItem extends Eav {
         $criteria->compare('product', $this->product);
         $criteria->compare('qty', $this->qty);
         $criteria->compare('price', $this->price, true);
+        $criteria->compare('lineval', $this->lineval, true);
+        $criteria->compare('disc1prc', $this->disc1prc, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
