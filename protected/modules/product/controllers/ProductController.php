@@ -320,7 +320,7 @@ class ProductController extends Controller {
         $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
 
         $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-        print_r($out);
+        //print_r($out);
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
