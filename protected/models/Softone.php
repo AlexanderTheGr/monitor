@@ -131,8 +131,8 @@ class Softone {
             "clientID" => $this->authenticateClientID,
             "appId" => $this->appId,
             "reqID" => $data->reqID,
-            "START" => 10000,
-            "LIMIT" => 30000
+            "START" => 40000,
+            "LIMIT" => 700000
         );
         $out = $this->doRequest($params);
         return $out;
