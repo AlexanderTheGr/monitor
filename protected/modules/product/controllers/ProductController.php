@@ -323,9 +323,9 @@ class ProductController extends Controller {
             $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
         }
         //print_r($dataOut);
-        $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
+        $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,ITELINES:LINEVAL,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
 
-        $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+        $out = $softone->calculate((array) $dataOut, $object, "", "",$locateinfo);
         //print_r($out);
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
@@ -339,10 +339,6 @@ class ProductController extends Controller {
                     $itemstoday[$item->product][$ordertoday->id] = "<a href='" . Yii::app()->request->baseUrl . "/orders/order/" . $ordertoday->id . "'>" . $ordertoday->id . "</a>";
             }
         }
-
-
-
-
         echo "<table class='fororder display'>";
         echo "<thead><tr>";
         echo "<th></th>";
@@ -369,9 +365,9 @@ class ProductController extends Controller {
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
             echo "<td>" . $product->item_pricew . "</td>";
             echo "<td>" . $product->item_pricer . "</td>";
-            echo "<td>" . $item->PRICE . "</td>";
+            echo "<td>" . $item->LINEVAL . "</td>";
             echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
-            echo "<td><input price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
+            echo "<td><input price='" . $item->LINEVAL . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
             echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
 
             echo "<td>" . implode(",", (array) $itemstoday[$product->id]) . "</td>";
