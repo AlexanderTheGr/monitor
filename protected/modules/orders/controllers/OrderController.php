@@ -775,7 +775,7 @@ class OrderController extends Controller {
             //$k = 9000001;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
-                    $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "QTY1" => $item->qty);
+                    $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "LINEVAL" => $item->lineval,"DISC1PRC" => $item->disc1prc, "QTY1" => $item->qty);
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, (int) 0);
