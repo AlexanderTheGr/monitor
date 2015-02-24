@@ -98,6 +98,8 @@ class Controller extends CController {
         $this->css[] = "bootstrap-toggle-buttons.css";
         $this->css[] = "style.css";
         $this->css[] = "widgets.css";
+        $this->css[] = "chosen.min.css";
+        
         $this->css[] = "bootstrap-responsive.css";
         $this->css[] = "jquery.dataTables.css";
         $this->css[] = "monitor.css";
@@ -134,9 +136,8 @@ class Controller extends CController {
         $this->js[] = "jquery-ui.min.js";
         $this->js[] = "jquery.dataTables.min.js";
         $this->js[] = "jquery.ui.timepicker.js";
-
-
-
+        $this->js[] = "chosen.jquery.min.js";
+        $this->js[] = "chosen.proto.min.js";
 
 
         $user = $this->model("User", Yii::app()->user->id);
