@@ -1106,5 +1106,24 @@ class Controller extends CController {
 
         return $event;
     }
+    public function articleAttributes($model) {
+        $url = "http://service.fastwebltd.com/";
+        $fields = array(
+            'action' => 'getSearch',
+            'tecdoc_article_id' => $model->_webserviceProducts_[11632]->article_id
+        );
 
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $data = curl_exec($ch);
+
+        return $data;
+    }
 }
