@@ -494,7 +494,7 @@ class OrderController extends Controller {
 
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
-            $json[] = $model->price * $model->qty;
+            $json[] = $model->lineval * $model->qty;
 
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
