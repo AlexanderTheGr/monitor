@@ -46,8 +46,8 @@ class ProductController extends Controller {
         $params["model"];
         $softone = new Softone();
         $filters = "ITEM.UPDDATE=" . date("Y-m-d") . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
-        $filters = "ITEM.UPDDATE=2015-02-21&ITEM.UPDDATE_TO=2015-02-24";
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
+        $filters = "ITEM.UPDDATE=2015-02-24&ITEM.UPDDATE_TO=2015-02-25";
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
         /*
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
