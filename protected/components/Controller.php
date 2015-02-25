@@ -1130,7 +1130,7 @@ class Controller extends CController {
     public function getOriginals($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
-            'action' => 'getOriginals',
+            'action' => 'originals',
             'tecdoc_article_id' => $model->_webserviceProducts_[11632]->article_id
         );
 
