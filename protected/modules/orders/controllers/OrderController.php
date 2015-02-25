@@ -479,7 +479,7 @@ class OrderController extends Controller {
                 $json[] = CHtml::dropDownList('sendtoorderlist', $select, $list) . "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Αποστολή</button>";
             }
 
-            $json[] = $this->articleAttributes($product)."<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
+            $json[] = $this->getOriginals($product)."<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
             $json[] = $product->item_code;
             $json[] = $product->item_name;
             $json[] = $product->item_mtrmanfctr;
