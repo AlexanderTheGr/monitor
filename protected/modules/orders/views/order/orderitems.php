@@ -60,6 +60,7 @@
         $(".product_info").live("click", function () {
             var data = {}
             data.id = $(this).attr("ref");
+            ProgressBar.displayProgressBar();
             $.post("<?php echo Yii::app()->request->baseUrl ?>/product/product/getProductInfo", data, function (result) {
                 
                 $productInfo = $("<div></div>")
@@ -77,8 +78,8 @@
                             }
                         });
                 $productInfo.html(result);
-                $productInfo.dialog("open")
-                
+                $productInfo.dialog("open");
+                ProgressBar.hideProgressBar();
             })
         })
 

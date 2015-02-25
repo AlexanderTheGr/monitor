@@ -692,7 +692,6 @@ class ProductController extends Controller {
         
         if (count($out["articlesSearch"])) {
             $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . "))";
-            echo $sql;
             $datas = Yii::app()->db->createCommand($sql)->queryAll();
             $out["antistixies"] = $datas;
         }

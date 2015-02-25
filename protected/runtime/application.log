@@ -29253,3 +29253,55 @@ Stack trace:
 REQUEST_URI=/developing/monitor/style/chosen-sprite.png
 HTTP_REFERER=http://192.168.1.105/developing/monitor/style/chosen.min.css
 ---
+2015/02/25 12:38:25 [error] [php] json_decode() expects parameter 1 to be string, array given (C:\xampp\htdocs\developing\monitor\protected\modules\product\views\product\productinfo.php:30)
+Stack trace:
+#0 C:\framework\web\CBaseController.php(95): ProductController->renderInternal()
+#1 C:\framework\web\CController.php(869): ProductController->renderFile()
+#2 C:\xampp\htdocs\developing\monitor\protected\modules\product\controllers\ProductController.php(712): ProductController->renderPartial()
+#3 C:\framework\web\actions\CInlineAction.php(49): ProductController->actionGetProductInfo()
+#4 C:\framework\web\CController.php(308): CInlineAction->runWithParams()
+#5 C:\framework\web\CController.php(286): ProductController->runAction()
+#6 C:\framework\web\CController.php(265): ProductController->runActionWithFilters()
+#7 C:\framework\web\CWebApplication.php(282): ProductController->run()
+#8 C:\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#9 C:\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#10 C:\xampp\htdocs\developing\monitor\index.php(14): CWebApplication->run()
+REQUEST_URI=/developing/monitor/product/product/getProductInfo
+in C:\xampp\htdocs\developing\monitor\protected\modules\product\views\product\productinfo.php (30)
+in C:\xampp\htdocs\developing\monitor\protected\modules\product\controllers\ProductController.php (712)
+in C:\xampp\htdocs\developing\monitor\index.php (14)
+2015/02/25 12:38:35 [error] [php] json_decode() expects parameter 1 to be string, array given (C:\xampp\htdocs\developing\monitor\protected\modules\product\views\product\productinfo.php:30)
+Stack trace:
+#0 C:\framework\web\CBaseController.php(95): ProductController->renderInternal()
+#1 C:\framework\web\CController.php(869): ProductController->renderFile()
+#2 C:\xampp\htdocs\developing\monitor\protected\modules\product\controllers\ProductController.php(712): ProductController->renderPartial()
+#3 C:\framework\web\actions\CInlineAction.php(49): ProductController->actionGetProductInfo()
+#4 C:\framework\web\CController.php(308): CInlineAction->runWithParams()
+#5 C:\framework\web\CController.php(286): ProductController->runAction()
+#6 C:\framework\web\CController.php(265): ProductController->runActionWithFilters()
+#7 C:\framework\web\CWebApplication.php(282): ProductController->run()
+#8 C:\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#9 C:\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#10 C:\xampp\htdocs\developing\monitor\index.php(14): CWebApplication->run()
+REQUEST_URI=/developing/monitor/product/product/getProductInfo
+in C:\xampp\htdocs\developing\monitor\protected\modules\product\views\product\productinfo.php (30)
+in C:\xampp\htdocs\developing\monitor\protected\modules\product\controllers\ProductController.php (712)
+in C:\xampp\htdocs\developing\monitor\index.php (14)
+2015/02/25 12:45:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "style/chosen-sprite.png".' in C:\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\framework\web\CWebApplication.php(141): CWebApplication->runController('style/chosen-sp...')
+#1 C:\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\developing\monitor\index.php(14): CApplication->run()
+#3 {main}
+REQUEST_URI=/developing/monitor/style/chosen-sprite.png
+HTTP_REFERER=http://192.168.1.105/developing/monitor/style/chosen.min.css
+---
+2015/02/25 12:57:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "style/chosen-sprite.png".' in C:\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\framework\web\CWebApplication.php(141): CWebApplication->runController('style/chosen-sp...')
+#1 C:\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\developing\monitor\index.php(14): CApplication->run()
+#3 {main}
+REQUEST_URI=/developing/monitor/style/chosen-sprite.png
+HTTP_REFERER=http://192.168.1.105/developing/monitor/style/chosen.min.css
+---
