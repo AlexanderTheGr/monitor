@@ -1109,7 +1109,7 @@ class Controller extends CController {
     public function articleAttributes($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
-            'action' => 'getSearch',
+            'action' => 'articleAttributes',
             'tecdoc_article_id' => $model->_webserviceProducts_[11632]->article_id
         );
 
