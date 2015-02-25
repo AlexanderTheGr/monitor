@@ -437,6 +437,9 @@ class OrderController extends Controller {
         ));
     }
 
+
+
+
     public function actionOrderitemsAjaxJson($id) {
 
         $_POST["iDisplayLength"];
@@ -469,7 +472,7 @@ class OrderController extends Controller {
 
             $json = array();
             $fields = array();
-            $json[] = "<img width=100 src='" . $product->media() . "' />";
+            $json[] = "<img class='product_info' ref='".$product->id."' width=100 src='" . $product->media() . "' />";
 
             if ($model->chk == 1) {
                 $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";

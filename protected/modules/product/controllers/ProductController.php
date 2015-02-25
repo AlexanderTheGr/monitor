@@ -366,7 +366,7 @@ class ProductController extends Controller {
             $product = $this->model("Product", $product->id);
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
-            echo "<td><img width=100 src='" . $product->media() . "' /></td>";
+            echo "<td><img  class='product_info' ref='".$product->id."' width=100 src='" . $product->media() . "' /></td>";
             echo "<td>" . $item_code . "</td>";
             echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
@@ -682,6 +682,37 @@ class ProductController extends Controller {
         return $out;
     }
 
+    
+    
+    public function getProductInfo($model) {
+        
+        $out["originals"] = $this->originals($model);
+        $out["articleAttributes"] =  $this->articleAttributes($model);
+        $out["articlesSearch"] =  unserialize($this->getArticlesSearch($model->item_cccfxrelbrand));
+        
+        if (count($out["articlesSearch"])) {
+            $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . "))";
+            echo $sql;
+            $datas = Yii::app()->db->createCommand($sql)->queryAll();
+            $out["antistixies"] = $datas;
+        }
+        
+        
+        $out["efarmoges"] =  unserialize($this->efarmoges($model));
+        return $out;
+    }
+    
+    public function actionGetProductInfo() {
+
+        $product = $this->model("Product", $_POST["id"]);
+        $out = $this->getProductInfo($product);
+
+        $this->renderPartial('productinfo', array(
+            'model' => $product,
+            'info' => $out
+        ));        
+    }    
+    
     function updatetecdoc($model) {
         //$data = array("service" => "login", 'username' => 'dev', 'password' => 'dev', 'appId' => '2000');
 

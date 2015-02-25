@@ -1126,8 +1126,48 @@ class Controller extends CController {
 
         return $data;
     }
+    public function getArticlesSearch($search) {
+        $url = "http://service.fastwebltd.com/";
+        $fields = array(
+            'action' => 'getSearch',
+            'search' => $search
+        );
+
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $data = curl_exec($ch);
+
+        return $data;
+    }  
     
-    public function getOriginals($model) {
+    public function efarmoges($model) {
+        $url = "http://service.fastwebltd.com/";
+        $fields = array(
+            'action' => 'efarmoges',
+            'tecdoc_article_id' => $model->_webserviceProducts_[11632]->article_id
+        );
+
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $data = curl_exec($ch);
+        return $data;
+    }     
+    
+    public function originals($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
             'action' => 'originals',
