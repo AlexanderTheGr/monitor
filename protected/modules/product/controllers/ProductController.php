@@ -45,8 +45,12 @@ class ProductController extends Controller {
         $params["eav_model"];
         $params["model"];
         $softone = new Softone();
-        $filters = "ITEM.UPDDATE=" . date("Y-m-d") . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
-        //$filters = "ITEM.UPDDATE=2015-02-24&ITEM.UPDDATE_TO=2015-02-25";
+        
+        
+        $sql = "Select max(ts) as t from product";
+        $data = Yii::app()->db->createCommand($sql)->queryRow();
+        $date = date("Y-m-d",strtotime($data["t"]));
+        $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
         /*
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
@@ -60,19 +64,22 @@ class ProductController extends Controller {
          * 
          */
 
+        $i = 0;
         foreach ($datas as $data) {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
 
             $model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
+            
+            if ($model->id > 0) {
+                $i++;
+            }
+            
             $model = $this->model($params["model"], $model->id);
 
             $model->catalogue = 1; //$customer->id;
 
-            if ($model->ts >= '2015-02-24 10:00:00')
-                continue;
-            
             unset($data["zoominfo"]);
             unset($data["fld-1"]);
             $model->reference = $info[1];
@@ -98,7 +105,7 @@ class ProductController extends Controller {
             $model->erp_code = $model->item_code;
             $model->tecdoc_code = $model->item_cccfxreltdcode;
             $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
-            echo $model->reference . "<BR>";
+            //echo $model->reference . "<BR>";
             $model->save(false);
             
             if ($model->flat_data == "") {
@@ -106,10 +113,10 @@ class ProductController extends Controller {
             }
             
             $model->setFlat();
-            
+            $i++;
             //if ($i++>10) break;
-            
         }
+        echo $i;
     }
 
     public function actionIndex() {

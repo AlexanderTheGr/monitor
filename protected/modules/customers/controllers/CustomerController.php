@@ -58,7 +58,14 @@ class CustomerController extends Controller {
         $params["eav_model"];
         $params["model"];
         $softone = new Softone();
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
+        //$datas = $softone->retrieveData($params["softone_object"], $params["list"]);
+        
+        $sql = "Select max(ts) as t from customer";
+        $data = Yii::app()->db->createCommand($sql)->queryRow();
+        $date = date("Y-m-d",strtotime($data["t"]));
+        $filters = "CUSTOMER.UPDDATE=" . $date . "&CUSTOMER.UPDDATE_TO=" . date("Y-m-d");
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
+        /*
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
             $attribute = Attributes::model()->findByAttributes(array('identifier' => $field));
@@ -67,6 +74,8 @@ class CustomerController extends Controller {
                 $fld[$field] = $attributeitem->id;
             }
         }
+         * 
+         */
         foreach ($datas as $data) {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
