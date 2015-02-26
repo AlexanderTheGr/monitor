@@ -258,6 +258,9 @@ class OrderController extends Controller {
                 $orderitem->disc1prc = $_POST["value"];
                 $orderitem->lineval = $orderitem->price - ($orderitem->price * $orderitem->disc1prc / 100);
             }
+            if ($field == "chk") {
+                 $orderitem->chk = $_POST["value"];
+            }
 
             $orderitem->save(false);
         }
