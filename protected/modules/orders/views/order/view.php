@@ -16,7 +16,7 @@
         <button style="float:left" class="btn btn-primary">Απεσταλμένη</button>
     <?php endif; ?>
     <button class="btn return_to_main_<?php echo $model->className() ?>">Επιστροφή</button>
-    <button ref="<?php echo $model->id; ?>" class="btn calculateOrder return_to_main_<?php echo $model->className() ?>">Υπολογισμός Τιμολογιακής Πολιτικής</button>
+    <button ref="<?php echo $model->id; ?>" class="btn calculateOrder">Υπολογισμός Τιμολογιακής Πολιτικής</button>
 </div>
 
 <?php echo HtmlWidget::tabber($tabs); ?>

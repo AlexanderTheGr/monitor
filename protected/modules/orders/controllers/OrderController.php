@@ -667,7 +667,7 @@ class OrderController extends Controller {
             };
             //$dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "LINEVAL" => $item->lineval, "DISC1PRC" => $item->disc1prc, "QTY1" => $item->qty);
             foreach ((array) $out->data->ITELINES as $item) {
-                if ($item->chk == 1) {
+                //if ($item->chk == 1) {
                     $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
                     $orderitem = $this->model("OrderItem");
                     $orderitem->product = $product->id;
@@ -677,7 +677,7 @@ class OrderController extends Controller {
                     $orderitem->lineval = $item->LINEVAL;
                     $orderitem->disc1prc = $item->DISC1PRC;
                     $orderitem->save();
-                }
+                //}
             }
         } else {
             $objectArr = array();
@@ -708,7 +708,7 @@ class OrderController extends Controller {
             };
 
             foreach ($out->data->ITELINES as $item) {
-                if ($item->chk == 1) {
+                //if ($item->chk == 1) {
                     $product = Product::model()->load()->findByAttributes(array('reference' => $item->MTRL));
                     $orderitem = new OrderItem;
                     $orderitem->product = $product->id;
@@ -718,7 +718,7 @@ class OrderController extends Controller {
                     $orderitem->lineval = $item->LINEVAL;
                     $orderitem->disc1prc = $item->DISC1PRC;                    
                     $orderitem->save(false);
-                }
+                //}
             }
 
             if ($out->id > 0) {
