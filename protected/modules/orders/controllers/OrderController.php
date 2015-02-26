@@ -719,10 +719,10 @@ class OrderController extends Controller {
                     $orderitem->order = $model->id;
                     $orderitem->qty = $item->QTY1;
                     $orderitem->price = $item->PRICE;
-                    $orderitem->lineval = $item->LINEVAL/$item->QTY1;
-                    $orderitem->disc1prc = $item->DISC1PRC;  
+                    $orderitem->lineval = $item->LINEVAL / $item->QTY1;
+                    $orderitem->disc1prc = $item->DISC1PRC;
                     $orderitem->chk = 1;
-                    $orderitem->save(false);
+                    $orderitem->save();
                 //}
             }
 
