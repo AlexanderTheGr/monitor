@@ -507,8 +507,10 @@ class OrderController extends Controller {
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
             $jsonArr[] = $json;
-            if ($model->chk == 1)
+            if ($model->chk == 1)  {
                 $price += $model->lineval * $model->qty;
+                $qty += $model->qty;
+            }
         }
 
         if (count($jsonArr)) {
@@ -523,8 +525,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "";
-            $json[] = "";
+            $json[] = "Τέμαχια";
+            $json[] = $qty;
             $json[] = "Σύνολο";
             $json[] = $price;
             $jsonArr[] = $json;
@@ -764,7 +766,15 @@ class OrderController extends Controller {
             //$k = 9000001;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
-                    $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "LINEVAL" => $item->lineval, "DISC1PRC" => $item->disc1prc, "QTY1" => $item->qty);
+                    $dataOut["ITELINES"][] = array(
+                        "VAT" => 1310, 
+                        "LINENUM" => $k++, 
+                        "MTRL" => $item->_product_->reference, 
+                        "PRICE" => $item->price, 
+                        "LINEVAL" => $item->lineval, 
+                        "DISC1PRC" => $item->disc1prc, 
+                        "QTY1" => $item->qty
+                        );
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, $model->reference);
