@@ -713,7 +713,7 @@ class OrderController extends Controller {
 
             foreach ($out->data->ITELINES as $item) {
                 //if ($item->chk == 1) {
-                    $product = Product::model()->load()->findByAttributes(array('reference' => $item->MTRL));
+                    $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
                     $orderitem = new OrderItem;
                     $orderitem->product = $product->id;
                     $orderitem->order = $model->id;
