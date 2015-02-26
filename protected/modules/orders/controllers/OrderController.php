@@ -282,6 +282,8 @@ class OrderController extends Controller {
         $orderitem->order = $_POST["order"];
         $orderitem->qty = $_POST["qty"] > 0 ? $_POST["qty"] : 1;
         $orderitem->price = $_POST["price"];
+        $orderitem->disc1prc = $_POST["disc1prc"];
+        $orderitem->lineval = $_POST["lineval"];
         $orderitem->chk = 1;
         $orderitem->save(false);
     }
