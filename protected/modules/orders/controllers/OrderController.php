@@ -676,6 +676,7 @@ class OrderController extends Controller {
                     $orderitem->price = $item->PRICE;
                     $orderitem->lineval = $item->LINEVAL / $item->QTY1;
                     $orderitem->disc1prc = $item->DISC1PRC;
+                    $orderitem->chk = 1;
                     $orderitem->save();
                 //}
             }
@@ -716,7 +717,8 @@ class OrderController extends Controller {
                     $orderitem->qty = $item->QTY1;
                     $orderitem->price = $item->PRICE;
                     $orderitem->lineval = $item->LINEVAL/$item->QTY1;
-                    $orderitem->disc1prc = $item->DISC1PRC;                    
+                    $orderitem->disc1prc = $item->DISC1PRC;  
+                    $orderitem->chk = 1;
                     $orderitem->save(false);
                 //}
             }
