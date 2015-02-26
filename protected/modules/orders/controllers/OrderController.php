@@ -278,8 +278,16 @@ class OrderController extends Controller {
     }
 
     public function actionAddorderitem() {
-        //$order = $this->model("Order", $_POST["order"]);
+        $order = $this->model("Order", $_POST["order"]);
         //$order->addOrderItem($_POST["product"]);
+        
+        foreach ($order->_items_ as $item) {
+            if ($item->product == $_POST["product"]) {
+                $item->delete();
+                break;
+            }
+        };
+        
         $orderitem = $this->model("OrderItem");
         $orderitem->product = $_POST["product"];
         $orderitem->order = $_POST["order"];
@@ -525,8 +533,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Τέμαχια";
-            $json[] = $qty;
+            $json[] = "";
+            $json[] = "";
             $json[] = "Σύνολο";
             $json[] = $price;
             $jsonArr[] = $json;
