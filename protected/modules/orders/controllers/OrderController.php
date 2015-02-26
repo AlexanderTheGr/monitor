@@ -170,7 +170,7 @@ class OrderController extends Controller {
             $price = 0;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1) {
-                    $price += $item->price * $item->qty;
+                    $price += $item->lineval * $item->qty;
                 }
             }
 
