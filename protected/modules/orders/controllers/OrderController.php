@@ -539,8 +539,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Τεμ";
             $json[] = "";
+            $json[] = "Τέμάχια: ".$qty;
             $json[] = "Σύνολο";
             $json[] = $price;
             $json[] = round($price*1.23,2);
