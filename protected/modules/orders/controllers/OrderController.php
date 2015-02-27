@@ -516,7 +516,7 @@ class OrderController extends Controller {
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
             $json[] = $model->lineval * $model->qty;
-            $json[] = $model->lineval * $model->qty * 1.23;
+            $json[] = round($model->lineval * $model->qty * 1.23,2);
 
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
@@ -543,7 +543,7 @@ class OrderController extends Controller {
             $json[] = $qty;
             $json[] = "Σύνολο";
             $json[] = $price;
-            $json[] = $price*1.23;
+            $json[] = round($price*1.23,2);
             $jsonArr[] = $json;
 
             $json = array();
@@ -579,7 +579,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "Τελικό Σύνολο";
             $json[] = $price * (1 - ($model->_order_->disc1prc / 100));
-            $json[] = $price * (1 - ($model->_order_->disc1prc / 100))*1.23;
+            $json[] = round($price * (1 - ($model->_order_->disc1prc / 100))*1.23,2);
             $jsonArr[] = $json;
         }
         $this->bAddnewpos = "''";
