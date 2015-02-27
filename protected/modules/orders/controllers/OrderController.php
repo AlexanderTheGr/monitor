@@ -380,6 +380,11 @@ class OrderController extends Controller {
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
+        $this->addColumn(array(
+            "label" => $this->translate("Σύνολο (ΦΠΑ)"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        );        
         //$this->useServerSide = true;
 
         $this->renderPartial('orderitems', array("order" => $id, "model" => $model));
@@ -511,6 +516,7 @@ class OrderController extends Controller {
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
             $json[] = $model->lineval * $model->qty;
+            $json[] = round($model->lineval * $model->qty * 1.23,2);
 
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
@@ -537,6 +543,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "Σύνολο";
             $json[] = $price;
+            $json[] = round($price*1.23,2);
             $jsonArr[] = $json;
 
             $json = array();
@@ -553,7 +560,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "Εκπτωση";
-            $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:100px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
+            $json[] = "<input  " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:50px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
+            $json[] = "";
             $jsonArr[] = $json;
 
             $json = array();
@@ -571,6 +579,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "Τελικό Σύνολο";
             $json[] = $price * (1 - ($model->_order_->disc1prc / 100));
+            $json[] = round($price * (1 - ($model->_order_->disc1prc / 100))*1.23,2);
             $jsonArr[] = $json;
         }
         $this->bAddnewpos = "''";
