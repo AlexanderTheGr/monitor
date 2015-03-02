@@ -61,13 +61,13 @@ class Product extends Eav {
         // will receive user inputs.
         
         return array(
-            array('reference, catalogue, erp_code, tecdoc_code, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search', 'required'),
+            array('reference, catalogue, erp_code, tecdoc_code, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search, gnisia', 'required'),
             array('reference, catalogue, tecdoc_supplier_id, tecdoc_generic_article_id, item_cccfxrelbrand, item_vat, item_mtrunit1, item_mtrl_itemtrdata_qty1, updated, actioneer', 'numerical', 'integerOnly' => true),
             array('erp_code, tecdoc_code, supplier_code, erp_supplier, tecdoc_article_name, item_cccfxreltdcode, item_cccfxcode1, item_mtrmanfctr, item_name1, item_name, item_code', 'length', 'max' => 255),
             array('disc1prc, item_pricer, item_pricew,item_pricer02, item_pricer01, item_pricew02, item_pricew01', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, catalogue, erp_code, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search', 'safe', 'on' => 'search'),
+            array('id, reference, catalogue, erp_code, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search,gnisia', 'safe', 'on' => 'search'),
         );
     }
 
@@ -127,6 +127,7 @@ class Product extends Eav {
             'modified' => 'Modified',
             'flat_data' => 'Flat Data',
             'search' => 'Search',
+            'gnisia' => 'Gnisia',
         );
     }
 
@@ -184,6 +185,7 @@ class Product extends Eav {
         $criteria->compare('modified', $this->modified, true);
         $criteria->compare('flat_data', $this->flat_data, true);
         $criteria->compare('search', $this->search, true);
+        $criteria->compare('gnisia', $this->gnisia, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
