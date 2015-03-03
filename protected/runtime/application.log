@@ -37421,3 +37421,12 @@ Stack trace:
 REQUEST_URI=/developing/monitor/style/chosen-sprite.png
 HTTP_REFERER=http://192.168.1.105/developing/monitor/style/chosen.min.css
 ---
+2015/03/03 13:22:23 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "style/chosen-sprite.png".' in C:\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\framework\web\CWebApplication.php(141): CWebApplication->runController('style/chosen-sp...')
+#1 C:\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\developing\monitor\index.php(14): CApplication->run()
+#3 {main}
+REQUEST_URI=/developing/monitor/style/chosen-sprite.png
+HTTP_REFERER=http://192.168.1.105/developing/monitor/style/chosen.min.css
+---

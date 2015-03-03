@@ -822,7 +822,7 @@ class OrderController extends Controller {
                 $model->save();
             }
 
-            //print_r($out);
+            print_r($out);
         }
     }
 
