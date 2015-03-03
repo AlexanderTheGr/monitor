@@ -283,7 +283,7 @@ class ProductController extends Controller {
     }
 
     public function actionfororderajaxjson() {
-
+        
         $products = array();
         $order = $this->model("Order", $_POST["order"]);
         if ($_POST["articleIds"]) {
@@ -296,33 +296,29 @@ class ProductController extends Controller {
                 $products[] = $this->loadModel($data["id"]);
             }
         } else {
+            
+            
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
             if (count($articleIds)) {
-                $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
+                $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
                 foreach ($datas as $data) {
                     $products[] = $this->loadModel($data["id"]);
                 }
             }
+            
+          
             if ($_POST["terms"]) {
-                $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
-                //echo $sql;                
+                $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";     
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                foreach ($datas as $data) {
+                foreach ((array)$datas as $data) {
                     $product = $this->loadModel($data["id"]);
                     $products[$data["id"]] = $product;
-                    /*
-                      $sql = "Select id, flat_data from product where gnisia LIKE '%" . $product->gnisia . "%'   limit 0,100";
-                      $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
-                      foreach ($datas2 as $data2) {
-                      $product = $this->loadModel($data2["id"]);
-                      $products[$data2["id"]] = $product;
-                      }
-                     * 
-                     */
+
                 }
             }
         }
+        return;
         $softone = new Softone();
         foreach ($order->_items_ as $item) {
             $items[] = $item->product;
@@ -351,7 +347,6 @@ class ProductController extends Controller {
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
-
 
         foreach ($datas as $data) {
             $ordertoday = $this->model("Order", $data["id"]);
