@@ -264,7 +264,9 @@ class OrderController extends Controller {
             if ($field == "chk") {
                 $orderitem->chk = $_POST["value"];
             }
-
+            if ($field == "qty") {
+                $orderitem->qty = $_POST["value"];
+            }
             $orderitem->save(false);
         }
     }
