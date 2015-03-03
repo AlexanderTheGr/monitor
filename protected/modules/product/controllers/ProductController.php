@@ -309,7 +309,7 @@ class ProductController extends Controller {
             }
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
-            echo '<b>Execution Time:</b> '.$execution_time."<BR>";
+            //echo '<b>Execution Time:</b> '.$execution_time."<BR>";
             
             
             $time_start = microtime(true);
@@ -329,7 +329,7 @@ class ProductController extends Controller {
             $execution_time = ($time_end - $time_start);
             
             
-            echo '<b>Execution Time:</b> '.$execution_time."<BR>";               
+            //echo '<b>Execution Time:</b> '.$execution_time."<BR>";               
         }
         $time_start = microtime(true);
         $softone = new Softone();
@@ -371,7 +371,7 @@ class ProductController extends Controller {
         
         $time_end = microtime(true);
         $execution_time = ($time_end - $time_start);
-        echo '<b>Execution Time:</b> '.$execution_time."<BR>";   
+        //echo '<b>Execution Time:</b> '.$execution_time."<BR>";   
         $time_start = microtime(true);
         
         echo "<table class='fororder display'>";
@@ -420,8 +420,8 @@ class ProductController extends Controller {
         $time_end_tot = microtime(true);
         $execution_time = ($time_end - $time_start);
         $execution_time_tot = ($time_end_tot - $time_start_tot);
-        echo '<b>Execution Time:</b> '.$execution_time."<BR>"; 
-        echo '<b>Total Execution Time:</b> '.$execution_time_tot."<BR>"; 
+        //echo '<b>Execution Time:</b> '.$execution_time."<BR>"; 
+        echo '<BR><b>Total Execution Time:</b> '.$execution_time_tot."<BR>"; 
         
     }
 
