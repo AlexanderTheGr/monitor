@@ -310,7 +310,7 @@ class ProductController extends Controller {
              
              
             
-            if (count($products) == 0) {
+            //if (count($products) == 0) {
                 if ($_POST["terms"]) {
                     $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%'";     
                     $datas = Yii::app()->db->createCommand($sql)->queryAll();
@@ -320,7 +320,7 @@ class ProductController extends Controller {
 
                     }
                 }
-            }
+            //}
             
         }
         //return;
