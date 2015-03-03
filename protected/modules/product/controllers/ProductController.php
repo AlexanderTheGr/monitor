@@ -318,7 +318,7 @@ class ProductController extends Controller {
                 }
             }
         }
-        return;
+
         $softone = new Softone();
         foreach ($order->_items_ as $item) {
             $items[] = $item->product;
