@@ -119,8 +119,7 @@
                     <div class="span4">
                         <!-- Logo. -->
                         <div class="logo" style="text-aling:center">
-                            <img src="<?php echo Yii::app()->request->baseUrl?>/img/FASTWEB-LOGO-rgb1.png"/>
-                            <div style="font-size:20px; text-aling:center;">Parts Box</div>
+                            <img src="<?php echo Yii::app()->request->baseUrl?>/img/Partsbox logo final-02.png"/>
                         </div>
                         <!-- Logo ends -->
                     </div>
