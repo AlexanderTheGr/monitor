@@ -290,10 +290,12 @@ class ProductController extends Controller {
             $articleIds = unserialize($_POST["articleIds"]);
         };
         if (count($articleIds)) {
-            $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
+            //$sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
+            $sql = "Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . ")";
+
             $datas = Yii::app()->db->createCommand($sql)->queryAll();
             foreach ($datas as $data) {
-                $products[] = $this->loadModel($data["id"]);
+                $products[] = $this->loadModel($data["product"]);
             }
         } else {
 
