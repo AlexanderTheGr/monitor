@@ -298,7 +298,7 @@ class ProductController extends Controller {
         } else {
             
             
-            
+            $time_start = microtime(true);
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
             if (count($articleIds)) {
                 $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
@@ -307,7 +307,12 @@ class ProductController extends Controller {
                     $products[] = $this->loadModel($data["id"]);
                 }
             }
+            $time_end = microtime(true);
+            $execution_time = ($time_end - $time_start);
+            echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";
             
+            
+            $time_start = microtime(true);
             //if (count($products) == 0) {
                 if ($_POST["terms"]) {
                     $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";     
@@ -320,8 +325,11 @@ class ProductController extends Controller {
                 }
             //}
             
+            $time_end = microtime(true);
+            $execution_time = ($time_end - $time_start);
+            echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";               
         }
-        //return;
+        $time_start = microtime(true);
         $softone = new Softone();
         foreach ($order->_items_ as $item) {
             $items[] = $item->product;
@@ -358,6 +366,12 @@ class ProductController extends Controller {
                     $itemstoday[$item->product][$ordertoday->id] = "<a href='" . Yii::app()->request->baseUrl . "/orders/order/" . $ordertoday->id . "'>" . $ordertoday->id . "</a>";
             }
         }
+        
+        $time_end = microtime(true);
+        $execution_time = ($time_end - $time_start);
+        echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";   
+        $time_start = microtime(true);
+        
         echo "<table class='fororder display'>";
         echo "<thead><tr>";
         echo "<th></th>";
@@ -399,6 +413,11 @@ class ProductController extends Controller {
             echo "</tr>";
         }
         echo "</tbody></table>";
+        
+        $time_end = microtime(true);
+        $execution_time = ($time_end - $time_start);
+        echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";   
+        
     }
 
     public function actionAjaxJson() {
