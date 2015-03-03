@@ -226,6 +226,10 @@ class Product extends Eav {
 
         $flat["attributeitems"] = $this->attributeitems;
         unset($flat["flat_data"]);
+        
+        $sql = "replace product_search set id = '".$this->id."', item_code = '".$this->item_code."', search = '".$this->search."', gnisia = '".$this->gnisia."'";
+        Yii::app()->db->createCommand($sql)->execute();
+        
         $flat["media"] = $this->media();
         $this->media = $this->media();
         $flat["_tecdocSupplier_"]["supplier"] = $this->_tecdocSupplier_->supplier;

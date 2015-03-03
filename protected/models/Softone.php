@@ -22,12 +22,15 @@ class Softone {
     }
 
     function login() {
+        
         if ($_SESSION["logindata"]) {
             //print_r($_SESSION["logindata"]);
             $data = $_SESSION["logindata"];
             $this->loginClientID = $data->clientID;
             return $data;  
         }
+        
+ 
         $params = array(
             "service" => "login",
             'username' => $this->username,
@@ -40,12 +43,14 @@ class Softone {
     }
 
     function authenticate($data) {
+        
         if ($_SESSION["authenticatedata"]) {
             //print_r($_SESSION["authenticatedata"]);
             $data = $_SESSION["authenticatedata"];
             $this->authenticateClientID = $data->clientID;
             return $data;
         }
+
 
         $this->loginClientID = $data->clientID;
         $params = array(
