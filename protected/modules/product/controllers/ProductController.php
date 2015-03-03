@@ -298,6 +298,7 @@ class ProductController extends Controller {
         } else {
             
             
+            
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
             if (count($articleIds)) {
                 $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
@@ -306,19 +307,23 @@ class ProductController extends Controller {
                     $products[] = $this->loadModel($data["id"]);
                 }
             }
+             
+             
             
-          
-            if ($_POST["terms"]) {
-                $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";     
-                $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                foreach ((array)$datas as $data) {
-                    $product = $this->loadModel($data["id"]);
-                    $products[$data["id"]] = $product;
+            if (count($products) == 0) {
+                if ($_POST["terms"]) {
+                    $sql = "Select id, flat_data from product where item_code LIKE '%" . $_POST["terms"] . "%'";     
+                    $datas = Yii::app()->db->createCommand($sql)->queryAll();
+                    foreach ((array)$datas as $data) {
+                        $product = $this->loadModel($data["id"]);
+                        $products[$data["id"]] = $product;
 
+                    }
                 }
             }
+            
         }
-
+        //return;
         $softone = new Softone();
         foreach ($order->_items_ as $item) {
             $items[] = $item->product;
