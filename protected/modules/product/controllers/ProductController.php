@@ -391,7 +391,7 @@ class ProductController extends Controller {
         foreach ((array) $out->data->ITELINES as $item) {
             echo "<tr price='" . $item->PRICE . "' class='productitem' ref='" . $product->id . "'>";
             $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
-            $product = $this->model("Product", $product->id);
+            //$product = $this->model("Product", $product->id);
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
             echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
