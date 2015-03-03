@@ -286,6 +286,7 @@ class OrderController extends Controller {
 
         foreach ($order->_items_ as $item) {
             if ($item->product == $_POST["product"]) {
+                $qty = $item->qty;
                 $item->delete();
                 break;
             }
@@ -294,7 +295,7 @@ class OrderController extends Controller {
         $orderitem = $this->model("OrderItem");
         $orderitem->product = $_POST["product"];
         $orderitem->order = $_POST["order"];
-        $orderitem->qty = $_POST["qty"] > 0 ? $_POST["qty"] : 1;
+        $orderitem->qty = $_POST["qty"] > 0 ? $_POST["qty"]+$qty : 1;
         $orderitem->price = $_POST["price"];
         $orderitem->disc1prc = $_POST["disc1prc"];
         $orderitem->lineval = $_POST["lineval"];
