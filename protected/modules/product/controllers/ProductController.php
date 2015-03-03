@@ -283,7 +283,7 @@ class ProductController extends Controller {
     }
 
     public function actionfororderajaxjson() {
-        
+        $time_start_tot = microtime(true);
         $products = array();
         $order = $this->model("Order", $_POST["order"]);
         if ($_POST["articleIds"]) {
@@ -309,7 +309,7 @@ class ProductController extends Controller {
             }
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
-            echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";
+            echo '<b>Execution Time:</b> '.$execution_time."<BR>";
             
             
             $time_start = microtime(true);
@@ -327,7 +327,9 @@ class ProductController extends Controller {
             
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
-            echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";               
+            
+            
+            echo '<b>Execution Time:</b> '.$execution_time."<BR>";               
         }
         $time_start = microtime(true);
         $softone = new Softone();
@@ -369,7 +371,7 @@ class ProductController extends Controller {
         
         $time_end = microtime(true);
         $execution_time = ($time_end - $time_start);
-        echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";   
+        echo '<b>Execution Time:</b> '.$execution_time."<BR>";   
         $time_start = microtime(true);
         
         echo "<table class='fororder display'>";
@@ -415,8 +417,11 @@ class ProductController extends Controller {
         echo "</tbody></table>";
         
         $time_end = microtime(true);
+        $time_end_tot = microtime(true);
         $execution_time = ($time_end - $time_start);
-        echo '<b>Total Execution Time:</b> '.$execution_time."<BR>";   
+        $execution_time_tot = ($time_end_tot - $time_start_tot);
+        echo '<b>Execution Time:</b> '.$execution_time."<BR>"; 
+        echo '<b>Total Execution Time:</b> '.$execution_time_tot."<BR>"; 
         
     }
 
