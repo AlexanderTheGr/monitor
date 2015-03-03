@@ -296,10 +296,12 @@ class ProductController extends Controller {
                 $products[] = $this->loadModel($data["id"]);
             }
         } else {
-            
-            
+
+
             $time_start = microtime(true);
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
+            //print_r($articleIds);
+            
             if (count($articleIds)) {
                 $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
@@ -307,28 +309,28 @@ class ProductController extends Controller {
                     $products[] = $this->loadModel($data["id"]);
                 }
             }
+       
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
             //echo '<b>Execution Time:</b> '.$execution_time."<BR>";
-            
-            
+
+
             $time_start = microtime(true);
             //if (count($products) == 0) {
-                if ($_POST["terms"]) {
-                    $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";     
-                    $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                    foreach ((array)$datas as $data) {
-                        $product = $this->loadModel($data["id"]);
-                        $products[$data["id"]] = $product;
-
-                    }
+            if ($_POST["terms"]) {
+                $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
+                $datas = Yii::app()->db->createCommand($sql)->queryAll();
+                foreach ((array) $datas as $data) {
+                    $product = $this->loadModel($data["id"]);
+                    $products[$data["id"]] = $product;
                 }
+            }
             //}
-            
+
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
-            
-            
+
+
             //echo '<b>Execution Time:</b> '.$execution_time."<BR>";               
         }
         $time_start = microtime(true);
@@ -368,12 +370,12 @@ class ProductController extends Controller {
                     $itemstoday[$item->product][$ordertoday->id] = "<a href='" . Yii::app()->request->baseUrl . "/orders/order/" . $ordertoday->id . "'>" . $ordertoday->id . "</a>";
             }
         }
-        
+
         $time_end = microtime(true);
         $execution_time = ($time_end - $time_start);
         //echo '<b>Execution Time:</b> '.$execution_time."<BR>";   
         $time_start = microtime(true);
-        
+
         echo "<table class='fororder display'>";
         echo "<thead><tr>";
         echo "<th></th>";
@@ -415,14 +417,13 @@ class ProductController extends Controller {
             echo "</tr>";
         }
         echo "</tbody></table>";
-        
+
         $time_end = microtime(true);
         $time_end_tot = microtime(true);
         $execution_time = ($time_end - $time_start);
         $execution_time_tot = ($time_end_tot - $time_start_tot);
         //echo '<b>Execution Time:</b> '.$execution_time."<BR>"; 
-        echo '<BR><b>Total Execution Time:</b> '.$execution_time_tot."<BR>"; 
-        
+        echo '<BR><b>Total Execution Time:</b> ' . $execution_time_tot . "<BR>";
     }
 
     public function actionAjaxJson() {
@@ -598,17 +599,17 @@ class ProductController extends Controller {
         $searchArr = explode("|", $model->search);
 
 
-        
-        
-        
+
+
+
         $model->gnisia = str_replace("\n", "|", $model->gnisia);
         $gnisiaArr = explode("|", $model->gnisia);
         foreach ($gnisiaArr as $gnisia) {
             if ($gnisia != "") {
-                $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";  
+                $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
                 foreach ($datas as $data) {
-                    if ($data["id"] != $model->id ) {
+                    if ($data["id"] != $model->id) {
                         $submodel = $this->model("Product", $data["id"]);
                         if (!in_array($submodel->item_code, $searchArr)) {
                             $searchArr[] = $submodel->item_code;
@@ -618,7 +619,7 @@ class ProductController extends Controller {
                 }
             }
         }
-        
+
         foreach ($searchArr as $search) {
             $submodel = Product::model()->findByAttributes(array('item_code' => $search));
             if ($submodel->id > 0) {
@@ -633,7 +634,7 @@ class ProductController extends Controller {
         }
 
 
-        
+
 
         $model->save();
 
@@ -732,24 +733,29 @@ class ProductController extends Controller {
     }
 
     public function getArticlesSearch($search) {
-        $url = "http://service.fastwebltd.com/";
-        $fields = array(
-            'action' => 'getSearch',
-            'search' => $search
-        );
+        if (file_exists(Yii::app()->params['root'] . "cache/terms/" . md5($search) . ".term")) {
+            $data = file_get_contents(Yii::app()->params['root'] . "cache/terms/" . md5($search) . ".term");
+            return $data;
+        } else {
+            $url = "http://service.fastwebltd.com/";
+            $fields = array(
+                'action' => 'getSearch',
+                'search' => $search
+            );
 
-        foreach ($fields as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
+            foreach ($fields as $key => $value) {
+                $fields_string .= $key . '=' . $value . '&';
+            }
+            rtrim($fields_string, '&');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, count($fields));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            $data = curl_exec($ch);
+            file_put_contents(Yii::app()->params['root'] . "cache/terms/" . md5($search) . ".term", $data);
+            return $data;
         }
-        rtrim($fields_string, '&');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        $data = curl_exec($ch);
-
-        return $data;
     }
 
     function getArticlesIds2($articleids) {
