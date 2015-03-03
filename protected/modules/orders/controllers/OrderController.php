@@ -157,7 +157,7 @@ class OrderController extends Controller {
         else
             $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "'";
 
-        $user = $this->loadModel(Yii::app()->user->id);
+        //$user = $this->loadModel(Yii::app()->user->id);
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
         $jsonArr = array();
@@ -165,12 +165,20 @@ class OrderController extends Controller {
         foreach ((array) $datas as $data) {
 
             $model = $this->loadModel($data["id"]);
-            $customer = $this->model("Customer", $model->customer);
-            $user = $this->model("User", $model->user);
+
+            if (!$customer[$model->customer])
+                $customer[$model->customer] = $this->model("Customer", $model->customer);
+
+            if (!$user[$model->user])
+                $user[$model->user] = $this->model("User", $model->user);
+
             $price = 0;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1) {
                     $price += $item->lineval * $item->qty;
+                }
+                if ($item->chk == 0) {
+                    $imitelis = 1;
                 }
             }
 
@@ -178,18 +186,13 @@ class OrderController extends Controller {
             $fields = array();
             $json[] = $model->insdate;
             $json[] = $model->fincode;
-            $json[] = $customer->customer_name;
-            $json[] = $user->email;
+            $json[] = $customer[$model->customer]->customer_name;
+            $json[] = $user[$model->user]->email;
             $json[] = $price;
 
             $json[] = $model->reference ? "ΝΑΙ" : "OXI";
             $imitelis = 0;
-            foreach ($model->_items_ as $item) {
-                if ($item->chk == 0) {
-                    $imitelis = 1;
-                    break;
-                }
-            }
+
 
             $json[] = $imitelis ? "ΝΑΙ" : "OXI";
 
@@ -259,7 +262,7 @@ class OrderController extends Controller {
                 $orderitem->lineval = $orderitem->price - ($orderitem->price * $orderitem->disc1prc / 100);
             }
             if ($field == "chk") {
-                 $orderitem->chk = $_POST["value"];
+                $orderitem->chk = $_POST["value"];
             }
 
             $orderitem->save(false);
@@ -280,14 +283,14 @@ class OrderController extends Controller {
     public function actionAddorderitem() {
         $order = $this->model("Order", $_POST["order"]);
         //$order->addOrderItem($_POST["product"]);
-        
+
         foreach ($order->_items_ as $item) {
             if ($item->product == $_POST["product"]) {
                 $item->delete();
                 break;
             }
         };
-        
+
         $orderitem = $this->model("OrderItem");
         $orderitem->product = $_POST["product"];
         $orderitem->order = $_POST["order"];
@@ -384,7 +387,7 @@ class OrderController extends Controller {
             "label" => $this->translate("Σύνολο (ΦΠΑ)"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
-        );        
+        );
         //$this->useServerSide = true;
 
         $this->renderPartial('orderitems', array("order" => $id, "model" => $model));
@@ -455,9 +458,6 @@ class OrderController extends Controller {
         ));
     }
 
-
-
-
     public function actionOrderitemsAjaxJson($id) {
 
         $_POST["iDisplayLength"];
@@ -490,7 +490,7 @@ class OrderController extends Controller {
 
             $json = array();
             $fields = array();
-            $json[] = "<img class='product_info' ref='".$product->id."' width=100 src='" . $product->media() . "' />";
+            $json[] = "<img class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' />";
 
             if ($model->chk == 1) {
                 $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
@@ -516,12 +516,12 @@ class OrderController extends Controller {
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
             $json[] = $model->lineval * $model->qty;
-            $json[] = round($model->lineval * $model->qty * 1.23,2);
+            $json[] = round($model->lineval * $model->qty * 1.23, 2);
 
             $json["DT_RowId"] = 'orderitem_' . $model->id;
             $json["DT_RowClass"] = '';
             $jsonArr[] = $json;
-            if ($model->chk == 1)  {
+            if ($model->chk == 1) {
                 $price += $model->lineval * $model->qty;
                 $qty += $model->qty;
             }
@@ -540,10 +540,10 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Τέμάχια: ".$qty;
+            $json[] = "Τέμάχια: " . $qty;
             $json[] = "Σύνολο";
             $json[] = $price;
-            $json[] = round($price*1.23,2);
+            $json[] = round($price * 1.23, 2);
             $jsonArr[] = $json;
 
             $json = array();
@@ -579,7 +579,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "Τελικό Σύνολο";
             $json[] = $price * (1 - ($model->_order_->disc1prc / 100));
-            $json[] = round($price * (1 - ($model->_order_->disc1prc / 100))*1.23,2);
+            $json[] = round($price * (1 - ($model->_order_->disc1prc / 100)) * 1.23, 2);
             $jsonArr[] = $json;
         }
         $this->bAddnewpos = "''";
@@ -690,16 +690,16 @@ class OrderController extends Controller {
             //$dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "LINEVAL" => $item->lineval, "DISC1PRC" => $item->disc1prc, "QTY1" => $item->qty);
             foreach ((array) $out->data->ITELINES as $item) {
                 //if ($item->chk == 1) {
-                    $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
-                    $orderitem = $this->model("OrderItem");
-                    $orderitem->product = $product->id;
-                    $orderitem->order = $model->id;
-                    $orderitem->qty = $item->QTY1;
-                    $orderitem->price = $item->PRICE;
-                    $orderitem->lineval = $item->LINEVAL / $item->QTY1;
-                    $orderitem->disc1prc = $item->DISC1PRC;
-                    $orderitem->chk = 1;
-                    $orderitem->save();
+                $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
+                $orderitem = $this->model("OrderItem");
+                $orderitem->product = $product->id;
+                $orderitem->order = $model->id;
+                $orderitem->qty = $item->QTY1;
+                $orderitem->price = $item->PRICE;
+                $orderitem->lineval = $item->LINEVAL / $item->QTY1;
+                $orderitem->disc1prc = $item->DISC1PRC;
+                $orderitem->chk = 1;
+                $orderitem->save();
                 //}
             }
         } else {
@@ -732,16 +732,16 @@ class OrderController extends Controller {
 
             foreach ($out->data->ITELINES as $item) {
                 //if ($item->chk == 1) {
-                    $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
-                    $orderitem = $this->model("OrderItem");
-                    $orderitem->product = $product->id;
-                    $orderitem->order = $model->id;
-                    $orderitem->qty = $item->QTY1;
-                    $orderitem->price = $item->PRICE;
-                    $orderitem->lineval = $item->LINEVAL / $item->QTY1;
-                    $orderitem->disc1prc = $item->DISC1PRC;
-                    $orderitem->chk = 1;
-                    $orderitem->save();
+                $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
+                $orderitem = $this->model("OrderItem");
+                $orderitem->product = $product->id;
+                $orderitem->order = $model->id;
+                $orderitem->qty = $item->QTY1;
+                $orderitem->price = $item->PRICE;
+                $orderitem->lineval = $item->LINEVAL / $item->QTY1;
+                $orderitem->disc1prc = $item->DISC1PRC;
+                $orderitem->chk = 1;
+                $orderitem->save();
                 //}
             }
 
@@ -784,14 +784,14 @@ class OrderController extends Controller {
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
                     $dataOut["ITELINES"][] = array(
-                        "VAT" => 1310, 
-                        "LINENUM" => $k++, 
-                        "MTRL" => $item->_product_->reference, 
-                        "PRICE" => $item->price, 
-                        "LINEVAL" => $item->lineval, 
-                        "DISC1PRC" => $item->disc1prc, 
+                        "VAT" => 1310,
+                        "LINENUM" => $k++,
+                        "MTRL" => $item->_product_->reference,
+                        "PRICE" => $item->price,
+                        "LINEVAL" => $item->lineval,
+                        "DISC1PRC" => $item->disc1prc,
                         "QTY1" => $item->qty
-                        );
+                    );
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, $model->reference);
