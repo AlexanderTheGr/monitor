@@ -395,7 +395,7 @@ class ProductController extends Controller {
         echo "<th></th></tr></thead>";
         echo "<tbody>";
         foreach ((array) $out->data->ITELINES as $item) {
-            echo "<tr price='" . $item->PRICE . "' class='productitem' ref='" . $product->id . "'>";
+            echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='".$item->MTRL."' ref='" . $product->id . "'>";
             $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
             //$product = $this->model("Product", $product->id);
             $i++;
