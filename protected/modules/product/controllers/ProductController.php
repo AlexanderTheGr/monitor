@@ -396,8 +396,10 @@ class ProductController extends Controller {
         echo "<tbody>";
         foreach ((array) $out->data->ITELINES as $item) {
             echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='".$item->MTRL."' ref='" . $product->id . "'>";
-            $product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
-            //$product = $this->model("Product", $product->id);
+            $sql = "Select id from product where reference = '".$item->MTRL."'";
+            $data = Yii::app()->db->createCommand($sql)->queryRow();
+            //$product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
+            $product = $this->model("Product", $data["id"]);
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
             echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";

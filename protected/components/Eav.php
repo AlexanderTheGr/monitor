@@ -506,6 +506,7 @@ class Eav extends CActiveRecord {
             if ($this->model->hasAttribute("created"))
                 $this->model->created = date('Y-m-d H:i:s');
         }
+        
         if ($this->model->hasAttribute("actioneer"))
             $this->model->actioneer = Yii::app()->user->id;
         if ($this->model->hasAttribute("modified"))
