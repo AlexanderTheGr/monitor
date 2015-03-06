@@ -675,7 +675,7 @@ class OrderController extends Controller {
             $objectArr[0]["TRDR"] = $model->_customer_->reference;
             $objectArr[0]["SERIESNUM"] = $model->seriesnum;
             $objectArr[0]["FINCODE"] = $model->fincode;
-            $objectArr[0]["PAYMENT"] = 1000;
+            $objectArr[0]["PAYMENT"] = $model->_customer_->customer_payment == 0 ? 1000 : $model->_customer_->customer_payment;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
             $objectArr[0]["SERIES"] = 7023; //$model->series;
@@ -713,7 +713,7 @@ class OrderController extends Controller {
             $objectArr[0]["TRDR"] = $model->_customer_->reference;
             $objectArr[0]["SERIESNUM"] = $model->seriesnum;
             $objectArr[0]["FINCODE"] = $model->fincode;
-            $objectArr[0]["PAYMENT"] = 1000;
+            $objectArr[0]["PAYMENT"] = $model->_customer_->customer_payment == 0 ? 1000 : $model->_customer_->customer_payment;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
             $objectArr[0]["SERIES"] = 7023; //$model->series;
@@ -778,7 +778,7 @@ class OrderController extends Controller {
             $objectArr[0]["TRDR"] = $model->_customer_->reference;
             $objectArr[0]["SERIESNUM"] = $model->seriesnum;
             $objectArr[0]["FINCODE"] = $model->fincode;
-            $objectArr[0]["PAYMENT"] = 1000;
+            $objectArr[0]["PAYMENT"] = $model->_customer_->customer_payment == 0 ? 1000 : $model->_customer_->customer_payment;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
             $objectArr[0]["SERIES"] = 7021; //$model->series;
@@ -800,14 +800,14 @@ class OrderController extends Controller {
                     );
             }
             print_r($dataOut);
-            $out = $softone->setData((array) $dataOut, $object, $model->reference);
-            print_r($out);
+            //$out = $softone->setData((array) $dataOut, $object, $model->reference);
+            //print_r($out);
         } else {
             $objectArr = array();
             $objectArr[0]["TRDR"] = $model->_customer_->reference;
             $objectArr[0]["SERIESNUM"] = $model->seriesnum;
             $objectArr[0]["FINCODE"] = $model->fincode;
-            $objectArr[0]["PAYMENT"] = 1000;
+            $objectArr[0]["PAYMENT"] = $model->_customer_->customer_payment == 0 ? 1000 : $model->_customer_->customer_payment;
             //$objectArr[0]["TFPRMS"] = $model->tfprms;
             //$objectArr[0]["FPRMS"] = $model->fprms;
             $objectArr[0]["SERIES"] = 7021; //$model->series;
@@ -821,14 +821,14 @@ class OrderController extends Controller {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $item->_product_->reference, "PRICE" => $item->price, "LINEVAL" => $item->lineval, "DISC1PRC" => $item->disc1prc, "QTY1" => $item->qty);
             }
             print_r($dataOut);
-            $out = $softone->setData((array) $dataOut, $object, (int) 0);
+            //$out = $softone->setData((array) $dataOut, $object, (int) 0);
 
             if ($out->id > 0) {
                 $model->reference = $out->id;
                 $model->save();
             }
 
-            print_r($out);
+            //print_r($out);
         }
     }
 
