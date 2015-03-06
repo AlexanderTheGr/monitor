@@ -519,7 +519,7 @@ class OrderController extends Controller {
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='disc1prc' class='orderitem disc1prc' value='" . $model->disc1prc . "'/>";
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='lineval' class='orderitem lineval' value='" . $model->lineval . "'/>";
 
-            $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            $json[] = "<input disabled " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
             $json[] = $model->lineval * $model->qty;
             $json[] = round($model->lineval * $model->qty * 1.23, 2);

@@ -48,7 +48,7 @@ class CustomerController extends Controller {
     }
 
     public function actionRetrievesoftonedata() {
-        $params = array("softone_object" => "CUSTOMER", "eav_model" => "customer", "model" => "Customer", "list" => "customer_parts");
+        $params = array("softone_object" => "CUSTOMER", "eav_model" => "customer", "model" => "Customer", "list" => "monitor");
         $this->retrieveSoftoneData($params);
     }
 
@@ -64,7 +64,7 @@ class CustomerController extends Controller {
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d",strtotime($data["t"]));
         $filters = "CUSTOMER.UPDDATE=" . $date . "&CUSTOMER.UPDDATE_TO=" . date("Y-m-d");
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
         /*
         $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
         foreach ($fields as $field) {
@@ -76,6 +76,7 @@ class CustomerController extends Controller {
         }
          * 
          */
+
         foreach ($datas as $data) {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);

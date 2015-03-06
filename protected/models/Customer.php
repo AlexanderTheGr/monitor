@@ -56,7 +56,7 @@ class Customer extends Eav {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('reference, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, ts, created, modified, flat_data', 'required'),
+            array('reference, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, created, modified, flat_data', 'required'),
             array('reference, customer_afm, customer_zip, actioneer', 'numerical', 'integerOnly'=>true),
             array('email, username', 'length', 'max'=>45),
             array('password', 'length', 'max'=>80),
@@ -64,7 +64,7 @@ class Customer extends Eav {
             array('status', 'length', 'max'=>8),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, email, username, password, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, ts, status, actioneer, created, modified, flat_data', 'safe', 'on'=>'search'),
+            array('id, reference, email, username, password, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, status, actioneer, created, modified, flat_data', 'safe', 'on'=>'search'),
         );
     }
 
@@ -101,6 +101,7 @@ class Customer extends Eav {
             'customer_fax' => 'Customer Fax',
             'customer_webpage' => 'Customer Webpage',
             'customer_email' => 'Customer Email',
+            'customer_payment' => 'Customer Payment',
             'ts' => 'Ts',
             'status' => 'Status',
             'actioneer' => 'Actioneer',
@@ -144,6 +145,7 @@ class Customer extends Eav {
         $criteria->compare('customer_fax',$this->customer_fax,true);
         $criteria->compare('customer_webpage',$this->customer_webpage,true);
         $criteria->compare('customer_email',$this->customer_email,true);
+        $criteria->compare('customer_payment',$this->customer_payment,true);
         $criteria->compare('ts',$this->ts,true);
         $criteria->compare('status',$this->status,true);
         $criteria->compare('actioneer',$this->actioneer);
