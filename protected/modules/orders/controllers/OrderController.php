@@ -102,22 +102,22 @@ class OrderController extends Controller {
         $this->clearColumns();
 
         $this->addColumn(array(
-            "label" => $this->translate(Ξ—ΞΌΞµΟ�ΞΏΞΌΞ·Ξ½Ξ―Ξ±),
+            "label" => $this->translate('Ημερομηνία εισαγωγής'),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ�Ο‰Ξ΄ΞΉΞΊΟ�Ο‚"),
+            "label" => $this->translate("Παραστατικό"),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ ΞµΞ»Ξ¬Ο„Ξ·Ο‚"),
+            "label" => $this->translate("Πελάτης"),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ§Ο�Ξ®ΟƒΟ„Ξ·Ο‚"),
+            "label" => $this->translate("Πωλητής"),
             "type" => "text",
                 )
         );
@@ -133,7 +133,7 @@ class OrderController extends Controller {
         );
 
         $this->addColumn(array(
-            "label" => $this->translate("Ξ™ΞΌΞΉΟ„ΞµΞ»Ξ®Ο‚"),
+            "label" => $this->translate("Ημιτελής"),
             "type" => "text",
                 )
         );
@@ -190,11 +190,11 @@ class OrderController extends Controller {
             $json[] = $user[$model->user]->email;
             $json[] = $price;
 
-            $json[] = $model->reference ? "Ξ�Ξ‘Ξ™" : "OXI";
+            $json[] = $model->reference ? "NAI" : "OXI";
             $imitelis = 0;
 
 
-            $json[] = $imitelis ? "Ξ�Ξ‘Ξ™" : "OXI";
+            $json[] = $imitelis ? "NAI" : "OXI";
 
 
             $json["DT_RowId"] = 'order_' . $model->id;
@@ -522,9 +522,9 @@ class OrderController extends Controller {
 
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='disc1prc' class='orderitem disc1prc' value='" . $model->disc1prc . "'/>";
-            $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='lineval' class='orderitem lineval' value='" . $model->lineval . "'/>";
+            $json[] = "<input disabled " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='lineval' class='orderitem lineval' value='" . $model->lineval . "'/>";
 
-            $json[] = "<input disabled " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
+            $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:30px' type='text' ref='" . $model->id . "' field='qty' class='orderitem qty' value='" . $model->qty . "'/>";
 
             $json[] = $model->lineval * $model->qty;
             $json[] = round($model->lineval * $model->qty * 1.23, 2);
