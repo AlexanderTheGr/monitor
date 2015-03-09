@@ -504,9 +504,9 @@ class OrderController extends Controller {
             $json[] = "<img class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' />";
 
             if ($model->chk == 1) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Ξ”ΞΉΞ±Ξ³Ο�Ξ±Ο†Ξ®</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
             } elseif ($order->fullytrans == 0) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Ξ”ΞΉΞ±Ξ³Ο�Ξ±Ο†Ξ®</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
             } else {
                 $json[] = CHtml::dropDownList('sendtoorderlist', $select, $list) . "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ®</button>";
             }
