@@ -372,7 +372,11 @@ class ProductController extends Controller {
                 if ($ITEM->success) {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
                 } else {
+                    $sql = "Delete from product_search where id = '".$product->id."'";
+                    Yii::app()->db->createCommand($sql)->execute();
                     $product->delete();
+                    
+                    //$sql = "Delete from product_search where "
                 }
             }
             //print_r($dataOut);
