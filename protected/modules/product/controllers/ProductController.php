@@ -784,12 +784,23 @@ class ProductController extends Controller {
 
     public function getProductInfo($model) {
 
+        //echo $model->item_cccfxreltdcode;
+        //exit;
+        
         $out["originals"] = $this->originals($model);
         $out["articleAttributes"] = $this->articleAttributes($model);
-        $out["articlesSearch"] = unserialize($this->getArticlesSearch($model->item_cccfxrelbrand));
+        $out["articlesSearch"] = unserialize($this->getArticlesSearch($model->item_cccfxreltdcode));
 
+
+        
         if (count($out["articlesSearch"])) {
             $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . "))";
+            
+            
+            $sql1 = "Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . ")";
+            //$datas = Yii::app()->db->createCommand($sql)->queryAll();
+            //print_r($datas);
+            
             $datas = Yii::app()->db->createCommand($sql)->queryAll();
             $out["antistixies"] = $datas;
         }
