@@ -14,7 +14,7 @@ class OrderController extends Controller {
     public $bPaginate = 'true';
     public $bFilter = 'true';
     public $media = "";
-    public $pagename = "Ξ Ξ±Ο�Ξ±Ξ³Ξ³ΞµΞ»Ξ―ΞµΟ‚";
+    public $pagename = "Παραγγελίες";
 
     public function beforeAction($action) {
         parent::beforeAction();
