@@ -86,7 +86,7 @@ class ProductController extends Controller {
             foreach ($data as $identifier => $dt) {
                 $imporetedData[$identifier] = addslashes($dt);
             }
-            print_r($imporetedData);
+            //print_r($imporetedData);
             $model->attributes = $imporetedData;
 
             /*
@@ -321,8 +321,9 @@ class ProductController extends Controller {
             //if (count($products) == 0) {
             if ($_POST["terms"]) {
                 $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
-                echo $sql;
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
+                echo $sql;
+                print_r($datas);
                 foreach ((array) $datas as $data) {
                     $product = $this->loadModel($data["id"]);
                     $products[$data["id"]] = $product;
