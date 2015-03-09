@@ -811,6 +811,7 @@ class OrderController extends Controller {
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, $model->reference);
+            $out = $softone->setData((array) $dataOut, $object, (int) 0);
             print_r($out);
         } else {
             $objectArr = array();
@@ -839,7 +840,7 @@ class OrderController extends Controller {
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, (int) 0);
-
+            $out = $softone->setData((array) $dataOut, $object, (int) 0);
             if ($out->id > 0) {
                 $model->reference = $out->id;
                 $model->save();
