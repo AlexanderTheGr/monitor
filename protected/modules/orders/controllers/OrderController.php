@@ -335,62 +335,62 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ�Ο‰Ξ΄ΞΉΞΊΟ�Ο‚"),
+            "label" => $this->translate("Κωδικός Είδους"),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ ΞµΟ�ΞΉΞ³Ο�Ξ±Ο†Ξ®"),
+            "label" => $this->translate("Περιγραφή"),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ•Ο�Ξ³ΞΏΟƒΟ„"),
+            "label" => $this->translate("Εργοστάσιο"),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ§ΞΏΞ½"),
+            "label" => $this->translate("Χονδρ"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ§ΞΏΞ½ ΞΌΞµ"),
+            "label" => $this->translate("Χονδρ ΦΠΑ"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ›ΞΉΞ±Ξ½ ΞΌΞµ"),
+            "label" => $this->translate("Λιάν ΦΠΑ"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ¤ΞΉΞΌΞ® Ξ�Ξ±Ο„"),
+            "label" => $this->translate("Χονδρ"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ•ΞΊΟ„Ο€"),
-            "aoColumns" => array("sWidth" => '100'),
-            "type" => "text")
-        );
-
-        $this->addColumn(array(
-            "label" => $this->translate("Ξ�Ξ­Ο„Ξ·"),
+            "label" => $this->translate("Εκτπωση"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
 
         $this->addColumn(array(
-            "label" => $this->translate("Ξ ΞΏΟƒΟ�Ο„Ξ·Ο„Ξ±"),
+            "label" => $this->translate("Νέτη"),
+            "aoColumns" => array("sWidth" => '100'),
+            "type" => "text")
+        );
+
+        $this->addColumn(array(
+            "label" => $this->translate("Ποσότητα"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ£Ο�Ξ½ΞΏΞ»ΞΏ"),
+            "label" => $this->translate("Αξία"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
         $this->addColumn(array(
-            "label" => $this->translate("Ξ£Ο�Ξ½ΞΏΞ»ΞΏ (Ξ¦Ξ Ξ‘)"),
+            "label" => $this->translate("Αξία ΦΠΑ"),
             "aoColumns" => array("sWidth" => '100'),
             "type" => "text")
         );
