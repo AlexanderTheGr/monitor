@@ -796,12 +796,12 @@ class OrderController extends Controller {
             $objectArr[0]["COMMENTS1"] = $model->comments;
 
             $dataOut[$object] = (array) $objectArr;
-            //$k = 9000001;
+            $k = 1;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
                     $dataOut["ITELINES"][] = array(
                         "VAT" => 1310,
-                        //"LINENUM" => $item->id,
+                        "LINENUM" => $k++,
                         "MTRL" => $item->_product_->reference,
                         "PRICE" => $item->price,
                         "LINEVAL" => $item->lineval,
@@ -825,12 +825,12 @@ class OrderController extends Controller {
             $objectArr[0]["COMMENTS1"] = $model->comments;
 
             $dataOut[$object] = (array) $objectArr;
-            //$k = 9000001;
+            $k = 1;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
                     $dataOut["ITELINES"][] = 
                     array("VAT" => 1310, 
-                          //"LINENUM" => $item->id, 
+                          "LINENUM" => $k++, 
                           "MTRL" => $item->_product_->reference, 
                           "PRICE" => $item->price, 
                           "LINEVAL" => $item->lineval, 
