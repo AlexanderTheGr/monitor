@@ -403,6 +403,15 @@ class ProductController extends Controller {
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
             echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
+            
+            if ($product->media()) {
+                echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
+            } else {
+                //$json[] = "<a class='product_info' ref='" . $product->id . "'  />Νο Image</a>";
+                echo "<td><a class='product_info' ref='" . $product->id . "'  />Νο Image</a></td>";
+            }
+            
+            
             echo "<td>" . $item_code . "</td>";
             echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
