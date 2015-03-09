@@ -321,6 +321,7 @@ class ProductController extends Controller {
             //if (count($products) == 0) {
             if ($_POST["terms"]) {
                 $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
+                echo $sql;
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
                 foreach ((array) $datas as $data) {
                     $product = $this->loadModel($data["id"]);
