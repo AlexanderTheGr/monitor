@@ -232,8 +232,8 @@ class OrderController extends Controller {
             }
         }
 
-        $tabs["Ξ“ΞµΞ½ΞΉΞΊΞ¬ Ξ£Ο„ΞΏΞΉΟ‡ΞµΞ―Ξ± "] = "orders/order/general/" . $model->id;
-        $tabs["Ξ•Ξ―Ξ΄Ξ·"] = "orders/order/orderitems/" . $model->id;
+        $tabs["Γενικά Στοιχεία"] = "orders/order/general/" . $model->id;
+        $tabs["Είδη"] = "orders/order/orderitems/" . $model->id;
 
         $this->render('view', array(
             'model' => $model,
@@ -444,18 +444,23 @@ class OrderController extends Controller {
         }
 
         $model->seriesnum = $model->id;
-        $model->fincode = "Ξ Ξ‘Ξ΅-" . $model->id;
+        $model->fincode = "ΠΑΡ-" . $model->id;
         if ($model->id == 0) {
             $model->insdate = date("Y-m-d H:s:i");
         }
 
-        $this->addFormField("text", $this->translate("Ξ‘Ξ½Ξ±Ξ¶Ξ®Ο„Ξ·ΟƒΞ· Ξ ΞµΞ»Ξ¬Ο„Ξ·"), "customer_name", $listData, "width:500px");
+        $this->addFormField("text", $this->translate("Αναζήτηση Πελάτη"), "customer_name", $listData, "width:500px");
 
         $this->addFormField("hidden", "", "customer", $listData);
 
-        $this->addFormField("datetime", $this->translate("Ξ—ΞΌΞµΟ�.ΞµΞΉΟƒΞ±Ξ³Ο‰Ξ³Ξ®Ο‚"), "insdate", "", "width:500px");
+        $this->addFormField("datetime", $this->translate("Ημερ.εισαγωγής"), "insdate", "", "width:500px");
 
-        $this->addFormField("select", $this->translate("Ξ‘ΞΉΟ„ΞΉΞΏΞ»ΞΏΞ³Ξ―Ξ±"), "comments", array("Ξ“ΞΉΞ± Ξ¤ΞΉΞΌΞΏΞ»Ο�Ξ³ΞΉΞΏ" => "Ξ“ΞΉΞ± Ξ¤ΞΉΞΌΞΏΞ»Ο�Ξ³ΞΉΞΏ", "Ξ“ΞΉΞ± Ξ‘Ο€Ο�Ξ΄ΞµΞΉΞΎΞ·" => "Ξ“ΞΉΞ± Ξ‘Ο€Ο�Ξ΄ΞµΞΉΞΎΞ·", "Ξ“ΞΉΞ± Ξ”ΞµΞ»Ο„Ξ―ΞΏ Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ®Ο‚" => "Ξ“ΞΉΞ± Ξ”ΞµΞ»Ο„Ξ―ΞΏ Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ®Ο‚"));
+        $this->addFormField("select", $this->translate("Αιτιολογία"), "comments", 
+		array(
+		"Για Τιμολόγιο" => "Για Τιμολόγιο", 
+		"Για Απόδειξη" => "Για Απόδειξη", 
+		"Για Δελτίο Αποστολής" => "Για Δελτίο Αποστολής")
+		);
         //$this->addFormField("text", $this->translate("Ξ Ξ±Ο�Ξ±ΟƒΟ„Ξ±Ο„ΞΉΞΊΟ�"), "fincode");
 
 
@@ -546,8 +551,8 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Ξ¤Ξ­ΞΌΞ¬Ο‡ΞΉΞ±: " . $qty;
-            $json[] = "Ξ£Ο�Ξ½ΞΏΞ»ΞΏ";
+            $json[] = "Τεμάχια: " . $qty;
+            $json[] = "Σύνολο";
             $json[] = $price;
             $json[] = round($price * 1.23, 2);
             $jsonArr[] = $json;
@@ -565,7 +570,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Ξ•ΞΊΟ€Ο„Ο‰ΟƒΞ·";
+            $json[] = "Εκπτωση";
             $json[] = "<input  " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:50px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $json[] = "";
             $jsonArr[] = $json;
@@ -583,7 +588,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
-            $json[] = "Ξ¤ΞµΞ»ΞΉΞΊΟ� Ξ£Ο�Ξ½ΞΏΞ»ΞΏ";
+            $json[] = "Τελικό Σύνολο";
             $json[] = $price * (1 - ($model->_order_->disc1prc / 100));
             $json[] = round($price * (1 - ($model->_order_->disc1prc / 100)) * 1.23, 2);
             $jsonArr[] = $json;
@@ -651,7 +656,7 @@ class OrderController extends Controller {
             echo json_encode($model->itemError) . "|||" . json_encode($model->tabError);
         else {
             $model->seriesnum = $model->id;
-            $model->fincode = "Ξ Ξ‘Ξ΅-" . $model->id;
+            $model->fincode = "ΠΑΡ-" . $model->id;
             $model->save(false);
             echo $model->id;
         }
