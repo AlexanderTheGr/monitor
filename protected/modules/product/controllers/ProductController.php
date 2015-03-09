@@ -366,7 +366,6 @@ class ProductController extends Controller {
         $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
         //print_r($out);
         if (!$out->success) {
-            echo "1";
             $dataOut["ITELINES"] = array();
             foreach ($products as $product) {
                 $ITEM = $softone->getData("ITEM", $product->reference, "", "ITEM:CODE");
@@ -375,9 +374,9 @@ class ProductController extends Controller {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
                 }
             }
-            print_r($dataOut);
+            //print_r($dataOut);
             $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-            print_r($out);
+            //print_r($out);
         }
 
 
