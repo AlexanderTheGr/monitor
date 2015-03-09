@@ -303,7 +303,7 @@ class ProductController extends Controller {
             $time_start = microtime(true);
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
             //print_r($articleIds);
-            
+
             if (count($articleIds)) {
                 $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
@@ -311,7 +311,7 @@ class ProductController extends Controller {
                     $products[] = $this->loadModel($data["id"]);
                 }
             }
-       
+
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
             //echo '<b>Execution Time:</b> '.$execution_time."<BR>";
@@ -355,6 +355,7 @@ class ProductController extends Controller {
 
         $dataOut[$object] = (array) $objectArr;
         $k = 9000001;
+        $dataOut["ITELINES"] = array();
         foreach ($products as $product) {
             $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
         }
@@ -362,6 +363,16 @@ class ProductController extends Controller {
         $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,ITELINES:LINEVAL,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
 
         $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+        if (!$out->success) {
+            $dataOut["ITELINES"] = array();
+            foreach ($products as $product) {
+                $ITEM = $softone->getData("ITEM", $product->reference,"","CODE");
+                if ($ITEM) {
+                    $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
+                }
+                $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+            }
+        }
         //print_r($out);
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
@@ -397,23 +408,23 @@ class ProductController extends Controller {
         echo "<th></th></tr></thead>";
         echo "<tbody>";
         foreach ((array) $out->data->ITELINES as $item) {
-            echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='".$item->MTRL."' ref='" . $product->id . "'>";
-            $sql = "Select id from product where reference = '".$item->MTRL."'";
+            echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='" . $item->MTRL . "' ref='" . $product->id . "'>";
+            $sql = "Select id from product where reference = '" . $item->MTRL . "'";
             $data = Yii::app()->db->createCommand($sql)->queryRow();
             //$product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
             $product = $this->model("Product", $data["id"]);
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
             //echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
-            
+
             if ($product->media()) {
                 echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
             } else {
                 //$json[] = "<a class='product_info' ref='" . $product->id . "'  />Νο Image</a>";
                 echo "<td><a class='product_info' ref='" . $product->id . "'  >Νο Image</a></td>";
             }
-            
-            
+
+
             echo "<td>" . $item_code . "</td>";
             echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
@@ -797,21 +808,21 @@ class ProductController extends Controller {
 
         //echo $model->item_cccfxreltdcode;
         //exit;
-        
+
         $out["originals"] = $this->originals($model);
         $out["articleAttributes"] = $this->articleAttributes($model);
         $out["articlesSearch"] = unserialize($this->getArticlesSearch($model->item_cccfxreltdcode));
 
 
-        
+
         if (count($out["articlesSearch"])) {
             $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . "))";
-            
-            
+
+
             $sql1 = "Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $out["articlesSearch"]) . ")";
             //$datas = Yii::app()->db->createCommand($sql)->queryAll();
             //print_r($datas);
-            
+
             $datas = Yii::app()->db->createCommand($sql)->queryAll();
             $out["antistixies"] = $datas;
         }
