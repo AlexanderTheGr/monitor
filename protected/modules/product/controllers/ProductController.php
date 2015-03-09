@@ -366,20 +366,20 @@ class ProductController extends Controller {
         $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
         //print_r($out);
         if (!$out->success) {
-             echo "1";
+            echo "1";
             $dataOut["ITELINES"] = array();
             foreach ($products as $product) {
-                $ITEM = $softone->getData("ITEM", $product->reference,"","ITEM:CODE");
+                $ITEM = $softone->getData("ITEM", $product->reference, "", "ITEM:CODE");
                 print_r($ITEM->success);
                 if ($ITEM) {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
                 }
-                print_r($dataOut);
-                $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-                print_r($out);
             }
+            print_r($dataOut);
+            $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+            print_r($out);
         }
-        
+
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
