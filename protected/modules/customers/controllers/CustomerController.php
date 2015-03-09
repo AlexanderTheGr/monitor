@@ -155,8 +155,8 @@ class CustomerController extends Controller {
                 $model = json_decode($data["flat_data"]);
             }
             $json["id"] = $data["id"];
-            $json["value"] = $model->customer_name . " ($model->customer_afm) ";
-            $json["label"] = $model->customer_name . " ($model->customer_afm) ";
+            $json["value"] = $model->customer_name . " ($model->customer_afm - $model->customer_code) ";
+            $json["label"] = $model->customer_name . " ($model->customer_afm - $model->customer_code) ";
             
             
             $out[] = $json;
