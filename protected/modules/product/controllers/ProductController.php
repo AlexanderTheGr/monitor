@@ -322,8 +322,8 @@ class ProductController extends Controller {
             if ($_POST["terms"]) {
                 $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                echo $sql;
-                print_r($datas);
+                //echo $sql;
+                //print_r($datas);
                 foreach ((array) $datas as $data) {
                     $product = $this->loadModel($data["id"]);
                     $products[$data["id"]] = $product;
@@ -358,11 +358,11 @@ class ProductController extends Controller {
         foreach ($products as $product) {
             $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
         }
-        //print_r($dataOut);
+        print_r($dataOut);
         $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,ITELINES:LINEVAL,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
 
         $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-        //print_r($out);
+        print_r($out);
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
