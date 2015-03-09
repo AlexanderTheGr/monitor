@@ -408,7 +408,7 @@ class ProductController extends Controller {
                 echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
             } else {
                 //$json[] = "<a class='product_info' ref='" . $product->id . "'  />Νο Image</a>";
-                echo "<td><a class='product_info' ref='" . $product->id . "'  />Νο Image</a></td>";
+                echo "<td><a class='product_info' ref='" . $product->id . "'  >Νο Image</a></td>";
             }
             
             

@@ -504,7 +504,7 @@ class OrderController extends Controller {
             if ($product->media()) {
                 $json[] = "<img class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' />";
             } else {
-                $json[] = "<a class='product_info' ref='" . $product->id . "'  />Νο Image</a>";
+                $json[] = "<a class='product_info' ref='" . $product->id . "'  >Νο Image</a>";
             }
             
 
