@@ -41,7 +41,7 @@
                 <th>Προγραφή</th>
                 <th>Κωδικός</th>
             </tr>
-            <?php foreach($info["antistixies"] as $product):?>
+            <?php foreach((array)$info["antistixies"] as $product):?>
             <?php $product = json_decode($product["flat_data"]);?>  
             <tr>
                 <td><?php echo $product->item_name;?></td>
