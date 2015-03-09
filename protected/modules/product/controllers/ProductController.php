@@ -367,6 +367,7 @@ class ProductController extends Controller {
             $dataOut["ITELINES"] = array();
             foreach ($products as $product) {
                 $ITEM = $softone->getData("ITEM", $product->reference,"","CODE");
+                print_r($ITEM);
                 if ($ITEM) {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
                 }
