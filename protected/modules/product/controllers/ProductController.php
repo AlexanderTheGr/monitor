@@ -402,7 +402,7 @@ class ProductController extends Controller {
             $product = $this->model("Product", $data["id"]);
             $i++;
             $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
-            echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
+            //echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
             
             if ($product->media()) {
                 echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
