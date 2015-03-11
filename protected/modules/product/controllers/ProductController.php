@@ -636,6 +636,7 @@ class ProductController extends Controller {
                             $subsearch = str_replace("\n", "|", $submodel->search);
 
 
+                            
                             $subsearchArr = explode("|", $subsearch);
 
                             if (!in_array($model->item_code, $subsearchArr))
