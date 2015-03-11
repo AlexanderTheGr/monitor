@@ -711,8 +711,8 @@ class ProductController extends Controller {
                             //print_r($subsearchArr);
                             echo "---\n";
                         }
-                        if ($i++ > 100)
-                            break;
+                        //if ($i++ > 100)
+                        //    break;
                     }
                 }
             }
