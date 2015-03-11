@@ -685,11 +685,10 @@ class ProductController extends Controller {
                                         $subsubmodel->setProductSearch();
                                         
                                         echo $model->item_code . "---" . $subsubmodel->item_code . "\n";
-                                        print_r($searchArr);
-                                        echo "---\n";
+                                        //print_r($searchArr);
+                                        //echo "---\n";
                                         print_r($subsubsearchArr);
                                         echo "---\n";
-                                        
                                     }
                                 }
                             }
@@ -707,8 +706,8 @@ class ProductController extends Controller {
 
 
                             echo $model->item_code . "---" . $submodel->item_code . "\n";
-                            //print_r($searchArr);
-                            //print_r($subsearchArr);
+                            print_r($searchArr);
+                            print_r($subsearchArr);
                             echo "---\n";
                         }
                         //if ($i++ > 100)
