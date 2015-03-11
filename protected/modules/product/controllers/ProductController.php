@@ -633,7 +633,7 @@ class ProductController extends Controller {
                         $subp = Yii::app()->db->createCommand($sql)->queryRow();
                         if ($subp["id"] > 0) {
                             $submodel = $this->model("Product", $subp["id"]);
-                            $subsearch = str_replace("\n", "|", $model->search);
+                            $subsearch = str_replace("\n", "|", $submodel->search);
 
 
                             $subsearchArr = explode("|", $subsearch);
