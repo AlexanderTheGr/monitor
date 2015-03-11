@@ -372,10 +372,10 @@ class ProductController extends Controller {
                 if ($ITEM->success) {
                     $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
                 } else {
-                    $sql = "Delete from product_search where id = '".$product->id."'";
+                    $sql = "Delete from product_search where id = '" . $product->id . "'";
                     Yii::app()->db->createCommand($sql)->execute();
                     $product->delete();
-                    
+
                     //$sql = "Delete from product_search where "
                 }
             }
@@ -617,6 +617,58 @@ class ProductController extends Controller {
         ));
     }
 
+    public function actionUpdateSynafiesActCodes() {
+        if (($handle = fopen("SYNAFEIES_ENTOS.csv", "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
+                if ($data[0] != $data[1]) {
+                    //$product = Product::model()->findByAttributes(array('item_cccfxcode1' => $data[0]));
+                    $sql = "Select id from product where item_cccfxcode1 = '" . $data[0] . "'";
+                    $p = Yii::app()->db->createCommand($sql)->queryRow();
+                    if ($p["id"] > 0) {
+                        $model = $this->model("Product", $p["id"]);
+                        $search = str_replace("\n", "|", $model->search);
+                        $searchArr = explode("|", $search);
+                        //$searchArr[] = $data[1];
+                        $sql = "Select id from product where item_cccfxcode1 = '" . $data[1] . "'";
+                        $subp = Yii::app()->db->createCommand($sql)->queryRow();
+                        if ($subp["id"] > 0) {
+                            $submodel = $this->model("Product", $subp["id"]);
+                            $subsearch = str_replace("\n", "|", $model->search);
+
+
+                            $subsearchArr = explode("|", $subsearch);
+
+                            if (!in_array($model->item_code, $subsearchArr))
+                                $subsearchArr[] = $model->item_code;
+
+                            if (!in_array($submodel->item_code, $searchArr))
+                                $searchArr[] = $submodel->item_code;
+                            
+                            
+                            $searchArr = array_filter(array_unique($searchArr));
+                            $subsearchArr = array_filter(array_unique($subsearchArr));
+                            
+                            $searchArr = array_diff($searchArr, array($model->item_code));
+                            $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+                            
+                            
+                            $model->search = implode("|", $searchArr);
+                            $submodel->search = implode("|", $subsearchArr);
+                            $model->save();
+                            $submodel->save();
+
+                            
+                            echo $model->item_code."---".$submodel->item_code."\n";
+                            print_r($searchArr);
+                            print_r($subsearchArr);
+                            echo "---\n";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function actionAjaxFormSave() {
         $model = $this->loadModel($_POST["id"]);
         $model->attributes = $_POST;
@@ -633,9 +685,6 @@ class ProductController extends Controller {
 
 
         $searchArr = explode("|", $model->search);
-
-
-
 
 
         $model->gnisia = str_replace("\n", "|", $model->gnisia);
