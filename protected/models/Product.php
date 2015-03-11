@@ -221,6 +221,11 @@ class Product extends Eav {
         return $this->media;
     }
 
+    function setProductSearch() {
+        $sql = "replace product_search set id = '".$this->id."', item_code = '".$this->item_code."', search = '".$this->search."', gnisia = '".$this->gnisia."'";
+        Yii::app()->db->createCommand($sql)->execute();        
+    }
+    
     function setFlat() {
         $flat = $this->attributes;
 
