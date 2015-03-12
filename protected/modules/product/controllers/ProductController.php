@@ -629,7 +629,7 @@ class ProductController extends Controller {
                         $search = str_replace("\n", "|", $model->search);
                         $searchArr = explode("|", $search);
                         $as = explode("-", $model->item_code);
-                        if ((int) $as[1] == 0)
+                        if ($as[1] == "")
                             continue;
 
                         $sql = "Select id from product where item_cccfxcode1 = '" . $data[1] . "'";
@@ -640,7 +640,7 @@ class ProductController extends Controller {
 
 
                             $as = explode("-", $submodel->item_code);
-                            if ((int) $as[1] == 0)
+                            if ($as[1] == "")
                                 continue;
 
                             $subsearchArr = explode("|", $subsearch);
@@ -657,7 +657,7 @@ class ProductController extends Controller {
                             $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
 
                             foreach ($searchArr as $srch) {
-                                $sql = "Select id from product where search LIKE '%" . $srch . "%' OR item_code = '".$srch."'  limit 0,30";
+                                $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '".$srch."'  limit 0,30";
                                 $srches = Yii::app()->db->createCommand($sql)->queryAll();
 
                                 foreach ($srches as $srchs) {
@@ -668,7 +668,7 @@ class ProductController extends Controller {
                                         $subsubsearchArr = explode("|", $subsubsearch);
 
                                         $as = explode("-", $subsubmodel->item_code);
-                                        if ((int) $as[1] == 0)
+                                        if ($as[1] == "")
                                             continue;
 
 
