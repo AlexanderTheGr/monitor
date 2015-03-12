@@ -618,7 +618,7 @@ class ProductController extends Controller {
     }
 
     public function actionUpdateSynafiesActCodes() {
-        if (($handle = fopen("SYNAFEIES_ENTOS.csv", "r")) !== FALSE) {
+        if (($handle = fopen("asdf.csv", "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
                 if ($data[0] != $data[1]) {
                     //$product = Product::model()->findByAttributes(array('item_cccfxcode1' => $data[0]));
