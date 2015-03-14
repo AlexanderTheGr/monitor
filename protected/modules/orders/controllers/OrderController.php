@@ -344,6 +344,11 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
+            "label" => $this->translate("Ράφι"),
+            "type" => "text",
+                )
+        );        
+        $this->addColumn(array(
             "label" => $this->translate("Εργοστάσιο"),
             "type" => "text")
         );
@@ -519,6 +524,7 @@ class OrderController extends Controller {
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
             $json[] = $product->item_code;
             $json[] = $product->item_name;
+            $json[] = $product->item_mtrplace;
             $json[] = $product->item_mtrmanfctr;
 
             $json[] = $product->item_pricew01;
@@ -556,6 +562,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
             $json[] = "Τεμάχια: " . $qty;
             $json[] = "Σύνολο";
             $json[] = $price;
@@ -575,12 +582,14 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
             $json[] = "Εκπτωση";
             $json[] = "<input  " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:50px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $json[] = "";
             $jsonArr[] = $json;
 
             $json = array();
+            $json[] = "";
             $json[] = "";
             $json[] = "";
             $json[] = "";
