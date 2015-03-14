@@ -51,7 +51,7 @@ class ProductController extends Controller {
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["t"]));
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"]);
         /*
           $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
           foreach ($fields as $field) {
