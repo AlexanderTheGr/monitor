@@ -345,6 +345,7 @@ class OrderController extends Controller {
         );
         $this->addColumn(array(
             "label" => $this->translate("Θέση Ράφι"),
+            "aoColumns" => array("sWidth" => '200'),
             "type" => "text",
                 )
         );        
