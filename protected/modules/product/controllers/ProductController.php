@@ -86,7 +86,7 @@ class ProductController extends Controller {
             foreach ($data as $identifier => $dt) {
                 $imporetedData[$identifier] = addslashes($dt);
             }
-            //print_r($imporetedData);
+            print_r($imporetedData);
             $model->attributes = $imporetedData;
 
             /*
@@ -113,7 +113,7 @@ class ProductController extends Controller {
 
             $model->setFlat();
             $i++;
-            //if ($i++>10) break;
+            if ($i++>10) break;
         }
         echo $i;
     }
