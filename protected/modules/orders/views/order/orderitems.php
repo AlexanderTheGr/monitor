@@ -1,6 +1,6 @@
 <div style="min-height:1000px">
     <?php if ($model->fullytrans == 0): ?>  
-        <div class="span3">
+        <div class="span2">
             Αναζήτηση με Κωδικό<BR>
 
             <input id="productitem" class='productitem' type="text"><!--button style='margin-top: -10px' class="btn savesoftone">Αναζήτηση</button-->
@@ -15,7 +15,7 @@
             </div>
         </div>
     <?php endif; ?>
-    <div class="span9">
+    <div class="span10">
         <?php require Yii::app()->params['widget'] . "datatable.php"; ?>  
     </div>    
 
