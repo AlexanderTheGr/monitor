@@ -66,6 +66,8 @@ class ProductController extends Controller {
 
         $i = 0;
         foreach ($datas as $data) {
+            
+            if ($data["item_mtrplace"] == "") continue; 
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
 
