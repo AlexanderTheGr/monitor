@@ -51,7 +51,7 @@ class ProductController extends Controller {
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["t"]));
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
-        $filters = "ITEM.MTRPLACE=*";
+        //$filters = "ITEM.MTRPLACE=*";
         $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
         /*
           $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
@@ -68,8 +68,6 @@ class ProductController extends Controller {
         $i = 0;
         foreach ($datas as $data) {
 
-            if ($data["item_mtrplace"] == "")
-                continue;
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
 
