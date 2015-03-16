@@ -67,8 +67,9 @@ class ProductController extends Controller {
 
         $i = 0;
         foreach ($datas as $data) {
-            
-            if ($data["item_mtrplace"] == "") continue; 
+
+            if ($data["item_mtrplace"] == "")
+                continue;
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
 
@@ -621,103 +622,221 @@ class ProductController extends Controller {
     }
 
     public function actionUpdateSynafiesActCodes() {
-        if (($handle = fopen("SYNAFEIES_ENTOS.csv", "r")) !== FALSE) {
+        if (($handle = fopen("sinaf22.csv", "r")) !== FALSE) {
+            $as = array();
             while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
-                if ($data[0] != $data[1]) {
-                    //$product = Product::model()->findByAttributes(array('item_cccfxcode1' => $data[0]));
-                    $sql = "Select id from product where item_cccfxcode1 = '" . $data[0] . "'";
-                    $p = Yii::app()->db->createCommand($sql)->queryRow();
-                    if ($p["id"] > 0) {
-                        $model = $this->model("Product", $p["id"]);
-                        $search = str_replace("\n", "|", $model->search);
-                        $searchArr = explode("|", $search);
-                        $as = explode("-", $model->item_code);
-                        if ($as[1] == "")
-                            continue;
+                $act[$data[1]][] = $data[0];
+                $keys[] = $data[1];
+            }
+            $keys = array_unique($keys);
 
-                        $sql = "Select id from product where item_cccfxcode1 = '" . $data[1] . "'";
-                        $subp = Yii::app()->db->createCommand($sql)->queryRow();
-                        if ($subp["id"] > 0) {
-                            $submodel = $this->model("Product", $subp["id"]);
-                            $subsearch = str_replace("\n", "|", $submodel->search);
+            $keys2 = array();
+            foreach ($keys as $key) {
+                if (count($act[$key]) > 1) {
+                    $keys2[] = $key;
+                }
+            }
+            $keys = array_unique($keys2);
 
 
-                            $as = explode("-", $submodel->item_code);
+
+            foreach ($keys as $key) {
+
+
+                if (count($act[$key]) > 1) {
+                    foreach ($act[$key] as $cccfxcode1) {
+                        $sql = "Select id from product where item_cccfxcode1 = '" . $cccfxcode1 . "'";
+                        $p = Yii::app()->db->createCommand($sql)->queryRow();
+                        if ($p["id"] > 0) {
+                            $model = $this->model("Product", $p["id"]);
+                            $search = str_replace("\n", "|", $model->search);
+                            $searchArr = explode("|", $search);
+                            $as = explode("-", $model->item_code);
                             if ($as[1] == "")
                                 continue;
 
-                            $subsearchArr = explode("|", $subsearch);
+                            $con = false;
+                            foreach ($act[$key] as $cccfxcode1_2) {
+                               
+                                $sql = "Select id from product where item_cccfxcode1 = '" . $cccfxcode1_2 . "'";
+                                $subp = Yii::app()->db->createCommand($sql)->queryRow();
+                                if ($subp["id"] > 0) {
+                                    $submodel = $this->model("Product", $subp["id"]);
 
-                            if (!in_array($model->item_code, $subsearchArr))
-                                $subsearchArr[] = $model->item_code;
+                                    if ($submodel->item_code == $model->item_code)
+                                        continue;;
 
-                            if (!in_array($submodel->item_code, $searchArr))
-                                $searchArr[] = $submodel->item_code;
+                                    $subsearch = str_replace("\n", "|", $submodel->search);
+                                    $as = explode("-", $submodel->item_code);
+                                    if ($as[1] == "")
+                                        continue;
+                                    $subsearchArr = explode("|", $subsearch);
 
-                            $searchArr = array_filter(array_unique($searchArr));
-                            $subsearchArr = array_filter(array_unique($subsearchArr));
-                            $searchArr = array_diff($searchArr, array($model->item_code));
-                            $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+                                    if (!in_array($model->item_code, $subsearchArr))
+                                        $subsearchArr[] = $model->item_code;
+                                    if (!in_array($submodel->item_code, $searchArr))
+                                        $searchArr[] = $submodel->item_code;
 
-                            foreach ($searchArr as $srch) {
-                                $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '".$srch."'  limit 0,30";
-                                $srches = Yii::app()->db->createCommand($sql)->queryAll();
+                                    $con = true;
 
-                                foreach ($srches as $srchs) {
-                                    if ($srchs["id"] != $model->id) {
-
-                                        $subsubmodel = $this->model("Product", $srchs["id"]);
-                                        $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
-                                        $subsubsearchArr = explode("|", $subsubsearch);
-
-                                        $as = explode("-", $subsubmodel->item_code);
-                                        if ($as[1] == "")
-                                            continue;
-
-
-                                        if (!in_array($subsubmodel->item_code, $searchArr)) {
-                                            $searchArr[] = $subsubmodel->item_code;
-                                        }
-                                        if (!in_array($model->item_code, $subsubsearchArr)) {
-                                            $subsubsearchArr[] = $model->item_code;
-                                        }
-                                        $subsubsearchArr = array_filter(array_unique($subsubsearchArr));
-                                        $subsubsearchArr = array_diff($subsubsearchArr, array($subsubmodel->item_code));
-                                        $subsubmodel->search = implode("|", $subsubsearchArr);
-                                        $subsubmodel->save();
-                                        $subsubmodel->setProductSearch();
-                                        
-                                        echo $model->item_code . "---" . $subsubmodel->item_code . "\n";
-                                        //print_r($searchArr);
-                                        //echo "---\n";
-                                        print_r($subsubsearchArr);
-                                        echo "---\n";
-                                    }
+                                    $searchArr = array_filter(array_unique($searchArr));
+                                    $subsearchArr = array_filter(array_unique($subsearchArr));
+                                    $searchArr = array_diff($searchArr, array($model->item_code));
+                                    $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
                                 }
                             }
-                            $searchArr = array_filter(array_unique($searchArr));
-                            $subsearchArr = array_filter(array_unique($subsearchArr));
-                            $searchArr = array_diff($searchArr, array($model->item_code));
-                            $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
-
-                            $model->search = implode("|", $searchArr);
-                            $submodel->search = implode("|", $subsearchArr);
-                            $model->save();
-                            $submodel->save();
-                            $model->setProductSearch();
-                            $submodel->setProductSearch();
-
-
-                            echo $model->item_code . "---" . $submodel->item_code . "\n";
-                            print_r($searchArr);
-                            print_r($subsearchArr);
-                            echo "---\n";
                         }
-                        //if ($i++ > 100)
-                        //    break;
+                        if ($con == false)
+                          continue;
+                        
+                        foreach ($searchArr as $srch) {
+                            $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
+                            $srches = Yii::app()->db->createCommand($sql)->queryAll();
+
+                            foreach ($srches as $srchs) {
+                                if ($srchs["id"] != $model->id) {
+
+                                    $subsubmodel = $this->model("Product", $srchs["id"]);
+                                    $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
+                                    $subsubsearchArr = explode("|", $subsubsearch);
+
+                                    $as = explode("-", $subsubmodel->item_code);
+                                    if ($as[1] == "")
+                                        continue;
+
+                                    if (!in_array($subsubmodel->item_code, $searchArr)) {
+                                        $searchArr[] = $subsubmodel->item_code;
+                                    }
+                                    if (!in_array($model->item_code, $subsubsearchArr)) {
+                                        $subsubsearchArr[] = $model->item_code;
+                                    }
+                                    $subsubsearchArr = array_filter(array_unique($subsubsearchArr));
+                                    $subsubsearchArr = array_diff($subsubsearchArr, array($subsubmodel->item_code));
+                                    $subsubmodel->search = implode("|", $subsubsearchArr);
+                                    $subsubmodel->save();
+                                    $subsubmodel->setProductSearch();
+                                }
+                            }
+                        }
+                        $searchArr = array_filter(array_unique($searchArr));
+                        $subsearchArr = array_filter(array_unique($subsearchArr));
+                        $searchArr = array_diff($searchArr, array($model->item_code));
+                        $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+
+                        $model->search = implode("|", $searchArr);
+                        $submodel->search = implode("|", $subsearchArr);
+                        $model->save();
+                        $submodel->save();
+                        $model->setProductSearch();
+                        $submodel->setProductSearch();
+
+                        echo $model->item_code . "---" . $submodel->item_code . "\n";
+                        print_r($searchArr);
+                        print_r($subsearchArr);
+                        echo "---\n";
                     }
                 }
             }
+
+            /*
+              while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
+              if ($data[0] != $data[1]) {
+              //$product = Product::model()->findByAttributes(array('item_cccfxcode1' => $data[0]));
+              $sql = "Select id from product where item_cccfxcode1 = '" . $data[0] . "'";
+              $p = Yii::app()->db->createCommand($sql)->queryRow();
+              if ($p["id"] > 0) {
+              $model = $this->model("Product", $p["id"]);
+              $search = str_replace("\n", "|", $model->search);
+              $searchArr = explode("|", $search);
+              $as = explode("-", $model->item_code);
+              if ($as[1] == "")
+              continue;
+
+              $sql = "Select id from product where item_cccfxcode1 = '" . $data[1] . "'";
+              $subp = Yii::app()->db->createCommand($sql)->queryRow();
+              if ($subp["id"] > 0) {
+              $submodel = $this->model("Product", $subp["id"]);
+              $subsearch = str_replace("\n", "|", $submodel->search);
+
+
+              $as = explode("-", $submodel->item_code);
+              if ($as[1] == "")
+              continue;
+
+              $subsearchArr = explode("|", $subsearch);
+
+              if (!in_array($model->item_code, $subsearchArr))
+              $subsearchArr[] = $model->item_code;
+
+              if (!in_array($submodel->item_code, $searchArr))
+              $searchArr[] = $submodel->item_code;
+
+              $searchArr = array_filter(array_unique($searchArr));
+              $subsearchArr = array_filter(array_unique($subsearchArr));
+              $searchArr = array_diff($searchArr, array($model->item_code));
+              $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+
+              foreach ($searchArr as $srch) {
+              $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
+              $srches = Yii::app()->db->createCommand($sql)->queryAll();
+
+              foreach ($srches as $srchs) {
+              if ($srchs["id"] != $model->id) {
+
+              $subsubmodel = $this->model("Product", $srchs["id"]);
+              $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
+              $subsubsearchArr = explode("|", $subsubsearch);
+
+              $as = explode("-", $subsubmodel->item_code);
+              if ($as[1] == "")
+              continue;
+
+
+              if (!in_array($subsubmodel->item_code, $searchArr)) {
+              $searchArr[] = $subsubmodel->item_code;
+              }
+              if (!in_array($model->item_code, $subsubsearchArr)) {
+              $subsubsearchArr[] = $model->item_code;
+              }
+              $subsubsearchArr = array_filter(array_unique($subsubsearchArr));
+              $subsubsearchArr = array_diff($subsubsearchArr, array($subsubmodel->item_code));
+              $subsubmodel->search = implode("|", $subsubsearchArr);
+              $subsubmodel->save();
+              $subsubmodel->setProductSearch();
+
+              echo $model->item_code . "---" . $subsubmodel->item_code . "\n";
+              //print_r($searchArr);
+              //echo "---\n";
+              print_r($subsubsearchArr);
+              echo "---\n";
+              }
+              }
+              }
+              $searchArr = array_filter(array_unique($searchArr));
+              $subsearchArr = array_filter(array_unique($subsearchArr));
+              $searchArr = array_diff($searchArr, array($model->item_code));
+              $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+
+              $model->search = implode("|", $searchArr);
+              $submodel->search = implode("|", $subsearchArr);
+              $model->save();
+              $submodel->save();
+              $model->setProductSearch();
+              $submodel->setProductSearch();
+
+
+              echo $model->item_code . "---" . $submodel->item_code . "\n";
+              print_r($searchArr);
+              print_r($subsearchArr);
+              echo "---\n";
+              }
+              //if ($i++ > 100)
+              //    break;
+              }
+              }
+              }
+             * 
+             */
         }
     }
 
