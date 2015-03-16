@@ -620,7 +620,7 @@ class ProductController extends Controller {
     }
 
     public function actionUpdateSynafiesActCodes() {
-        if (($handle = fopen("sinaf22.csv", "r")) !== FALSE) {
+        if (($handle = fopen("SINAF2.csv", "r")) !== FALSE) {
             $as = array();
             while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
                 $act[$data[1]][] = $data[0];
