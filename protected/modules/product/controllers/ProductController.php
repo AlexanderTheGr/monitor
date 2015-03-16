@@ -689,6 +689,7 @@ class ProductController extends Controller {
                         if ($con == false)
                           continue;
                         
+                        
                         foreach ($searchArr as $srch) {
                             $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
                             $srches = Yii::app()->db->createCommand($sql)->queryAll();
