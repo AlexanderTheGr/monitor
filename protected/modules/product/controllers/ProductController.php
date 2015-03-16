@@ -717,6 +717,14 @@ class ProductController extends Controller {
                                 }
                             }
                         }
+                        
+                        foreach ($searchArr as $srch) {
+                            $subsearchArr[] = $srch;
+                        }
+                        foreach ($subsearchArr as $srch) {
+                            $searchArr[] = $srch;
+                        } 
+                        
                         $searchArr = array_filter(array_unique($searchArr));
                         $subsearchArr = array_filter(array_unique($subsearchArr));
                         $searchArr = array_diff($searchArr, array($model->item_code));
