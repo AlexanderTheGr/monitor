@@ -499,8 +499,8 @@ class ProductController extends Controller {
             $queryarr[] = "id = '" . $_POST["sSearch_0"] . "'";
         if ($_POST["sSearch_1"])
             $queryarr[] = "item_name like '%" . $_POST["sSearch_1"] . "%'";
-        if ($_POST["sSearch_2"])
-            $queryarr[] = "item_code like '%" . $_POST["sSearch_2"] . "%'";
+        if ($_POST["sSearch_2"]) 
+            $queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%')";
         if ($_POST["sSearch_3"])
             $queryarr[] = "item_mtrmanfctr like '%" . $_POST["sSearch_3"] . "%'";
         if ($_POST["sSearch_4"])
