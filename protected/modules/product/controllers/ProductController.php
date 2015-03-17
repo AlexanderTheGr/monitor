@@ -141,6 +141,11 @@ class ProductController extends Controller {
                 )
         );
         $this->addColumn(array(
+            "label" => $this->translate("Θέση Ράφι"),
+            "type" => "text",
+                )
+        );        
+        $this->addColumn(array(
             "label" => $this->translate("Erp Supplier"),
             "type" => "text",
                 )
@@ -501,10 +506,12 @@ class ProductController extends Controller {
             $queryarr[] = "item_name like '%" . $_POST["sSearch_1"] . "%'";
         if ($_POST["sSearch_2"]) 
             $queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
-        if ($_POST["sSearch_3"])
-            $queryarr[] = "item_mtrmanfctr like '%" . $_POST["sSearch_3"] . "%'";
+         if ($_POST["sSearch_3"])
+            $queryarr[] = "item_mtrplace like '%" . $_POST["sSearch_3"] . "%'";
         if ($_POST["sSearch_4"])
-            $queryarr[] = "item_cccfxreltdcode like '%" . $_POST["sSearch_4"] . "%'";
+            $queryarr[] = "item_mtrmanfctr like '%" . $_POST["sSearch_4"] . "%'";
+        if ($_POST["sSearch_5"])
+            $queryarr[] = "item_cccfxreltdcode like '%" . $_POST["sSearch_5"] . "%'";
 
         if (count($queryarr)) {
             $query = " where " . implode(" AND ", $queryarr);
@@ -547,6 +554,7 @@ class ProductController extends Controller {
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
             $json[] = $model->item_name;
             $json[] = $model->item_code;
+            $json[] = $model->item_mtrplace;
             $json[] = $model->item_mtrmanfctr;
             $json[] = $model->item_cccfxreltdcode;
             $json[] = $model->_tecdocSupplier_->supplier;
