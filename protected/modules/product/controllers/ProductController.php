@@ -110,9 +110,9 @@ class ProductController extends Controller {
             //echo $model->reference . "<BR>";
             $model->save(false);
 
-            if ($model->flat_data == "") {
+            //if ($model->flat_data == "") {
                 $this->updatetecdoc($model);
-            }
+            //}
 
             $model->setFlat();
             $i++;
@@ -906,7 +906,7 @@ class ProductController extends Controller {
 
         $params = array("softone_object" => "ITEM", "eav_model" => "product", "model" => $model, "list" => 'parts');
         //$this->saveSoftone($params);
-        //$this->updatetecdoc($model);
+        $this->updatetecdoc($model);
 
 
         if (count($model->itemError) > 0)
@@ -1114,10 +1114,10 @@ class ProductController extends Controller {
             //$webserviceProduct = WebserviceProduct::model()->findByAttributes(array('product' =>  $model->id,"webservice"=>$this->webservice));
             if ($out->articleId) {
 
-                $sql = "Select * from webservice_product where product = '" . $model->id . "' AND article_id = '" . $out->articleId . "' AND webservice= '" . $this->webservice . "'";
-                $data = Yii::app()->db->createCommand($sql)->queryRow();
+                $sql = "Delete from webservice_product where product = '" . $model->id . "' AND webservice= '" . $this->webservice . "'";
+                $data = Yii::app()->db->createCommand($sql)->execute();
 
-                $webserviceProduct = $this->model("WebserviceProduct", $data["id"]);
+                $webserviceProduct = $this->model("WebserviceProduct");
                 $webserviceProduct->product = $model->id;
                 $webserviceProduct->webservice = $this->webservice;
                 $webserviceProduct->article_id = $out->articleId;
