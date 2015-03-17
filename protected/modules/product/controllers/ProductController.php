@@ -73,7 +73,7 @@ class ProductController extends Controller {
 
             //$model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
-            $model = $params["model"]::model()->findByAttributes(array('reference' => $data["reference"]));
+            $model = $params["model"]::model()->findByAttributes(array('reference' => $info[1]));
             
             if ($model->id > 0) {
                 $i++;
