@@ -71,9 +71,10 @@ class ProductController extends Controller {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
 
-            $model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
+            //$model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
-
+            $model = $params["model"]::model()->findByAttributes(array('reference' => $data["reference"]));
+            
             if ($model->id > 0) {
                 $i++;
             }
@@ -877,6 +878,7 @@ class ProductController extends Controller {
                         if (!in_array($submodel->item_code, $searchArr)) {
                             $searchArr[] = $submodel->item_code;
                         }
+                        $searchArr = array_filter(array_unique($searchArr));
                         $model->search = implode("|", $searchArr);
                     }
                 }
@@ -891,6 +893,7 @@ class ProductController extends Controller {
                 if (!in_array($model->item_code, $subsearchArr)) {
                     $subsearchArr[] = $model->item_code;
                 }
+                $subsearchArr = array_filter(array_unique($subsearchArr));
                 $submodel->search = implode("|", $subsearchArr);
                 $submodel->save();
             }
