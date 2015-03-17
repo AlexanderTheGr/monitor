@@ -110,9 +110,9 @@ class ProductController extends Controller {
             //echo $model->reference . "<BR>";
             $model->save(false);
 
-            //if ($model->flat_data == "") {
+            if ($model->flat_data == "") {
                 $this->updatetecdoc($model);
-            //}
+            }
 
             $model->setFlat();
             $i++;
