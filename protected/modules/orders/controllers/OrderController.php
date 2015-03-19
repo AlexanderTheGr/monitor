@@ -811,17 +811,17 @@ class OrderController extends Controller {
                 if ($item->chk == 1)
                     $dataOut["ITELINES"][] = array(
                         "VAT" => 1310,
+						"QTY1" => $item->qty,
                         "LINENUM" => $k++,
                         "MTRL" => $item->_product_->reference,
                         "PRICE" => $item->price,
                         "LINEVAL" => $item->lineval,
-                        "DISC1PRC" => $item->disc1prc,
-                        "QTY1" => $item->qty
+                        "DISC1PRC" => $item->disc1prc
                     );
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, $model->reference);
-            $out = $softone->setData((array) $dataOut, $object, (int) 0);
+            $out = $softone->setData((array) $dataOut, $object, $model->reference);
             print_r($out);
         } else {
             $objectArr = array();
