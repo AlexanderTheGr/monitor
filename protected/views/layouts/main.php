@@ -146,7 +146,17 @@
                         <li><a class="<?php echo $this->pagename == "Users" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/users/user"><i class="icon-user-md"></i><?php echo $this->translate("Χρήστες"); ?></a></li>  
                         <li><a class="<?php echo $this->pagename == "Products" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/product/product"><i class="icon-cogs"></i><?php echo $this->translate("Προϊόντα"); ?></a></li>  
                         <li><a class="<?php echo $this->pagename == "Πελάτες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customer"><i class="icon-user"></i><?php echo $this->translate("Πελάτες"); ?></a></li> 
-                        <li><a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a></li> 
+                        <li>
+                            <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="#"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a>
+                            <ul>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order"><?php echo $this->translate("Λίστα Παραγγελίων"); ?></a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><?php echo $this->translate("Νέα Παραγγελία"); ?></a>
+                                </li>
+                            </ul>
+                        </li> 
                     </ul>
                 </div>
             <?php elseif ($user->role != '' AND $user->role == "user"): ?>
@@ -157,7 +167,17 @@
                         <li><a href="<?php echo Yii::app()->request->baseUrl; ?>"><i class="icon-home"></i><?php echo $this->translate("Αρχική"); ?></a></li>   
                         <li><a class="<?php echo $this->pagename == "Products" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/product/product"><i class="icon-cogs"></i><?php echo $this->translate("Προϊόντα"); ?></a></li>  
                         <li><a class="<?php echo $this->pagename == "Πελάτες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customer"><i class="icon-user"></i><?php echo $this->translate("Πελάτες"); ?></a></li> 
-                        <li><a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a></li> 
+                        <li>
+                            <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="#"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a>
+                            <ul>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Νέα"); ?></a>
+                                </li>
+                            </ul>
+                        </li> 
                     </ul>
                 </div>
             <?php endif; ?>
