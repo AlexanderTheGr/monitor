@@ -251,7 +251,7 @@ class OrderController extends Controller {
                 $orderitem->price = $_POST["value"];
                 $orderitem->lineval = $orderitem->price - ($orderitem->price * $orderitem->disc1prc / 100);
             }
-            
+
             if ($field == "lineval") {
                 return;
                 $orderitem->lineval = $_POST["value"];
@@ -299,7 +299,7 @@ class OrderController extends Controller {
         $orderitem = $this->model("OrderItem");
         $orderitem->product = $_POST["product"];
         $orderitem->order = $_POST["order"];
-        $orderitem->qty = $_POST["qty"] > 0 ? $_POST["qty"]+$qty : 1;
+        $orderitem->qty = $_POST["qty"] > 0 ? $_POST["qty"] + $qty : 1;
         $orderitem->price = $_POST["price"];
         $orderitem->disc1prc = $_POST["disc1prc"];
         $orderitem->lineval = $_POST["lineval"];
@@ -348,7 +348,7 @@ class OrderController extends Controller {
             "aoColumns" => array("sWidth" => '200'),
             "type" => "text",
                 )
-        );        
+        );
         $this->addColumn(array(
             "label" => $this->translate("Εργοστάσιο"),
             "type" => "text")
@@ -461,12 +461,11 @@ class OrderController extends Controller {
 
         $this->addFormField("datetime", $this->translate("Ημερ.εισαγωγής"), "insdate", "", "width:500px");
 
-        $this->addFormField("select", $this->translate("Αιτιολογία"), "comments", 
-		array(
-		"Για Τιμολόγιο" => "Για Τιμολόγιο", 
-		"Για Απόδειξη" => "Για Απόδειξη", 
-		"Για Δελτίο Αποστολής" => "Για Δελτίο Αποστολής")
-		);
+        $this->addFormField("select", $this->translate("Αιτιολογία"), "comments", array(
+            "Για Τιμολόγιο" => "Για Τιμολόγιο",
+            "Για Απόδειξη" => "Για Απόδειξη",
+            "Για Δελτίο Αποστολής" => "Για Δελτίο Αποστολής")
+        );
         //$this->addFormField("text", $this->translate("Ξ Ξ±Ο�Ξ±ΟƒΟ„Ξ±Ο„ΞΉΞΊΟ�"), "fincode");
 
 
@@ -512,7 +511,7 @@ class OrderController extends Controller {
             } else {
                 $json[] = "<a class='product_info' ref='" . $product->id . "'  >Νο Image</a>";
             }
-            
+
 
             if ($model->chk == 1) {
                 $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
@@ -811,7 +810,7 @@ class OrderController extends Controller {
                 if ($item->chk == 1)
                     $dataOut["ITELINES"][] = array(
                         "VAT" => 1310,
-						"QTY1" => $item->qty,
+                        "QTY1" => $item->qty,
                         "LINENUM" => $k++,
                         "MTRL" => $item->_product_->reference,
                         "PRICE" => $item->price,
@@ -839,14 +838,14 @@ class OrderController extends Controller {
             $k = 1;
             foreach ($model->_items_ as $item) {
                 if ($item->chk == 1)
-                    $dataOut["ITELINES"][] = 
-                    array("VAT" => 1310, 
-                          "LINENUM" => $k++, 
-                          "MTRL" => $item->_product_->reference, 
-                          "PRICE" => $item->price, 
-                          "LINEVAL" => $item->lineval, 
-                          "DISC1PRC" => $item->disc1prc, 
-                          "QTY1" => $item->qty);
+                    $dataOut["ITELINES"][] = array("VAT" => 1310,
+                                "QTY1" => $item->qty,
+                                "LINENUM" => $k++,
+                                "MTRL" => $item->_product_->reference,
+                                "PRICE" => $item->price,
+                                "LINEVAL" => $item->lineval,
+                                "DISC1PRC" => $item->disc1prc
+                    );
             }
             print_r($dataOut);
             $out = $softone->setData((array) $dataOut, $object, (int) 0);
