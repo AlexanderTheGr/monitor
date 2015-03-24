@@ -421,6 +421,7 @@ class ProductController extends Controller {
         echo "<th>Εκπτ</th>";
         echo "<th>Νέτη</th>";
         echo "<th>Απόθεμα</th>";
+        echo "<th>Θέση Ράφι</th>";
         echo "<th>Ποσότητα</th>";
         echo "<th></th>";
         echo "<th></th></tr></thead>";
@@ -452,6 +453,7 @@ class ProductController extends Controller {
             echo "<td>" . $item->DISC1PRC . "</td>";
             echo "<td>" . $item->LINEVAL . "</td>";
             echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
+            echo "<td>" . $product->item_mtrplace . "</td>";
             echo "<td><input lineval='" . $item->LINEVAL . "' disc1prc='" . $item->DISC1PRC . "' price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
             echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
 
