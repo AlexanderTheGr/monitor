@@ -456,10 +456,7 @@ class ProductController extends Controller {
             echo "<td>" . $product->item_mtrplace . "</td>";
             echo "<td><input lineval='" . $item->LINEVAL . "' disc1prc='" . $item->DISC1PRC . "' price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
             echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
-
             echo "<td>" . implode(",", (array) $itemstoday[$product->id]) . "</td>";
-
-
             echo "</tr>";
         }
         echo "</tbody></table>";
