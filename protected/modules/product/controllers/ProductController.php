@@ -50,8 +50,9 @@ class ProductController extends Controller {
         $sql = "Select max(ts) as t from product";
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["ts"]));
-        $date = "2015-03-15";
-        $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
+        $date = "2015-03-19";
+        $dateto = "2015-03-10";
+        $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . $dateto;
         //$filters = "ITEM.MTRPLACE=*";
         $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
         /*
