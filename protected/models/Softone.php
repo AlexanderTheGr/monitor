@@ -152,7 +152,7 @@ class Softone {
             "appId" => $this->appId,
             "reqID" => $data->reqID,
             "START" => 0,
-            "LIMIT" => 70000000
+            "LIMIT" => 10
         );
         $out = $this->doRequest($params);
         return $out;
