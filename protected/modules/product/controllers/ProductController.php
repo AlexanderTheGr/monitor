@@ -50,7 +50,7 @@ class ProductController extends Controller {
         $sql = "Select max(ts) as t from product";
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["ts"]));
-        $date = "2015-03-15";
+        //$date = "2015-03-15";
         
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         //$filters = "ITEM.MTRPLACE=*";
