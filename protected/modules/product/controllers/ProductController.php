@@ -51,7 +51,7 @@ class ProductController extends Controller {
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["t"]));
         //$date = "2015-03-15";
-        
+
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         //$filters = "ITEM.MTRPLACE=*";
         $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
@@ -76,7 +76,7 @@ class ProductController extends Controller {
             //$model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
             $model = $params["model"]::model()->findByAttributes(array('reference' => $info[1]));
-            
+
             if ($model->id > 0) {
                 $i++;
             }
@@ -113,7 +113,7 @@ class ProductController extends Controller {
             $model->save(false);
 
             //if ($model->flat_data == "") {
-                $this->updatetecdoc($model);
+            $this->updatetecdoc($model);
             //}
 
             $model->setFlat();
@@ -146,7 +146,7 @@ class ProductController extends Controller {
             "label" => $this->translate("Θέση Ράφι"),
             "type" => "text",
                 )
-        );        
+        );
         $this->addColumn(array(
             "label" => $this->translate("Erp Supplier"),
             "type" => "text",
@@ -505,9 +505,9 @@ class ProductController extends Controller {
             $queryarr[] = "id = '" . $_POST["sSearch_0"] . "'";
         if ($_POST["sSearch_1"])
             $queryarr[] = "item_name like '%" . $_POST["sSearch_1"] . "%'";
-        if ($_POST["sSearch_2"]) 
+        if ($_POST["sSearch_2"])
             $queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
-         if ($_POST["sSearch_3"])
+        if ($_POST["sSearch_3"])
             $queryarr[] = "item_mtrplace like '%" . $_POST["sSearch_3"] . "%'";
         if ($_POST["sSearch_4"])
             $queryarr[] = "item_mtrmanfctr like '%" . $_POST["sSearch_4"] . "%'";
@@ -646,11 +646,7 @@ class ProductController extends Controller {
             }
             $keys = array_unique($keys2);
 
-
-
             foreach ($keys as $key) {
-
-
                 if (count($act[$key]) > 1) {
                     foreach ($act[$key] as $cccfxcode1) {
                         $sql = "Select id from product where item_cccfxcode1 = '" . $cccfxcode1 . "'";
@@ -665,7 +661,6 @@ class ProductController extends Controller {
 
                             $con = false;
                             foreach ($act[$key] as $cccfxcode1_2) {
-                               
                                 $sql = "Select id from product where item_cccfxcode1 = '" . $cccfxcode1_2 . "'";
                                 $subp = Yii::app()->db->createCommand($sql)->queryRow();
                                 if ($subp["id"] > 0) {
@@ -695,20 +690,18 @@ class ProductController extends Controller {
                             }
                         }
                         if ($con == false)
-                          continue;
-                        
-                        
+                            continue;
+
+
                         foreach ($searchArr as $srch) {
                             $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
                             $srches = Yii::app()->db->createCommand($sql)->queryAll();
 
                             foreach ($srches as $srchs) {
                                 if ($srchs["id"] != $model->id) {
-
                                     $subsubmodel = $this->model("Product", $srchs["id"]);
                                     $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
                                     $subsubsearchArr = explode("|", $subsubsearch);
-
                                     $as = explode("-", $subsubmodel->item_code);
                                     if ($as[1] == "")
                                         continue;
@@ -727,14 +720,14 @@ class ProductController extends Controller {
                                 }
                             }
                         }
-                        
+
                         foreach ($searchArr as $srch) {
                             $subsearchArr[] = $srch;
                         }
                         foreach ($subsearchArr as $srch) {
                             $searchArr[] = $srch;
-                        } 
-                        
+                        }
+
                         $searchArr = array_filter(array_unique($searchArr));
                         $subsearchArr = array_filter(array_unique($subsearchArr));
                         $searchArr = array_diff($searchArr, array($model->item_code));
@@ -879,7 +872,7 @@ class ProductController extends Controller {
         $gnisiaArr = explode("|", $model->gnisia);
         foreach ($gnisiaArr as $gnisia) {
             if ($gnisia != "") {
-                $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
+                //$sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
                 foreach ($datas as $data) {
                     if ($data["id"] != $model->id) {
@@ -894,6 +887,11 @@ class ProductController extends Controller {
             }
         }
 
+        $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
+        
+        echo $sql;
+        $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
+
         foreach ($searchArr as $search) {
             $submodel = Product::model()->findByAttributes(array('item_code' => $search));
             if ($submodel->id > 0) {
@@ -905,10 +903,26 @@ class ProductController extends Controller {
                 $subsearchArr = array_filter(array_unique($subsearchArr));
                 $submodel->search = implode("|", $subsearchArr);
                 $submodel->save();
-            }
+            } 
+            //else {
+                foreach ($datas2 as $data2) {
+                    $nosubmodel = $this->model("Product", $data2["id"]);
+                    if ($nosubmodel->id > 0) {
+                        echo $nosubmodel->item_code.",";
+                        
+                        $nosubsearchArr = explode("|", $nosubmodel->search);
+                        if (!in_array($search, $nosubsearchArr)) {
+                            $nosubsearchArr[] = $search;
+                        }
+                        $nosubsearchArr = array_filter(array_unique($nosubsearchArr));
+                        $nosubmodel->search = implode("|", $nosubsearchArr);
+                        $nosubmodel->save();
+                        $nosubmodel->setFlat();
+                        $nosubmodel->setProductSearch();
+                    }
+                }
+            //}
         }
-
-
 
 
         $model->save();
@@ -922,7 +936,7 @@ class ProductController extends Controller {
             echo json_encode($model->itemError) . "|||" . json_encode($model->tabError);
         else {
             $model->setFlat();
-
+            $model->setProductSearch();
             echo $model->id;
         }
     }
