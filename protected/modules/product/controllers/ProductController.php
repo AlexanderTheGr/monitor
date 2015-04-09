@@ -889,7 +889,7 @@ class ProductController extends Controller {
 
         $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
         
-        echo $sql;
+        //echo $sql;
         $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
 
         foreach ($searchArr as $search) {
@@ -908,7 +908,7 @@ class ProductController extends Controller {
                 foreach ($datas2 as $data2) {
                     $nosubmodel = $this->model("Product", $data2["id"]);
                     if ($nosubmodel->id > 0) {
-                        echo $nosubmodel->item_code.",";
+                        //echo $nosubmodel->item_code.",";
                         
                         $nosubsearchArr = explode("|", $nosubmodel->search);
                         if (!in_array($search, $nosubsearchArr)) {
