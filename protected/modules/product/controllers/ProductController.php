@@ -897,9 +897,13 @@ class ProductController extends Controller {
             if ($submodel->id > 0) {
                 $submodel = $this->model("Product", $submodel->id);
                 $subsearchArr = explode("|", $submodel->search);
-                if (!in_array($model->item_code, $subsearchArr)) {
-                    $subsearchArr[] = $model->item_code;
+                
+                foreach ($searchArr as $search1) {
+                    if (!in_array($search1, $subsearchArr)) {
+                        $subsearchArr[] = $$search1;
+                    }
                 }
+                
                 $subsearchArr = array_filter(array_unique($subsearchArr));
                 $submodel->search = implode("|", $subsearchArr);
                 $submodel->save();
@@ -926,6 +930,7 @@ class ProductController extends Controller {
 
 
         $model->save();
+        
 
         $params = array("softone_object" => "ITEM", "eav_model" => "product", "model" => $model, "list" => 'parts');
         //$this->saveSoftone($params);
@@ -937,6 +942,7 @@ class ProductController extends Controller {
         else {
             $model->setFlat();
             $model->setProductSearch();
+            $model->updateSynafies();
             echo $model->id;
         }
     }
