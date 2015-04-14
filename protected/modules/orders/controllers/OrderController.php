@@ -318,7 +318,11 @@ class OrderController extends Controller {
         $this->ajaxformsave = "orders/order/orderitemsajaxformsave/";
         $this->ajaxdelete = "orders/order/orderitemsajaxdelete/";
 
-
+        $this->addColumn(array(
+            "label" => $this->translate("A/A"),
+            "type" => "text",
+                )
+        );
         $this->addColumn(array(
             "label" => $this->translate(""),
             "type" => "text",
@@ -489,22 +493,24 @@ class OrderController extends Controller {
 
 
 
-        $openorderssql = "Select id from `order` where `customer` = '" . $order->customer . "' AND fullytrans = 0";
+        $openorderssql = "Select id from `order` where `customer` = '" . $order->customer . "' AND fullytrans = 0 order by id";
         $openorderdatas = Yii::app()->db->createCommand($openorderssql)->queryAll();
 
 
-        $list[0] = "Ξ�Ξ­Ξ± Ο€Ξ±Ο�Ξ±Ξ³Ξ³ΞµΞ»ΞµΞ―Ξ±";
+        $list[0] = "";
         foreach ($openorderdatas as $openorderdata) {
             $list[$openorderdata["id"]] = $openorderdata["id"];
         }
         //$monitor = new Monitor();
+        $i=1;
         foreach ((array) $datas as $data) {
-
+            
             $model = OrderItem::model()->findByPk($data["id"]); //$this->model("OrderItem",$data["id"]);
 
             $product = $this->model("Product", $model->product);
 
             $json = array();
+            $json[] = $i++;
             $fields = array();
             if ($product->media()) {
                 $json[] = "<img class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' />";
@@ -514,13 +520,13 @@ class OrderController extends Controller {
 
 
             if ($model->chk == 1) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγρ</button>";
             } elseif ($order->fullytrans == 0) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγραφή</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγρ</button>";
             } else {
                 $json[] = CHtml::dropDownList('sendtoorderlist', $select, $list) . "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ®</button>";
             }
-
+            
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
             $json[] = $product->item_code;
             $json[] = $product->item_name;
@@ -563,6 +569,7 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
             $json[] = "Τεμάχια: " . $qty;
             $json[] = "Σύνολο";
             $json[] = $price;
@@ -583,12 +590,14 @@ class OrderController extends Controller {
             $json[] = "";
             $json[] = "";
             $json[] = "";
+            $json[] = "";
             $json[] = "Εκπτωση";
             $json[] = "<input  " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:50px' type='text' ref='" . $model->order . "' field='disc1prc' class='order disc1prc' value='" . $model->_order_->disc1prc . "'/>";
             $json[] = "";
             $jsonArr[] = $json;
 
             $json = array();
+            $json[] = "";
             $json[] = "";
             $json[] = "";
             $json[] = "";
