@@ -59,7 +59,7 @@ class Product extends Eav {
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
-        
+
         return array(
             array('reference, catalogue, erp_code,item_mtrplace, tecdoc_code, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search, gnisia', 'required'),
             array('reference, catalogue, tecdoc_supplier_id, tecdoc_generic_article_id, item_cccfxrelbrand, item_vat, item_mtrunit1, item_mtrl_itemtrdata_qty1, updated, actioneer', 'numerical', 'integerOnly' => true),
@@ -109,19 +109,15 @@ class Product extends Eav {
             'item_mtrmanfctr' => 'Item Mtrmanfctr',
             'item_pricer' => 'Item Pricer',
             'item_pricew' => 'Item Pricew',
-            
             'item_pricer01' => 'Item Pricer',
             'item_pricew01' => 'Item Pricew',
             'item_pricer02' => 'Item Pricer',
             'item_pricew02' => 'Item Pricew',
-            
             'item_mtrunit1' => 'Item Mtrunit1',
             'item_name1' => 'Item Name1',
             'item_name' => 'Item Name',
             'item_code' => 'Item Code',
             'item_mtrplace' => 'item_mtrplace',
-            
-            
             'item_mtrl_itemtrdata_qty1' => 'Item Mtrl Itemtrdata Qty1',
             'updated' => 'Updated',
             'ts' => 'Ts',
@@ -170,18 +166,18 @@ class Product extends Eav {
         $criteria->compare('item_mtrmanfctr', $this->item_mtrmanfctr, true);
         $criteria->compare('item_pricer', $this->item_pricer, true);
         $criteria->compare('item_pricew', $this->item_pricew, true);
-        
+
         $criteria->compare('item_pricer01', $this->item_pricer01, true);
-        $criteria->compare('item_pricew01', $this->item_pricew01, true);        
+        $criteria->compare('item_pricew01', $this->item_pricew01, true);
         $criteria->compare('item_pricer02', $this->item_pricer02, true);
         $criteria->compare('item_pricew02', $this->item_pricew02, true);
-        
+
         $criteria->compare('item_mtrunit1', $this->item_mtrunit1);
         $criteria->compare('item_name1', $this->item_name1, true);
         $criteria->compare('item_name', $this->item_name, true);
         $criteria->compare('item_code', $this->item_code, true);
         $criteria->compare('item_mtrplace', $this->item_mtrplace, true);
-        
+
         $criteria->compare('item_mtrl_itemtrdata_qty1', $this->item_mtrl_itemtrdata_qty1);
         $criteria->compare('updated', $this->updated);
         $criteria->compare('ts', $this->ts, true);
@@ -200,8 +196,9 @@ class Product extends Eav {
     public function media() {
 
         $product = json_decode($this->flat_data);
-        if ($product->_webserviceProducts_->article_id == "") return;
-        
+        if ($product->_webserviceProducts_->article_id == "")
+            return;
+
         if ($this->media != "")
             return $this->media;
 
@@ -226,20 +223,58 @@ class Product extends Eav {
         return $this->media;
     }
 
-    function setProductSearch() {
-        $sql = "replace product_search set id = '".$this->id."', item_code = '".$this->item_code."', search = '".$this->search."', gnisia = '".$this->gnisia."'";
-        Yii::app()->db->createCommand($sql)->execute();        
+    function updateSynafies() {
+        $search = str_replace("\n", "|", $this->search);
+        $searchArr = explode("|", $search);
+        foreach ($searchArr as $srch) {
+            $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
+            $srches = Yii::app()->db->createCommand($sql)->queryAll();
+            $searchArr2[] = $srch;
+            foreach ($srches as $srchs) {
+                if ($srchs["id"] != $this->id) {
+                    $submodel = Product::model()->findByPk($srchs["id"]);
+                    $submodel->load();
+                    $subsearch = str_replace("\n", "|", $submodel->search);
+                    $subsearchArr = explode("|", $subsearch);
+                    foreach ($searchArr as $srch2) {
+                        if ($srch2 != $submodel->item_code)
+                            $subsearchArr[] = $srch2;
+                    }
+                    foreach ($subsearchArr as $srch3) {
+                        if ($srch3 != $this->item_code) {
+                            $searchArr2[] = $srch3;
+                        }
+                    }
+                    $subsearchArr[] = $this->item_code;
+                    $subsearchArr = array_filter(array_unique($subsearchArr));
+                    $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+                    $submodel->search = implode("|", (array) $subsearchArr);
+                    $submodel->save();
+                    $submodel->setProductSearch();
+                }
+            }
+        }       
+        $searchArr = array_filter(array_unique($searchArr2));
+        $searchArr = array_diff($searchArr, array($this->item_code));
+        $this->search = implode("|", $searchArr);
+        $this->save();
+        $this->setProductSearch();
     }
-    
+
+    function setProductSearch() {
+        $sql = "replace product_search set id = '" . $this->id . "', item_code = '" . $this->item_code . "', search = '" . $this->search . "', gnisia = '" . $this->gnisia . "'";
+        Yii::app()->db->createCommand($sql)->execute();
+    }
+
     function setFlat() {
         $flat = $this->attributes;
 
         $flat["attributeitems"] = $this->attributeitems;
         unset($flat["flat_data"]);
-        
-        $sql = "replace product_search set id = '".$this->id."', item_code = '".$this->item_code."', search = '".$this->search."', gnisia = '".$this->gnisia."'";
+
+        $sql = "replace product_search set id = '" . $this->id . "', item_code = '" . $this->item_code . "', search = '" . $this->search . "', gnisia = '" . $this->gnisia . "'";
         Yii::app()->db->createCommand($sql)->execute();
-        
+
         $flat["media"] = $this->media();
         $this->media = $this->media();
         $flat["_tecdocSupplier_"]["supplier"] = $this->_tecdocSupplier_->supplier;
