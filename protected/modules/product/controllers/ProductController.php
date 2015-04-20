@@ -50,7 +50,7 @@ class ProductController extends Controller {
         $sql = "Select max(ts) as t from product";
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["t"]));
-        //$date = "2015-03-15";
+        //$date = "2015-04-10";
 
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         //$filters = "ITEM.MTRPLACE=*";
@@ -872,7 +872,7 @@ class ProductController extends Controller {
         $gnisiaArr = explode("|", $model->gnisia);
         foreach ($gnisiaArr as $gnisia) {
             if ($gnisia != "") {
-                //$sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
+                $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
                 foreach ($datas as $data) {
                     if ($data["id"] != $model->id) {
@@ -886,12 +886,10 @@ class ProductController extends Controller {
                 }
             }
         }
-
-        $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
         
+        $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
         //echo $sql;
         $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
-
         foreach ($searchArr as $search) {
             $submodel = Product::model()->findByAttributes(array('item_code' => $search));
             if ($submodel->id > 0) {
@@ -907,27 +905,9 @@ class ProductController extends Controller {
                 $subsearchArr = array_filter(array_unique($subsearchArr));
                 $submodel->search = implode("|", $subsearchArr);
                 $submodel->save();
-            } 
-            //else {
-                foreach ($datas2 as $data2) {
-                    $nosubmodel = $this->model("Product", $data2["id"]);
-                    if ($nosubmodel->id > 0) {
-                        //echo $nosubmodel->item_code.",";
-                        
-                        $nosubsearchArr = explode("|", $nosubmodel->search);
-                        if (!in_array($search, $nosubsearchArr)) {
-                            $nosubsearchArr[] = $search;
-                        }
-                        $nosubsearchArr = array_filter(array_unique($nosubsearchArr));
-                        $nosubmodel->search = implode("|", $nosubsearchArr);
-                        $nosubmodel->save();
-                        $nosubmodel->setFlat();
-                        $nosubmodel->setProductSearch();
-                    }
-                }
-            //}
+            }
         }
-
+        
 
         $model->save();
         
