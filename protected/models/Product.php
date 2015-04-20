@@ -224,15 +224,21 @@ class Product extends Eav {
     }
 
     function updateSynafies() {
+        //return;
         $search = str_replace("\n", "|", $this->search);
         $searchArr = explode("|", $search);
         foreach ($searchArr as $srch) {
-            $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
+            $as = explode("-", $srch);
+            if ($as[1] == "")
+                continue;
+            
+            $sql = "Select id,item_code from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
             $srches = Yii::app()->db->createCommand($sql)->queryAll();
             $searchArr2[] = $srch;
             foreach ($srches as $srchs) {
                 if ($srchs["id"] != $this->id) {
                     $submodel = Product::model()->findByPk($srchs["id"]);
+                    //$submodel = Product::model()->findByAttributes(array('item_code' => $srchs["item_code"]));
                     $submodel->load();
                     $subsearch = str_replace("\n", "|", $submodel->search);
                     $subsearchArr = explode("|", $subsearch);
