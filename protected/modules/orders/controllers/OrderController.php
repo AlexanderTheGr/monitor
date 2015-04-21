@@ -153,9 +153,9 @@ class OrderController extends Controller {
 
 
         if ($this->userrole == 'admin')
-            $sql = "Select id from `order`";
+            $sql = "Select id from `order` limit 0, 1000";
         else
-            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "'";
+            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "' limit 0, 1000";
 
         //$user = $this->loadModel(Yii::app()->user->id);
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
@@ -557,7 +557,7 @@ class OrderController extends Controller {
 
         if (count($jsonArr)) {
             $json = array();
-            $json[] = "";
+            $json[] = "<span style='display:none'>1000000</span>";
             $json[] = "";
             $json[] = "";
             $json[] = "";
@@ -577,7 +577,7 @@ class OrderController extends Controller {
             $jsonArr[] = $json;
 
             $json = array();
-            $json[] = "";
+            $json[] = "<span style='display:none'>1000000</span>";
             $json[] = "";
             $json[] = "";
             $json[] = "";
@@ -597,7 +597,7 @@ class OrderController extends Controller {
             $jsonArr[] = $json;
 
             $json = array();
-            $json[] = "";
+            $json[] = "<span style='display:none'>1000000</span>";
             $json[] = "";
             $json[] = "";
             $json[] = "";
