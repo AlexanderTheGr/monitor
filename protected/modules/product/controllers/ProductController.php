@@ -694,17 +694,19 @@ class ProductController extends Controller {
 
 
                         foreach ($searchArr as $srch) {
+                            $as = explode("-", $srch);
+                            if ($as[1] == "")
+                                continue;
+                            
                             $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
                             $srches = Yii::app()->db->createCommand($sql)->queryAll();
 
                             foreach ($srches as $srchs) {
+
                                 if ($srchs["id"] != $model->id) {
                                     $subsubmodel = $this->model("Product", $srchs["id"]);
                                     $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
                                     $subsubsearchArr = explode("|", $subsubsearch);
-                                    $as = explode("-", $subsubmodel->item_code);
-                                    if ($as[1] == "")
-                                        continue;
 
                                     if (!in_array($subsubmodel->item_code, $searchArr)) {
                                         $searchArr[] = $subsubmodel->item_code;
@@ -886,31 +888,36 @@ class ProductController extends Controller {
                 }
             }
         }
-        
+
         $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
         //echo $sql;
         $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
         foreach ($searchArr as $search) {
+
+            $as = explode("-", $search);
+            if ($as[1] == "")
+                continue;
+
             $submodel = Product::model()->findByAttributes(array('item_code' => $search));
             if ($submodel->id > 0) {
                 $submodel = $this->model("Product", $submodel->id);
                 $subsearchArr = explode("|", $submodel->search);
-                
+
                 foreach ($searchArr as $search1) {
                     if (!in_array($search1, $subsearchArr)) {
-                        $subsearchArr[] = $$search1;
+                        $subsearchArr[] = $search1;
                     }
                 }
-                
+
                 $subsearchArr = array_filter(array_unique($subsearchArr));
                 $submodel->search = implode("|", $subsearchArr);
                 $submodel->save();
             }
         }
-        
+
 
         $model->save();
-        
+
 
         $params = array("softone_object" => "ITEM", "eav_model" => "product", "model" => $model, "list" => 'parts');
         //$this->saveSoftone($params);
@@ -922,6 +929,7 @@ class ProductController extends Controller {
         else {
             $model->setFlat();
             $model->setProductSearch();
+            $model->updateSynafies();
             $model->updateSynafies();
             echo $model->id;
         }
