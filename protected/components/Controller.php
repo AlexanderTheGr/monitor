@@ -59,7 +59,7 @@ class Controller extends CController {
     public $pagename = "";
     public $userrole = "";
     public $tableName;
-    public $aaSorting = "[[0,'desc']]";
+    public $aaSorting = "[[0,'asc']]";
     public $callback = "function() {alert('Data Saved')}";
     public $btnTitles = array("add_new" => "Νέο", "save" => "Αποθήκευη", "delete" => "Διαγραφή", "cancel" => "Άκυρο");
     public $settings = array();
