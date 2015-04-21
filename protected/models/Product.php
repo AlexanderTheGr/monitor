@@ -225,28 +225,51 @@ class Product extends Eav {
 
     function updateSynafies() {
         //return;
+        //return;
         $search = str_replace("\n", "|", $this->search);
         $searchArr = explode("|", $search);
+        
         foreach ($searchArr as $srch) {
             $as = explode("-", $srch);
             if ($as[1] == "")
                 continue;
-            
+
+
             $sql = "Select id,item_code from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
             $srches = Yii::app()->db->createCommand($sql)->queryAll();
             $searchArr2[] = $srch;
+            
+
+            
             foreach ($srches as $srchs) {
+                $as = explode("-", $srchs["item_code"]);
+                if ($as[1] == "")
+                    continue;
+
+
                 if ($srchs["id"] != $this->id) {
                     $submodel = Product::model()->findByPk($srchs["id"]);
                     //$submodel = Product::model()->findByAttributes(array('item_code' => $srchs["item_code"]));
                     $submodel->load();
                     $subsearch = str_replace("\n", "|", $submodel->search);
                     $subsearchArr = explode("|", $subsearch);
+                    $subsearchArr[] = $this->item_code;
                     foreach ($searchArr as $srch2) {
-                        if ($srch2 != $submodel->item_code)
+                        $as = explode("-", $srch2);
+                        if ($as[1] == "")
+                            continue;
+
+                        if ($srch2 != $submodel->item_code) {
                             $subsearchArr[] = $srch2;
+                        }
                     }
+
+
                     foreach ($subsearchArr as $srch3) {
+                        $as = explode("-", $srch3);
+                        if ($as[1] == "")
+                            continue;
+
                         if ($srch3 != $this->item_code) {
                             $searchArr2[] = $srch3;
                         }
@@ -254,17 +277,33 @@ class Product extends Eav {
                     $subsearchArr[] = $this->item_code;
                     $subsearchArr = array_filter(array_unique($subsearchArr));
                     $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
+                    $subsearchArr = $this->clearItemCodeArr($subsearchArr);
+
                     $submodel->search = implode("|", (array) $subsearchArr);
                     $submodel->save();
                     $submodel->setProductSearch();
                 }
             }
-        }       
+        }
         $searchArr = array_filter(array_unique($searchArr2));
         $searchArr = array_diff($searchArr, array($this->item_code));
+        $searchArr = $this->clearItemCodeArr($searchArr);
         $this->search = implode("|", $searchArr);
         $this->save();
         $this->setProductSearch();
+    }
+
+    function clearItemCodeArr($searchArr) {
+        $out = array();
+        foreach ((array)$searchArr as $se) {
+            $as = explode("-", $se);
+            if ($as[1] == "")
+                continue;
+            if ($as[0] == "")
+                continue;            
+            $out[] = $se;
+        }
+        return $out;
     }
 
     function setProductSearch() {
