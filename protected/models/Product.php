@@ -156,6 +156,7 @@ class Product extends Eav {
         $criteria->compare('item_insdate', $this->item_insdate, true);
         $criteria->compare('item_upddate', $this->item_upddate, true);
         
+        
         $criteria->compare('tecdoc_supplier_id', $this->tecdoc_supplier_id);
         $criteria->compare('supplier_code', $this->supplier_code, true);
         $criteria->compare('erp_supplier', $this->erp_supplier, true);
