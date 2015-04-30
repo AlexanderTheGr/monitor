@@ -61,13 +61,13 @@ class Product extends Eav {
         // will receive user inputs.
 
         return array(
-            array('reference, catalogue, erp_code,item_mtrplace, tecdoc_code, supplier_code, item_upddate, item_insdate, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search, gnisia', 'required'),
+            array('reference, catalogue, erp_code,item_mtrplace, tecdoc_code, supplier_code,item_mtrl_iteextra_num02, item_upddate, item_insdate, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, ts, actioneer, created, modified, flat_data, search, gnisia', 'required'),
             array('reference, catalogue, tecdoc_supplier_id, tecdoc_generic_article_id, item_cccfxrelbrand, item_vat, item_mtrunit1, item_mtrl_itemtrdata_qty1, updated, actioneer', 'numerical', 'integerOnly' => true),
             array('erp_code, tecdoc_code, supplier_code, erp_supplier,item_mtrplace, tecdoc_article_name, item_cccfxreltdcode, item_cccfxcode1, item_mtrmanfctr, item_name1, item_name, item_code', 'length', 'max' => 255),
             array('disc1prc, item_pricer, item_pricew,item_pricer02, item_pricer01, item_pricew02, item_pricew01', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, catalogue, item_upddate, item_insdate, erp_code,item_mtrplace, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search,gnisia', 'safe', 'on' => 'search'),
+            array('id, reference, catalogue, item_mtrl_iteextra_num02, item_upddate, item_insdate, erp_code,item_mtrplace, tecdoc_code, tecdoc_supplier_id, supplier_code, erp_supplier, title, disc1prc, tecdoc_article_name, tecdoc_generic_article_id, item_cccfxrelbrand, item_cccfxreltdcode, item_vat, item_cccfxcode1, item_mtrmanfctr, item_pricer, item_pricew, item_pricer02, item_pricer01, item_pricew02, item_pricew01, item_mtrunit1, item_name1, item_name, item_code, item_mtrl_itemtrdata_qty1, updated, ts, actioneer, created, modified, flat_data, search,gnisia', 'safe', 'on' => 'search'),
         );
     }
 
@@ -100,6 +100,7 @@ class Product extends Eav {
             'erp_supplier' => 'Erp Supplier',
             'title' => 'Title',
             'disc1prc' => 'Disc1prc',
+            'item_mtrl_iteextra_num02'=>'item_mtrl_iteextra_num02',
             'tecdoc_article_name' => 'Tecdoc Article Name',
             'tecdoc_generic_article_id' => 'Tecdoc Generic Article',
             'item_cccfxrelbrand' => 'Item Cccfxrelbrand',
@@ -155,7 +156,7 @@ class Product extends Eav {
         
         $criteria->compare('item_insdate', $this->item_insdate, true);
         $criteria->compare('item_upddate', $this->item_upddate, true);
-        
+        $criteria->compare('item_mtrl_iteextra_num02', $this->item_mtrl_iteextra_num02, true);
         
         $criteria->compare('tecdoc_supplier_id', $this->tecdoc_supplier_id);
         $criteria->compare('supplier_code', $this->supplier_code, true);
@@ -290,10 +291,15 @@ class Product extends Eav {
                 }
             }
         }
-        $searchArr = array_filter(array_unique($searchArr2));
-        $searchArr = array_diff($searchArr, array($this->item_code));
-        $searchArr = $this->clearItemCodeArr($searchArr);
-        $this->search = implode("|", $searchArr);
+        
+        $searchArr = array_filter(array_unique((array)$searchArr2));
+        $searchArr = (array)$searchArr;
+        
+        //if (count($searchArr))
+        //     $searchArr = array_diff((array)$searchArr, $this->item_code);
+        
+        $searchArr = $this->clearItemCodeArr((array)$searchArr);
+        $this->search = implode("|", (array)$searchArr);
         $this->save();
         $this->setProductSearch();
     }
