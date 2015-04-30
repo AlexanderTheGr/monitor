@@ -47,14 +47,16 @@ class ProductController extends Controller {
         $softone = new Softone();
 
 
-        $sql = "Select max(ts) as t from product";
+        $sql = "Select max(item_upddate) as t from product";
         $data = Yii::app()->db->createCommand($sql)->queryRow();
         $date = date("Y-m-d", strtotime($data["t"]));
-        //$date = "2015-04-10";
-
+        //$date = "2015-03-30";
+        //echo $date;
+        //exit;
+        //$params["list"] = "";
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         //$filters = "ITEM.MTRPLACE=*";
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
         /*
           $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
           foreach ($fields as $field) {
@@ -67,18 +69,29 @@ class ProductController extends Controller {
          * 
          */
 
+        //print_r($datas);
+        echo count($datas);
+        //exit;
         $i = 0;
         foreach ($datas as $data) {
 
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
-
+            /*
+            
+            $sql = "Update  product set item_mtrl_iteextra_num02 = '".$data["item_mtrl_iteextra_num02"]."', item_mtrl_itemtrdata_qty1 = '".$data["item_mtrl_itemtrdata_qty1"]."' where reference = '" . $info[1] . "'";
+            
+            Yii::app()->db->createCommand($sql)->execute();
+            continue;
+             * 
+             */
+           
             //$model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
             $model = $params["model"]::model()->findByAttributes(array('reference' => $info[1]));
 
             if ($model->id > 0) {
-                $i++;
+               // continue;
             }
 
             $model = $this->model($params["model"], $model->id);
@@ -120,7 +133,11 @@ class ProductController extends Controller {
             $i++;
             //if ($i++>100) break;
         }
-        echo $i;
+        echo "-".$i;
+    }
+
+    public function synafiaremover() {
+        
     }
 
     public function actionIndex() {
@@ -158,12 +175,12 @@ class ProductController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Tecdoc Supplier"),
+            "label" => $this->translate("Κόστος"),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Tecdoc Article ID"),
+            "label" => $this->translate("Απόθεμα"),
             "type" => "text",
                 )
         );
@@ -492,9 +509,9 @@ class ProductController extends Controller {
 
 
         if (count($articleIds)) {
-            $sql = "Select id, flat_data from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
+            $sql = "Select * from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
         } else {
-            $sql = "Select id, flat_data from product";
+            $sql = "Select * from product";
             $sqlcnt = "Select count(*) as cnt from product";
         }
 
@@ -523,8 +540,12 @@ class ProductController extends Controller {
         $cnt = Yii::app()->db->createCommand($sqlcnt . " " . $query)->queryRow();
         $datas = Yii::app()->db->createCommand($sql . " " . $query . " " . $limiter)->queryAll();
         $jsonArr = array();
+        //echo count($datas);
+        //exit;
+        
         foreach ((array) $datas as $data) {
             //$data["flat_data"] = "";
+            /*
             if ($data["flat_data"] == "") {
 
                 $model = $this->loadModel($data["id"]);
@@ -547,27 +568,31 @@ class ProductController extends Controller {
             } else {
                 $model = json_decode($data["flat_data"]);
             }
-            $model1 = $this->loadModel($data["id"]);
+             * 
+             */
+            //$model1 = $this->loadModel($data["id"]);
             $json = array();
             $f = false;
             $fields = array();
-            $json[] = "<img width=100 src='" . $model1->media() . "' />";
+
+            $json[] = "";//<img width=100 src='" . $model1->media() . "' />";
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
-            $json[] = $model->item_name;
-            $json[] = $model->item_code;
-            $json[] = $model->item_mtrplace;
-            $json[] = $model->item_mtrmanfctr;
-            $json[] = $model->item_cccfxreltdcode;
-            $json[] = $model->_tecdocSupplier_->supplier;
-            $json[] = $model->_webserviceProducts_->article_id;
-            $json[] = $model->_webserviceProducts_->article_name;
+            $json[] = $data["item_name"];
+            $json[] = $data["item_code"];
+            $json[] = $data["item_mtrplace"];
+            $json[] = $data["item_mtrmanfctr"];
+            $json[] = $data["item_cccfxreltdcode"];
+
+            $json[] = $data["item_mtrl_iteextra_num02"];
+            $json[] = $data["item_mtrl_itemtrdata_qty1"];
+            $json[] = "";
             /*
               $json[] = $model1->_tecdocSupplier_->supplier;
               $json[] = $model1->_webserviceProducts_[$this->settings["webservice"]]->article_id;
               $json[] = $model1->_webserviceProducts_[$this->settings["webservice"]]->article_name;
              */
             //$json[] = "<a href='" . Yii::app()->params['mainurl'] . "/users/user/" . $model->id . "'>Edit</a>";
-            $json["DT_RowId"] = 'product_' . $model->id;
+            $json["DT_RowId"] = 'product_' . $data["id"];
             $json["DT_RowClass"] = 'productpage';
             $jsonArr[] = $json;
         }
@@ -697,7 +722,7 @@ class ProductController extends Controller {
                             $as = explode("-", $srch);
                             if ($as[1] == "")
                                 continue;
-                            
+
                             $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
                             $srches = Yii::app()->db->createCommand($sql)->queryAll();
 
@@ -930,7 +955,7 @@ class ProductController extends Controller {
             $model->setFlat();
             $model->setProductSearch();
             $model->updateSynafies();
-            $model->updateSynafies();
+            //$model->updateSynafies();
             echo $model->id;
         }
     }
