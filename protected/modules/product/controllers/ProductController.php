@@ -56,7 +56,7 @@ class ProductController extends Controller {
         //$params["list"] = "";
         $filters = "ITEM.UPDDATE=" . $date . "&ITEM.UPDDATE_TO=" . date("Y-m-d");
         //$filters = "ITEM.MTRPLACE=*";
-        $datas = $softone->retrieveData($params["softone_object"], $params["list"],$filters);
+        $datas = $softone->retrieveData($params["softone_object"], $params["list"], $filters);
         /*
           $fields = $softone->retrieveFields($params["softone_object"], $params["list"]);
           foreach ($fields as $field) {
@@ -78,20 +78,20 @@ class ProductController extends Controller {
             $zoominfo = $data["zoominfo"];
             $info = explode(";", $zoominfo);
             /*
-            
-            $sql = "Update  product set item_mtrl_iteextra_num02 = '".$data["item_mtrl_iteextra_num02"]."', item_mtrl_itemtrdata_qty1 = '".$data["item_mtrl_itemtrdata_qty1"]."' where reference = '" . $info[1] . "'";
-            
-            Yii::app()->db->createCommand($sql)->execute();
-            continue;
+
+              $sql = "Update  product set item_mtrl_iteextra_num02 = '".$data["item_mtrl_iteextra_num02"]."', item_mtrl_itemtrdata_qty1 = '".$data["item_mtrl_itemtrdata_qty1"]."' where reference = '" . $info[1] . "'";
+
+              Yii::app()->db->createCommand($sql)->execute();
+              continue;
              * 
              */
-           
+
             //$model = $params["model"]::model()->findByAttributes(array('item_code' => $data["item_code"]));
 
             $model = $params["model"]::model()->findByAttributes(array('reference' => $info[1]));
 
             if ($model->id > 0) {
-               // continue;
+                // continue;
             }
 
             $model = $this->model($params["model"], $model->id);
@@ -128,12 +128,12 @@ class ProductController extends Controller {
             //if ($model->flat_data == "") {
             $this->updatetecdoc($model);
             //}
-
             $model->setFlat();
+            $model->updateSynafies();
             $i++;
             //if ($i++>100) break;
         }
-        echo "-".$i;
+        echo "-" . $i;
     }
 
     public function synafiaremover() {
@@ -329,7 +329,6 @@ class ProductController extends Controller {
 
             $time_start = microtime(true);
             $articleIds = unserialize($this->getArticlesSearch($_POST["terms"]));
-            //print_r($articleIds);
 
             if (count($articleIds)) {
                 $sql = "Select id from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
@@ -347,8 +346,12 @@ class ProductController extends Controller {
             $time_start = microtime(true);
             //if (count($products) == 0) {
             if ($_POST["terms"]) {
-                $sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
+                //$sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
+                //$datas = Yii::app()->db->createCommand($sql)->queryAll();
+                
+                $sql = "Select id from product_search where id in (Select id2 from synafies where id1 in (Select id from product_search where item_code like '%" . $_POST["terms"] . "%') OR id2 in (Select id from product_search where item_code like '%" . $_POST["terms"] . "%'))";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
+                
                 //echo $sql;
                 //print_r($datas);
                 foreach ((array) $datas as $data) {
@@ -497,7 +500,7 @@ class ProductController extends Controller {
 
         $this->settings["webservice"] = 11632;
 
-
+        
         if ($_POST["iDisplayLength"]) {
             $limiter = " limit " . $_POST["iDisplayStart"] . ", " . $_POST["iDisplayLength"];
         }
@@ -505,25 +508,19 @@ class ProductController extends Controller {
             $articleIds = unserialize($_POST["articleIds"]);
         };
 
-
-
-
         if (count($articleIds)) {
             $sql = "Select * from product where id in (Select product from webservice_product where webservice = '" . $this->settings["webservice"] . "' AND article_id in (" . implode(",", $articleIds) . "))";
         } else {
             $sql = "Select * from product";
             $sqlcnt = "Select count(*) as cnt from product";
         }
-
-
-
-
         if ($_POST["sSearch_0"])
             $queryarr[] = "id = '" . $_POST["sSearch_0"] . "'";
         if ($_POST["sSearch_1"])
             $queryarr[] = "item_name like '%" . $_POST["sSearch_1"] . "%'";
-        if ($_POST["sSearch_2"])
-            $queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
+        if ($_POST["sSearch_2"]) 
+            //$queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
+            $queryarr[] = "id in (Select id2 from synafies where id1 in (Select id from product_search where item_code like '%" . $_POST["sSearch_2"] . "%') OR id2 in (Select id from product_search where item_code like '%" . $_POST["sSearch_2"] . "%'))";
         if ($_POST["sSearch_3"])
             $queryarr[] = "item_mtrplace like '%" . $_POST["sSearch_3"] . "%'";
         if ($_POST["sSearch_4"])
@@ -542,40 +539,51 @@ class ProductController extends Controller {
         $jsonArr = array();
         //echo count($datas);
         //exit;
+
         
+        //$sql = "Select id from product where id > 94206";
+        //$datas = Yii::app()->db->createCommand($sql . " " . $query . " " . $limiter)->queryAll();
+        //$datas = Yii::app()->db->createCommand($sql)->queryAll();
+
         foreach ((array) $datas as $data) {
+
             //$data["flat_data"] = "";
             /*
-            if ($data["flat_data"] == "") {
+              if ($data["flat_data"] == "") {
 
-                $model = $this->loadModel($data["id"]);
-                $model->load();
+              $model = $this->loadModel($data["id"]);
+              $model->load();
 
 
-                if ($data["flat_data"] == "") {
-                    $model->erp_code = $model->item_code;
-                    $model->tecdoc_code = $model->item_cccfxreltdcode;
-                    $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
-                }
-                if ($model->item_cccfxreltdcode != "") {
-                    $this->updatetecdoc($model);
-                }
-                if ($data["flat_data"] == "") {
-                    $model->setFlat();
-                }
+              if ($data["flat_data"] == "") {
+              $model->erp_code = $model->item_code;
+              $model->tecdoc_code = $model->item_cccfxreltdcode;
+              $model->tecdoc_supplier_id = $model->item_cccfxrelbrand;
+              }
+              if ($model->item_cccfxreltdcode != "") {
+              $this->updatetecdoc($model);
+              }
+              if ($data["flat_data"] == "") {
+              $model->setFlat();
+              }
 
-                $model = json_decode($model->flat_data);
-            } else {
-                $model = json_decode($data["flat_data"]);
-            }
+              $model = json_decode($model->flat_data);
+              } else {
+              $model = json_decode($data["flat_data"]);
+              }
              * 
              */
-            //$model1 = $this->loadModel($data["id"]);
+            //echo "aaa->".$data["id"]."<BR>";
+            //$model = $this->loadModel($data["id"]);
+            //$model->updateSynafies();
+            //return;
             $json = array();
             $f = false;
             $fields = array();
 
-            $json[] = "";//<img width=100 src='" . $model1->media() . "' />";
+            //$model->updateSynafies();
+            
+            $json[] = ""; //<img width=100 src='" . $model1->media() . "' />";
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
             $json[] = $data["item_name"];
             $json[] = $data["item_code"];
@@ -595,6 +603,7 @@ class ProductController extends Controller {
             $json["DT_RowId"] = 'product_' . $data["id"];
             $json["DT_RowClass"] = 'productpage';
             $jsonArr[] = $json;
+            
         }
         echo json_encode(array('iTotalRecords' => $cnt["cnt"], 'iTotalDisplayRecords' => $cnt["cnt"], 'aaData' => $jsonArr));
     }
@@ -636,8 +645,21 @@ class ProductController extends Controller {
         $data = $softone->getData("ITEM", $model->reference, "");
         //print_r($data);
 
-        $model->search = str_replace("|", "\n", $model->search);
+        
+        $sql = "Select id2 from synafies where id1 = '" . $model->id . "'";
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $searchArr = array();
+        foreach ($datas as $data) {
+            $submodel = Product::model()->findByPk($data["id2"]);
+            $searchArr[] = $submodel->item_code;
+        }
+        
+        
+        $model->search  = implode("\n", $searchArr);
+        
+        
         $model->gnisia = str_replace("|", "\n", $model->gnisia);
+        
 
         $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
         $this->addFormField("text", $this->translate("Κωδικός Είδους"), "item_code", "", "width:500px");
@@ -892,69 +914,72 @@ class ProductController extends Controller {
         $model->search = str_replace("\n", "|", $model->search);
 
 
-        $searchArr = explode("|", $model->search);
+        $model->updateSynafies();
+        
+        /*
+          $model->gnisia = str_replace("\n", "|", $model->gnisia);
+          $gnisiaArr = explode("|", $model->gnisia);
+          foreach ($gnisiaArr as $gnisia) {
+          if ($gnisia != "") {
+          $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
+          $datas = Yii::app()->db->createCommand($sql)->queryAll();
+          foreach ($datas as $data) {
+          if ($data["id"] != $model->id) {
+          $submodel = $this->model("Product", $data["id"]);
+          if (!in_array($submodel->item_code, $searchArr)) {
+          $searchArr[] = $submodel->item_code;
+          }
+          $searchArr = array_filter(array_unique($searchArr));
+          $model->search = implode("|", $searchArr);
+          }
+          }
+          }
+          }
 
+          $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
+          //echo $sql;
+          $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
+          foreach ($searchArr as $search) {
 
-        $model->gnisia = str_replace("\n", "|", $model->gnisia);
-        $gnisiaArr = explode("|", $model->gnisia);
-        foreach ($gnisiaArr as $gnisia) {
-            if ($gnisia != "") {
-                $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
-                $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                foreach ($datas as $data) {
-                    if ($data["id"] != $model->id) {
-                        $submodel = $this->model("Product", $data["id"]);
-                        if (!in_array($submodel->item_code, $searchArr)) {
-                            $searchArr[] = $submodel->item_code;
-                        }
-                        $searchArr = array_filter(array_unique($searchArr));
-                        $model->search = implode("|", $searchArr);
-                    }
-                }
-            }
-        }
+          $as = explode("-", $search);
+          if ($as[1] == "")
+          continue;
 
-        $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
-        //echo $sql;
-        $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($searchArr as $search) {
+          $submodel = Product::model()->findByAttributes(array('item_code' => $search));
+          if ($submodel->id > 0) {
+          $submodel = $this->model("Product", $submodel->id);
+          $subsearchArr = explode("|", $submodel->search);
 
-            $as = explode("-", $search);
-            if ($as[1] == "")
-                continue;
+          foreach ($searchArr as $search1) {
+          if (!in_array($search1, $subsearchArr)) {
+          $subsearchArr[] = $search1;
+          }
+          }
 
-            $submodel = Product::model()->findByAttributes(array('item_code' => $search));
-            if ($submodel->id > 0) {
-                $submodel = $this->model("Product", $submodel->id);
-                $subsearchArr = explode("|", $submodel->search);
+          $subsearchArr = array_filter(array_unique($subsearchArr));
+          $submodel->search = implode("|", $subsearchArr);
+          $submodel->save();
+          }
+          }
+         */
 
-                foreach ($searchArr as $search1) {
-                    if (!in_array($search1, $subsearchArr)) {
-                        $subsearchArr[] = $search1;
-                    }
-                }
-
-                $subsearchArr = array_filter(array_unique($subsearchArr));
-                $submodel->search = implode("|", $subsearchArr);
-                $submodel->save();
-            }
-        }
 
 
         $model->save();
 
 
+
         $params = array("softone_object" => "ITEM", "eav_model" => "product", "model" => $model, "list" => 'parts');
         //$this->saveSoftone($params);
-        $this->updatetecdoc($model);
+        //$this->updatetecdoc($model);
 
 
         if (count($model->itemError) > 0)
             echo json_encode($model->itemError) . "|||" . json_encode($model->tabError);
         else {
             $model->setFlat();
-            $model->setProductSearch();
-            $model->updateSynafies();
+            //$model->setProductSearch();
+            //$model->updateSynafies();
             //$model->updateSynafies();
             echo $model->id;
         }
