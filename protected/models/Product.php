@@ -100,7 +100,7 @@ class Product extends Eav {
             'erp_supplier' => 'Erp Supplier',
             'title' => 'Title',
             'disc1prc' => 'Disc1prc',
-            'item_mtrl_iteextra_num02'=>'item_mtrl_iteextra_num02',
+            'item_mtrl_iteextra_num02' => 'item_mtrl_iteextra_num02',
             'tecdoc_article_name' => 'Tecdoc Article Name',
             'tecdoc_generic_article_id' => 'Tecdoc Generic Article',
             'item_cccfxrelbrand' => 'Item Cccfxrelbrand',
@@ -153,11 +153,11 @@ class Product extends Eav {
         $criteria->compare('catalogue', $this->catalogue);
         $criteria->compare('erp_code', $this->erp_code, true);
         $criteria->compare('tecdoc_code', $this->tecdoc_code, true);
-        
+
         $criteria->compare('item_insdate', $this->item_insdate, true);
         $criteria->compare('item_upddate', $this->item_upddate, true);
         $criteria->compare('item_mtrl_iteextra_num02', $this->item_mtrl_iteextra_num02, true);
-        
+
         $criteria->compare('tecdoc_supplier_id', $this->tecdoc_supplier_id);
         $criteria->compare('supplier_code', $this->supplier_code, true);
         $criteria->compare('erp_supplier', $this->erp_supplier, true);
@@ -232,86 +232,67 @@ class Product extends Eav {
     function updateSynafies() {
         //return;
         //return;
-        $search = str_replace("\n", "|", $this->search);
-        $searchArr = explode("|", $search);
+
+        $searchArr = explode("|", $this->search);
+        $sql = "delete from synafies where id1 = '" . $this->id . "' OR id2 = '" . $this->id . "'";
+        Yii::app()->db->createCommand($sql)->execute();
+        $sql = "Replace synafies set id1 = '" . $this->id . "', id2 = '" . $this->id . "'";
+        Yii::app()->db->createCommand($sql)->execute();
         
-        foreach ($searchArr as $srch) {
-            $as = explode("-", $srch);
-            if ($as[1] == "")
+        $as = explode("-", $this->item_code);
+        if (trim($as[1]) == "")
+            return;
+        if (trim($as[0]) == "")
+            return;        
+        
+        foreach ($searchArr as $search) {
+            $as = explode("-", $search);
+            if (trim($as[1]) == "")
+                continue;
+            if (trim($as[0]) == "")
                 continue;
 
-
-            $sql = "Select id,item_code from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
-            $srches = Yii::app()->db->createCommand($sql)->queryAll();
-            $searchArr2[] = $srch;
-            
-
-            
-            foreach ($srches as $srchs) {
-                $as = explode("-", $srchs["item_code"]);
-                if ($as[1] == "")
-                    continue;
-
-
-                if ($srchs["id"] != $this->id) {
-                    $submodel = Product::model()->findByPk($srchs["id"]);
-                    //$submodel = Product::model()->findByAttributes(array('item_code' => $srchs["item_code"]));
-                    $submodel->load();
-                    $subsearch = str_replace("\n", "|", $submodel->search);
-                    $subsearchArr = explode("|", $subsearch);
-                    $subsearchArr[] = $this->item_code;
-                    foreach ($searchArr as $srch2) {
-                        $as = explode("-", $srch2);
-                        if ($as[1] == "")
-                            continue;
-
-                        if ($srch2 != $submodel->item_code) {
-                            $subsearchArr[] = $srch2;
-                        }
-                    }
-
-
-                    foreach ($subsearchArr as $srch3) {
-                        $as = explode("-", $srch3);
-                        if ($as[1] == "")
-                            continue;
-
-                        if ($srch3 != $this->item_code) {
-                            $searchArr2[] = $srch3;
-                        }
-                    }
-                    $subsearchArr[] = $this->item_code;
-                    $subsearchArr = array_filter(array_unique($subsearchArr));
-                    $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
-                    $subsearchArr = $this->clearItemCodeArr($subsearchArr);
-
-                    $submodel->search = implode("|", (array) $subsearchArr);
-                    $submodel->save();
-                    $submodel->setProductSearch();
-                }
+            $submodel = Product::model()->findByAttributes(array('item_code' => $search));
+            if ($submodel->id) {
+                $sql = "Replace synafies set id1 = '" . $this->id . "', id2 = '" . $submodel->id . "'";
+                Yii::app()->db->createCommand($sql)->execute();
+                $sql = "Replace synafies set id2 = '" . $this->id . "', id1 = '" . $submodel->id . "'";
+                Yii::app()->db->createCommand($sql)->execute();
             }
         }
-        
-        $searchArr = array_filter(array_unique((array)$searchArr2));
-        $searchArr = (array)$searchArr;
-        
-        //if (count($searchArr))
-        //     $searchArr = array_diff((array)$searchArr, $this->item_code);
-        
-        $searchArr = $this->clearItemCodeArr((array)$searchArr);
-        $this->search = implode("|", (array)$searchArr);
-        $this->save();
-        $this->setProductSearch();
+        $sql = "Select * from synafies where id1 = '" . $this->id . "' OR id2 = '" . $this->id . "'";
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $d = array();
+        foreach ($datas as $data) {
+
+            $sql = "Select * from synafies where id1 = '" . $data["id2"] . "' OR id2 = '" . $data["id2"] . "' OR id1 = '" . $data["id1"] . "' OR id2 = '" . $data["id1"] . "'";
+            $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
+            foreach ($datas2 as $data2) {
+                $d[] = $data2["id1"];
+                $d[] = $data2["id2"];
+            }
+        }
+        $d = array_filter(array_unique($d));
+        foreach ($d as $t1) {
+            foreach ($d as $t2) {
+                //if ($t1 != $t2) {
+                    $sql = "Replace synafies set id1 = '" . $t1 . "', id2 = '" . $t2 . "'";
+                    Yii::app()->db->createCommand($sql)->execute();
+                    $sql = "Replace synafies set id2 = '" . $t2 . "', id1 = '" . $t1 . "'";
+                    Yii::app()->db->createCommand($sql)->execute();
+                //}
+            }
+        }
     }
 
     function clearItemCodeArr($searchArr) {
         $out = array();
-        foreach ((array)$searchArr as $se) {
+        foreach ((array) $searchArr as $se) {
             $as = explode("-", $se);
             if ($as[1] == "")
                 continue;
             if ($as[0] == "")
-                continue;            
+                continue;
             $out[] = $se;
         }
         return $out;
