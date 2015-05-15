@@ -339,7 +339,7 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Κωδικός Είδους"),
+            "label" => $this->translate("Κωδικός"),
             "type" => "text")
         );
         $this->addColumn(array(
@@ -348,13 +348,13 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Θέση Ράφι"),
-            "aoColumns" => array("sWidth" => '200'),
+            "label" => $this->translate("Ράφι"),
+            "aoColumns" => array("sWidth" => '150'),
             "type" => "text",
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Εργοστάσιο"),
+            "label" => $this->translate("Εργοστ"),
             "type" => "text")
         );
         $this->addColumn(array(
@@ -520,9 +520,9 @@ class OrderController extends Controller {
 
 
             if ($model->chk == 1) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγρ</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>X</button>";
             } elseif ($order->fullytrans == 0) {
-                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>Διαγρ</button>";
+                $json[] = "<button " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " ref='" . $model->id . "' class='btn btn-danger delete_model'>X</button>";
             } else {
                 $json[] = CHtml::dropDownList('sendtoorderlist', $select, $list) . "<button ref='" . $model->id . "' class='btn btn-success sendtoorder'>Ξ‘Ο€ΞΏΟƒΟ„ΞΏΞ»Ξ®</button>";
             }
