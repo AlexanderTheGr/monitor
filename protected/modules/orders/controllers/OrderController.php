@@ -155,9 +155,9 @@ class OrderController extends Controller {
 
 
         if ($this->userrole == 'admin')
-            $sql = "Select id from `order` limit 0, 500";
+            $sql = "Select id from `order` limit order by id desc 0, 500";
         else
-            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "' limit 0, 500";
+            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "' order by id desc limit 0, 200";
 
         //$user = $this->loadModel(Yii::app()->user->id);
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
