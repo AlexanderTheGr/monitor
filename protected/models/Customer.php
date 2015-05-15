@@ -76,6 +76,7 @@ class Customer extends Eav {
         // class name for the relations automatically generated below.
         return array(
             'orders' => array(self::HAS_MANY, 'Order', 'customer'),
+            'customerrules' => array(self::HAS_MANY, 'Customerrule', 'customer'),
         );
     }
 
