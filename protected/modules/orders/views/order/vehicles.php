@@ -201,6 +201,7 @@
             data.order = '<?php echo $model->id ?>'
             data.terms = $(this).val();
             ProgressBar.displayProgressBar();
+            gogogo = 1;
             $.post("<?php echo Yii::app()->request->baseUrl ?>/product/product/fororderajaxjson", data, function (result) {
                 $fororderajaxjson = $("<div></div>")
                         .dialog({
@@ -214,6 +215,10 @@
                             close: function (ev, ui) {
                                 $("#productitem").focus()
                                 $("#productitem").val('');
+                                setTimeout(function(){
+                                    gogogo = 0;
+                                },100)
+                                
                             }
                         });
                 $fororderajaxjson.html(result);

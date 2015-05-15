@@ -8,6 +8,7 @@
 <button class="btn return_to_main_<?php echo $model->className()?>">Επιστροφή</button>
 </div>
 
+<?php //echo HtmlWidget::tabber($tabs); ?>
 
 <?php require Yii::app()->params['widget'] . "ajaxform.php"; ?>
 <?php //echo  HtmlWidget::tabber($tabs);?>

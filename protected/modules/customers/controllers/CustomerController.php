@@ -237,14 +237,65 @@ class CustomerController extends Controller {
         $this->addFormField("text", $this->translate("Webpage"), "customer_webpage", "");
         $this->addFormField("text", $this->translate("Email"), "customer_email", "");
 
+        
 
         $this->render('view', array(
             'model' => $model,
             'specialityArr' => $specialityArr,
-            'tabs' => $this->createTabs($model)
+            'tabs' => $this->createEditTabs($model)
         ));
     }
+    function createEditTabs($model) {
+        $tabs = array();
+        //$tabs[] = array("title"=>"Τιμολογιακή Πολιτική","reg"=>"customers/customer/rules/" . $model->id);
+        if ($model->id > 0) {
+            return $tabs;
+        }
+    }
+    
+    public function actionRules($id = 0) {
+        $this->clearColumns();
 
+        $this->addColumn(array(
+            "label" => $this->translate("Supplier"),
+            "type" => "text",
+                )
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Value"),
+            "type" => "text",
+                )
+        );
+        $this->sAjaxSource = "customers/customer/ajaxrulesjson/".$id;
+        $this->dataTableId = "customerrule";
+        $this->ajaxdelete = "customers/customer/ajaxrulesdelete/";
+        //$this->useServerSide = true;
+        $this->ajaxform = "customers/customer/ajaxrulesform/".$id;
+        $this->ajaxformsave = "customers/customer/ajaxforrulesmsave/";
+        $this->sfields = true;
+
+        $this->renderPartial('rules', array());
+    }
+    public function actionAjaxRulesJson($id = 0) {
+        $sql = "Select id from customerrule where customer = '".$id."'";
+        
+        $user = $this->loadModel(Yii::app()->user->id);
+        $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $jsonArr = array();
+        foreach ((array) $datas as $data) {
+            $model = $this->model("Customerrule",$data["id"]);
+            $json = array();
+            $fields = array();
+            $json[] = $model->supplier;
+            $json[] = $model->val; // "";//$model->getCustomerName();
+            $json["DT_RowId"] = 'customerrule_' . $model->id;
+            $json["DT_RowClass"] = 'customerrule';
+            $jsonArr[] = $json;
+            //if ($i++ > 10) break;
+        }
+        echo json_encode(array('iTotalRecords' => count($cntPrd), 'iTotalDisplayRecords' => count($cntPrd), 'aaData' => $jsonArr));
+    }
     public function actionAjaxForm() {
         $model = $this->loadModel($_POST["id"]);
 
@@ -255,6 +306,35 @@ class CustomerController extends Controller {
             'specialityArr' => $specialityArr,
             'tabs' => $this->createTabs($model)
         ));
+    }
+    
+    public function actionAjaxRulesForm($id = 0) {
+        
+        $model = $this->model("Customerrule",$_POST["id"]);
+        
+        $model->customer = $id;
+        
+        $sql = "SELECT distinct(item_mtrmanfctr) FROM `product` order by item_mtrmanfctr";
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        
+        foreach($datas as $data) {
+            $supliers[$data["item_mtrmanfctr"]] = $data["item_mtrmanfctr"];
+        }
+        $this->addFormField("select", "Supplier","supplier",$supliers);
+        $this->addFormField("text", "Value", "val", "");
+        $this->addFormField("hidden", "", "customer", $id);
+        
+        $this->renderPartial('ajaxform', array(
+            'model' => $model,
+            'specialityArr' => $specialityArr
+        ));
+    }
+  
+    public function actionAjaxforrulesmsave() {
+        $model = $this->model("Customerrule",$_POST["id"]);
+        $model->attributes = $_POST;
+        $model->attrs = $_POST["attrs"];
+        $model->save();
     }
 
     public function actionAjaxFormSave() {
@@ -293,7 +373,10 @@ class CustomerController extends Controller {
     }
     
    
-
+    public function actionAjaxRulesDelete() {
+        $model = $this->model("customerrule",$_POST["id"]);
+        $model->deleteModel();
+    }
     public function actionAjaxDelete() {
         $model = $this->loadModel($_POST["id"]);
         $model->deleteModel();
