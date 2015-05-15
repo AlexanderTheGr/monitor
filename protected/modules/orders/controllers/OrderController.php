@@ -534,7 +534,7 @@ class OrderController extends Controller {
             $json[] = $product->item_mtrmanfctr;
 
             $json[] = $product->item_pricew01;
-            $json[] = $product->item_pricew02;
+            $json[] = $product->item_pricer01;
             $json[] = $product->item_pricer02;
 
             $json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " style='width:40px' type='text' ref='" . $model->id . "' field='price' class='orderitem price' value='" . $model->price . "'/>";
