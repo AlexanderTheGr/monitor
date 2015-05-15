@@ -300,9 +300,9 @@ class ProductController extends Controller {
         $out = array();
         foreach ($datas as $data) {
             $brandmodeltype = $this->model("BrandModelType", $data["id"]);
-            //$engine = $tecdocbrandmodeltype->engine;
+            $engine = $brandmodeltype->engine;
             //$tecdocbrandmodeltype->motor_type = "s";
-            $out[$brandmodeltype->motor_type . "-" . $brandmodeltype->brand_model_type . "-" . $brandmodeltype->power_hp] = array("chk" => (int) $chk, "motor_type" => $brandmodeltype->motor_type, "id" => $brandmodeltype->id, "name" => $brandmodeltype->brand_model_type . " " . $engine . " (" . $brandmodeltype->power_hp . "HP)");
+            $out[$brandmodeltype->motor_type . "-" . $brandmodeltype->brand_model_type . "-" . $brandmodeltype->power_hp] = array("chk" => (int) $chk, "motor_type" => $brandmodeltype->motor_type, "id" => $brandmodeltype->id, "name" => $brandmodeltype->brand_model_type . " (" . $brandmodeltype->power_hp . "HP) " . $engine);
         }
         ksort($out);
         $json = json_encode($out);
@@ -662,7 +662,7 @@ class ProductController extends Controller {
         
 
         $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
-        $this->addFormField("text", $this->translate("Κωδικός Είδους"), "item_code", "", "width:500px");
+        $this->addFormField("text", $this->translate("Κωδικός"), "item_code", "", "width:500px");
         $this->addFormField("text", $this->translate("Erp Supplier"), "item_mtrmanfctr", "", "width:500px");
 
         $this->addFormField("select", $this->translate("Tecdoc Supplier"), "item_cccfxrelbrand", CHtml::listData(TecdocSupplier::model()->findAll(), 'id', 'supplier'));
