@@ -137,7 +137,9 @@ class OrderController extends Controller {
             "type" => "text",
                 )
         );
-
+        
+        $this->aaSorting = "[[0,'desc']]";
+        
         $this->sfields = true;
         $this->bAddnewpos = "''";
         $this->render('index', array());
