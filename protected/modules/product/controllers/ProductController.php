@@ -580,10 +580,10 @@ class ProductController extends Controller {
             $json = array();
             $f = false;
             $fields = array();
-
+            $model = $this->loadModel($data["id"]);
             //$model->updateSynafies();
             
-            $json[] = "<img width=100 src='" . $model1->media() . "' />";
+            $json[] = "<img width=100 src='" . $model->media() . "' />";
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
             $json[] = $data["item_name"];
             $json[] = $data["item_code"];
