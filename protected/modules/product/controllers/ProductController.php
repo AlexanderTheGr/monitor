@@ -583,7 +583,7 @@ class ProductController extends Controller {
 
             //$model->updateSynafies();
             
-            $json[] = ""; //<img width=100 src='" . $model1->media() . "' />";
+            $json[] = "img width=100 src='" . $model1->media() . "' />";
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
             $json[] = $data["item_name"];
             $json[] = $data["item_code"];
