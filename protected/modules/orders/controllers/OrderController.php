@@ -135,7 +135,7 @@ class OrderController extends Controller {
                 )
         );
         $this->addColumn(array(
-            "label" => $this->translate("Μονο τιμες"),
+            "label" => $this->translate("Προσφορά"),
             "type" => "select",
             "select_data" => array("ΝΑΙ"=>"ΝΑΙ","ΟΧΙ"=>"ΟΧΙ")
                 )
