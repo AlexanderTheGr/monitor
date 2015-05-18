@@ -126,11 +126,20 @@ class OrderController extends Controller {
             "type" => "text",
                 )
         );
+        
         $this->addColumn(array(
             "label" => $this->translate("Softone"),
-            "type" => "text",
+            "type" => "select",
+            "select_data" => array("ΝΑΙ"=>"ΝΑΙ","ΟΧΙ"=>"ΟΧΙ")
+            
                 )
         );
+        $this->addColumn(array(
+            "label" => $this->translate("Μονο τιμες"),
+            "type" => "select",
+            "select_data" => array("ΝΑΙ"=>"ΝΑΙ","ΟΧΙ"=>"ΟΧΙ")
+                )
+        );        
 
         $this->addColumn(array(
             "label" => $this->translate("Ημιτελής"),
@@ -155,9 +164,9 @@ class OrderController extends Controller {
 
 
         if ($this->userrole == 'admin')
-            $sql = "Select id from `order` where noorder = 0 order by id desc limit 0, 500";
+            $sql = "Select id from `order` order by id desc limit 0, 500";
         else
-            $sql = "Select id from `order` where noorder = 0 AND user = '" . Yii::app()->user->id . "' order by id desc limit 0, 200";
+            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "' order by id desc limit 0, 200";
 
         //$user = $this->loadModel(Yii::app()->user->id);
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
@@ -192,7 +201,8 @@ class OrderController extends Controller {
             $json[] = $user[$model->user]->email;
             $json[] = $price;
 
-            $json[] = $model->reference ? "NAI" : "OXI";
+            $json[] = $model->reference ? "ΝΑΙ" : "ΟΧΙ";
+            $json[] = $model->noorder ? "ΝΑΙ" : "ΟΧΙ";
             $imitelis = 0;
 
 
