@@ -119,7 +119,7 @@
                     <div class="span4">
                         <!-- Logo. -->
                         <div class="logo" style="text-aling:center">
-                            <img src="<?php echo Yii::app()->request->baseUrl?>/img/Partsbox logo final-02.png"/>
+                            <img style="height: 50px;" src="<?php echo Yii::app()->request->baseUrl?>/img/Partsbox logo final-02.png"/>
                         </div>
                         <!-- Logo ends -->
                     </div>
@@ -155,6 +155,9 @@
                                 <li>
                                     <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><?php echo $this->translate("Νέα Παραγγελία"); ?></a>
                                 </li>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><?php echo $this->translate("Μόνο τιμές"); ?></a>
+                                </li>                               
                             </ul>
                         </li> 
                     </ul>
@@ -176,6 +179,9 @@
                                 <li>
                                     <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Νέα"); ?></a>
                                 </li>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Μόνο τιμές"); ?></a>
+                                </li>                                
                             </ul>
                         </li> 
                     </ul>
