@@ -3,7 +3,7 @@
 <div style="text-align: right">
     <?php if ($model->fullytrans == 0): ?>
         <?php if ($this->showSave): ?>    
-            <button class="btn btn-success savesoftone">Αποστολή</button>
+            <button class="btn btn-success savesoftone">Αποστολή Για Τιμολόγιση</button>
             <button class="saveorder btn btn-success save_model_<?php echo $model->className() ?>">Αποθήκευση</button>
         <?php endif; ?>
         <?php if ($this->showDelete): ?> 
