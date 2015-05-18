@@ -43,29 +43,6 @@ class Order extends Eav {
     function saveSoftone() {
         $monitor = new Monitor();
         $orderdata = $monitor->getData("SALDOC", $this->reference);
-
-
-        //$data = (array)$orderdata->data;
-        //$saldoc = $data["SALDOC"][0];
-        //  $saldoc->FINDOC = 0;         
-        // $saldoc->FINDOC_SALMTRDOC_FINDOC = 0;       
-        //$saldoc->FINCODE = "";
-        // $saldoc->CMPFINCODE = "";
-        //$saldoc->CMPSERIESNUM = 3;
-        //$saldoc->SERIESNUM = 3;       
-        // $saldoc->SERIES = 7021;
-        //$data["SALDOC"][0] = $saldoc;
-        //$data["MTRDOC"] = array();
-        //$data["VATANAL"] = array();
-        //$data["MTRLINES"][0]->MTRL_MTRL_VAT = 1310;
-        //$data["MTRLINES"][0]->VAT = 1310;
-        //$data["MTRLINES"][0]->FINDOC = 0;
-        //$data["ITELINES"][0]->FINDOC = 0;
-        //$orderdata->data->SALDOC[0]->SERIESNUM = 3;
-        //$orderdata->data->SALDOC[0]->CMPSERIESNUM = 3;
-        //print_r($orderdata);
-
-
         print_r($monitor->setData($orderdata, "SALDOC", $this->reference));
         //print_r($monitor->setData($orderdata, "SALDOC", $this->reference));
     }
@@ -124,12 +101,12 @@ class Order extends Eav {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('reference, customer_name,comments,customer,fullytrans,user, tfprms, fprms, insdate, seriesnum, series, fincode, status, created, modified', 'required'),
-            array('reference, customer_name,comments, customer,fullytrans,user tfprms, fprms, seriesnum, series, status, actioneer', 'numerical', 'integerOnly' => true),
+            array('reference, customer_name,comments,customer,fullytrans,user, tfprms, fprms, noorder, insdate, seriesnum, series, fincode, status, created, modified', 'required'),
+            array('reference, customer_name,comments, customer,fullytrans,user tfprms, fprms, noorder, seriesnum, series, status, actioneer', 'numerical', 'integerOnly' => true),
             array('fincode', 'length', 'max' => 255),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, customer,user, tfprms, fprms, insdate, seriesnum,fullytrans, series, fincode, status, actioneer, created, modified', 'safe', 'on' => 'search'),
+            array('id, reference, customer,user, tfprms, fprms, insdate, seriesnum,fullytrans, noorder, series, fincode, status, actioneer, created, modified', 'safe', 'on' => 'search'),
         );
     }
 
@@ -157,6 +134,7 @@ class Order extends Eav {
             'fullytrans' => 'Fullytrans',
             'insdate' => 'Insdate',
             'comments'=>'comments',
+            'noorder'=>'noorder',
             'status' => 'Status',
             'actioneer' => 'Actioneer',
             'created' => 'Created',
@@ -178,23 +156,20 @@ class Order extends Eav {
      */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
-
         $criteria = new CDbCriteria;
-
         $criteria->compare('id', $this->id);
         $criteria->compare('customer', $this->customer);
         $criteria->compare('insdate', $this->insdate);
         $criteria->compare('comments', $this->comments);
+        $criteria->compare('norder', $this->norder);
         $criteria->compare('fullytrans', $this->fullytrans);
         $criteria->compare('customer_name', $this->customer_name);
         $criteria->compare('status', $this->status);
         $criteria->compare('actioneer', $this->actioneer);
         $criteria->compare('created', $this->created, true);
         $criteria->compare('modified', $this->modified, true);
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
         ));
     }
-
 }
