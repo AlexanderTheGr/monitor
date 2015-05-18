@@ -155,9 +155,9 @@ class OrderController extends Controller {
 
 
         if ($this->userrole == 'admin')
-            $sql = "Select id from `order` limit order by id desc 0, 500";
+            $sql = "Select id from `order` where noorder = 0 order by id desc limit 0, 500";
         else
-            $sql = "Select id from `order` where user = '" . Yii::app()->user->id . "' order by id desc limit 0, 200";
+            $sql = "Select id from `order` where noorder = 0 AND user = '" . Yii::app()->user->id . "' order by id desc limit 0, 200";
 
         //$user = $this->loadModel(Yii::app()->user->id);
         $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
@@ -216,6 +216,32 @@ class OrderController extends Controller {
             echo $this->translate("Create New Order");
         }
     }
+    
+    public function actionNoorder($id = 0) {
+        
+        $model = $this->loadModel($id);
+        $this->returntomain = "orders/order";
+        $customer = $this->model("Customer", $model->customer);
+        $this->pagename = $model->fincode . " " . $customer->customer_name;
+
+        if ($model->reference > 0) {
+            $softone = new Softone();
+            $locateinfo = "SALDOC:FULLYTRANSF;";
+            $SALDOC = $softone->getData("SALDOC", $model->reference, "", $locateinfo);
+            if ($ITEM->data->SALDOC[0]->FULLYTRANSF != $model->fullytrans) {
+                $model->fullytrans = $ITEM->data->SALDOC[0]->FULLYTRANSF;
+                $model->save();
+            }
+        }
+        $this->returnaftersafe = "orders/order/edit/";
+        $tabs["Γενικά Στοιχεία"] = "orders/order/noordergeneral/" . $model->id;
+        $tabs["Είδη"] = "orders/order/orderitems/" . $model->id;
+
+        $this->render('noorder', array(
+            'model' => $model,
+            'tabs' => $tabs,
+        ));        
+    }    
 
     public function actionEdit($id = 0) {
         //echo $id;
@@ -224,6 +250,11 @@ class OrderController extends Controller {
         $customer = $this->model("Customer", $model->customer);
         $this->pagename = $model->fincode . " " . $customer->customer_name;
 
+        if ($model->noorder) {
+            header("Location:".Yii::app()->request->baseUrl."/orders/order/noorder/".$model->id);
+            exit;
+        }
+        
         if ($model->reference > 0) {
             $softone = new Softone();
             $locateinfo = "SALDOC:FULLYTRANSF;";
@@ -289,7 +320,6 @@ class OrderController extends Controller {
     public function actionAddorderitem() {
         $order = $this->model("Order", $_POST["order"]);
         //$order->addOrderItem($_POST["product"]);
-
         foreach ($order->_items_ as $item) {
             if ($item->product == $_POST["product"]) {
                 $qty = $item->qty;
@@ -437,6 +467,45 @@ class OrderController extends Controller {
         $this->addFormField("text", $this->translate("QTY"), "qty");
 
         $this->renderPartial('orderitem', array(
+            'model' => $model,
+        ));
+    }
+    public function actionNoorderGeneral($id = 0) {
+
+
+
+        $model = $this->loadModel($id);
+        $this->returntomain = "orders/order";
+
+        $sql = "Select id,flat_data from customer";
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ((array) $datas as $data) {
+            $customer = json_decode($data["flat_data"]);
+            $listData[$customer->id] = $customer->attributeitems->customer_name;
+        }
+
+        $model->seriesnum = $model->id;
+        $model->fincode = "ΠΑΡ-" . $model->id;
+        if ($model->id == 0) {
+            $model->insdate = date("Y-m-d H:s:i");
+        }
+        $model->noorder = 1;
+        $this->addFormField("text", $this->translate("Αναζήτηση Πελάτη"), "customer_name", $listData, "width:500px");
+
+        $this->addFormField("hidden", "", "customer", $listData);
+        $this->addFormField("hidden", "", "noorder");
+
+        $this->addFormField("datetime", $this->translate("Ημερ.εισαγωγής"), "insdate", "", "width:500px");
+
+        $this->addFormField("select", $this->translate("Αιτιολογία"), "comments", array(
+            "Για Τιμολόγιο" => "Για Τιμολόγιο",
+            "Για Απόδειξη" => "Για Απόδειξη",
+            "Για Δελτίο Αποστολής" => "Για Δελτίο Αποστολής")
+        );
+        //$this->addFormField("text", $this->translate("Ξ Ξ±Ο�Ξ±ΟƒΟ„Ξ±Ο„ΞΉΞΊΟ�"), "fincode");
+
+
+        $this->renderPartial('ajaxnoorderform', array(
             'model' => $model,
         ));
     }

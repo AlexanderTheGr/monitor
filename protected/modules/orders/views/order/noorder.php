@@ -1,6 +1,6 @@
 
 
-<div style="text-align: right">
+<div style="text-align: right; display:none">
     <?php if ($model->fullytrans == 0): ?>
         <?php if ($this->showSave): ?>    
             <button class="btn btn-success savesoftone">Αποστολή</button>
@@ -40,8 +40,8 @@
             data.id = '<?php echo $model->id; ?>'
             ProgressBar.displayProgressBar();
             $.post("<?php echo Yii::app()->request->baseUrl ?>/orders/order/savesoftone", data, function () {
+                alert("SSS");
                 callback.orderitem();
-               
                 ProgressBar.hideProgressBar();
             })
         })
