@@ -348,10 +348,10 @@ class ProductController extends Controller {
             if ($_POST["terms"]) {
                 //$sql = "Select id from product_search where item_code LIKE '%" . $_POST["terms"] . "%' OR search LIKE '%" . $_POST["terms"] . "%' OR gnisia LIKE '%" . $_POST["terms"] . "%'   limit 0,100";
                 //$datas = Yii::app()->db->createCommand($sql)->queryAll();
-                
+
                 $sql = "Select id from product_search where id in (Select id2 from synafies where id1 in (Select id from product_search where item_code like '%" . $_POST["terms"] . "%') OR id2 in (Select id from product_search where item_code like '%" . $_POST["terms"] . "%'))";
                 $datas = Yii::app()->db->createCommand($sql)->queryAll();
-                
+
                 //echo $sql;
                 //print_r($datas);
                 foreach ((array) $datas as $data) {
@@ -420,9 +420,11 @@ class ProductController extends Controller {
 
         foreach ($datas as $data) {
             $ordertoday = $this->model("Order", $data["id"]);
-            foreach ($ordertoday->_items_ as $item) {
-                if ($ordertoday->id != $order->id)
-                    $itemstoday[$item->product][$ordertoday->id] = "<a href='" . Yii::app()->request->baseUrl . "/orders/order/" . $ordertoday->id . "'>" . $ordertoday->id . "</a>";
+            if ($ordertoday->noorder == 0) {
+                foreach ($ordertoday->_items_ as $item) {
+                    if ($ordertoday->id != $order->id)
+                        $itemstoday[$item->product][$ordertoday->id] = "<a href='" . Yii::app()->request->baseUrl . "/orders/order/" . $ordertoday->id . "'>" . $ordertoday->id . "</a>";
+                }
             }
         }
 
@@ -500,7 +502,7 @@ class ProductController extends Controller {
 
         $this->settings["webservice"] = 11632;
 
-        
+
         if ($_POST["iDisplayLength"]) {
             $limiter = " limit " . $_POST["iDisplayStart"] . ", " . $_POST["iDisplayLength"];
         }
@@ -518,8 +520,8 @@ class ProductController extends Controller {
             $queryarr[] = "id = '" . $_POST["sSearch_0"] . "'";
         if ($_POST["sSearch_1"])
             $queryarr[] = "item_name like '%" . $_POST["sSearch_1"] . "%'";
-        if ($_POST["sSearch_2"]) 
-            //$queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
+        if ($_POST["sSearch_2"])
+        //$queryarr[] = "(item_code like '%" . $_POST["sSearch_2"] . "%' OR search LIKE '%" . $_POST["sSearch_2"] . "%' OR gnisia LIKE '%" . $_POST["sSearch_2"] . "%')";
             $queryarr[] = "id in (Select id2 from synafies where id1 in (Select id from product_search where item_code like '%" . $_POST["sSearch_2"] . "%') OR id2 in (Select id from product_search where item_code like '%" . $_POST["sSearch_2"] . "%'))";
         if ($_POST["sSearch_3"])
             $queryarr[] = "item_mtrplace like '%" . $_POST["sSearch_3"] . "%'";
@@ -539,8 +541,6 @@ class ProductController extends Controller {
         $jsonArr = array();
         //echo count($datas);
         //exit;
-
-        
         //$sql = "Select id from product where id > 94206";
         //$datas = Yii::app()->db->createCommand($sql . " " . $query . " " . $limiter)->queryAll();
         //$datas = Yii::app()->db->createCommand($sql)->queryAll();
@@ -582,7 +582,7 @@ class ProductController extends Controller {
             $fields = array();
             $model = $this->loadModel($data["id"]);
             //$model->updateSynafies();
-            
+
             $json[] = "<img width=100 src='" . $model->media() . "' />";
             //$json[] = $model->_productLangs_[$this->settings["language"]]->title;
             $json[] = $data["item_name"];
@@ -603,7 +603,6 @@ class ProductController extends Controller {
             $json["DT_RowId"] = 'product_' . $data["id"];
             $json["DT_RowClass"] = 'productpage';
             $jsonArr[] = $json;
-            
         }
         echo json_encode(array('iTotalRecords' => $cnt["cnt"], 'iTotalDisplayRecords' => $cnt["cnt"], 'aaData' => $jsonArr));
     }
@@ -645,7 +644,7 @@ class ProductController extends Controller {
         $data = $softone->getData("ITEM", $model->reference, "");
         //print_r($data);
 
-        
+
         $sql = "Select id2 from synafies where id1 = '" . $model->id . "'";
         $datas = Yii::app()->db->createCommand($sql)->queryAll();
         $searchArr = array();
@@ -653,13 +652,13 @@ class ProductController extends Controller {
             $submodel = Product::model()->findByPk($data["id2"]);
             $searchArr[] = $submodel->item_code;
         }
-        
-        
-        $model->search  = implode("\n", $searchArr);
-        
-        
+
+
+        $model->search = implode("\n", $searchArr);
+
+
         $model->gnisia = str_replace("|", "\n", $model->gnisia);
-        
+
 
         $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
         $this->addFormField("text", $this->translate("Κωδικός"), "item_code", "", "width:500px");
@@ -915,7 +914,7 @@ class ProductController extends Controller {
 
 
         $model->updateSynafies();
-        
+
         /*
           $model->gnisia = str_replace("\n", "|", $model->gnisia);
           $gnisiaArr = explode("|", $model->gnisia);
