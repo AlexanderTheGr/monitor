@@ -941,6 +941,7 @@ class OrderController extends Controller {
             $out = $softone->setData((array) $dataOut, $object, (int) 0);
             if ($out->id > 0) {
                 $model->reference = $out->id;
+                $model->noorder = 1;
                 $model->save();
             }
 
