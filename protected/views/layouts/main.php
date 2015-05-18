@@ -177,10 +177,10 @@
                                     <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Νέα"); ?></a>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Νέα Παραγγελία"); ?></a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Μόνο τιμές"); ?></a>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><i class="icon-shopping-cart"></i><?php echo $this->translate("Νεα Προσφορά"); ?></a>
                                 </li>                                
                             </ul>
                         </li> 
