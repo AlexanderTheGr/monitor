@@ -156,7 +156,7 @@
                                     <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/edit/"><?php echo $this->translate("Νέα Παραγγελία"); ?></a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><?php echo $this->translate("Μόνο τιμές"); ?></a>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/orders/order/noorder/"><?php echo $this->translate("Νεα Προσφορά"); ?></a>
                                 </li>                               
                             </ul>
                         </li> 
