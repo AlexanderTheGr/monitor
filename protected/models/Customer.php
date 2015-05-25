@@ -56,15 +56,15 @@ class Customer extends Eav {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('reference, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, created, modified, flat_data', 'required'),
-            array('reference, customer_afm, customer_zip, actioneer', 'numerical', 'integerOnly'=>true),
+            array('reference, group, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, created, modified, flat_data', 'required'),
+            array('reference, group, customer_afm, customer_zip, actioneer', 'numerical', 'integerOnly'=>true),
             array('email, username', 'length', 'max'=>45),
             array('password', 'length', 'max'=>80),
             array('customer_code, customer_name, customer_address, customer_district, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email', 'length', 'max'=>255),
             array('status', 'length', 'max'=>8),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, reference, email, username, password, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, status, actioneer, created, modified, flat_data', 'safe', 'on'=>'search'),
+            array('id, reference, group, email, username, password, customer_code, customer_name, customer_afm, customer_address, customer_district, customer_zip, customer_phone01, customer_phone02, customer_fax, customer_webpage, customer_email, customer_payment, ts, status, actioneer, created, modified, flat_data', 'safe', 'on'=>'search'),
         );
     }
 
@@ -77,6 +77,7 @@ class Customer extends Eav {
         return array(
             'orders' => array(self::HAS_MANY, 'Order', 'customer'),
             'customerrules' => array(self::HAS_MANY, 'Customerrule', 'customer'),
+            '_group_' => array(self::BELONGS_TO, 'Customergroup', 'group'),
         );
     }
 
@@ -88,6 +89,7 @@ class Customer extends Eav {
         return array(
             'id' => 'ID',
             'reference' => 'Reference',
+            'group' => 'Group',
             'email' => 'Email',
             'username' => 'Username',
             'password' => 'Password',
@@ -112,6 +114,35 @@ class Customer extends Eav {
         );
     }
 
+    function calculateDiscount($product) {
+        $ru[$product->item_mtrmanfctr] = 0;
+        foreach($this->_group_->_customergrouprules_ as $rule) {
+            $ru[$rule->supplier] = $rule->val;            
+        }        
+        foreach($this->customerrules as $rule) {
+            $ru[$rule->supplier] = $rule->val;            
+        }
+        return number_format($ru[$product->item_mtrmanfctr], 2, ".", "");
+    }    
+    function calculatePrice($product) {
+        $base_price = $this->_group_->base_price ? $this->_group_->base_price : "item_pricew02";
+        $price = $product->$base_price;
+        return number_format($price, 2, ".", "");
+    }
+    function calculateDiscountedPrice($product) {
+        $base_price = $this->_group_->base_price ? $this->_group_->base_price : "item_pricew02";
+        $price = $product->$base_price;
+        $ru[$product->item_mtrmanfctr] = 1;
+        foreach($this->_group_->_customergrouprules_ as $rule) {
+            $ru[$rule->supplier] = 1-$rule->val/100;            
+        }        
+        foreach($this->customerrules as $rule) {
+            $ru[$rule->supplier] = 1-$rule->val/100;            
+        }
+
+        return number_format($price*$ru[$product->item_mtrmanfctr], 2, ".", "");
+    }
+    
     /**
      * Retrieves a list of models based on the current search/filter conditions.
      *
@@ -132,6 +163,7 @@ class Customer extends Eav {
 
         $criteria->compare('id',$this->id);
         $criteria->compare('reference',$this->reference);
+        $criteria->compare('group',$this->group);
         $criteria->compare('email',$this->email,true);
         $criteria->compare('username',$this->username,true);
         $criteria->compare('password',$this->password,true);

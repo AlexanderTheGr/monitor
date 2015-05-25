@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "customerrule".
+ * This is the model class for table "customerrulegrouprule".
  *
- * The followings are the available columns in table 'customerrule':
+ * The followings are the available columns in table 'customerrulegrouprule':
  * @property integer $id
- * @property integer $customer
+ * @property integer $group
  * @property string $val
  * @property string $supplier
  *
  * The followings are the available model relations:
- * @property Customer $customer0
+ * @property Customerrulegroup $group0
  */
-class Customerrule extends Eav {
+class Customergrouprule extends Eav {
 
-    function Customerrule() {
+    function Customergrouprule() {
         $this->tableName = $this->tableName();
         $this->validationRules();
     }
@@ -31,27 +31,26 @@ class Customerrule extends Eav {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+
     public function tableName() {
-        return 'customerrule';
+        return 'customergrouprule';
     }
 
     public function className() {
         return __CLASS__;
     }
-    /**
-     * @return array validation rules for model attributes.
-     */
+
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer, val, supplier', 'required'),
-            array('customer', 'numerical', 'integerOnly' => true),
+            array('group, val, supplier', 'required'),
+            array('group', 'numerical', 'integerOnly' => true),
             array('val', 'length', 'max' => 10),
             array('supplier', 'length', 'max' => 255),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, customer, val, supplier', 'safe', 'on' => 'search'),
+            array('id, group, val, supplier', 'safe', 'on' => 'search'),
         );
     }
 
@@ -62,7 +61,6 @@ class Customerrule extends Eav {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            '_customer_' => array(self::BELONGS_TO, 'Customer', 'customer'),
             '_group_' => array(self::BELONGS_TO, 'Customergroup', 'group'),
         );
     }
@@ -73,7 +71,7 @@ class Customerrule extends Eav {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'customer' => 'Customer',
+            'group' => 'Group',
             'val' => 'Val',
             'supplier' => 'Supplier',
         );
@@ -97,7 +95,7 @@ class Customerrule extends Eav {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('customer', $this->customer);
+        $criteria->compare('group', $this->group);
         $criteria->compare('val', $this->val, true);
         $criteria->compare('supplier', $this->supplier, true);
 
@@ -105,5 +103,6 @@ class Customerrule extends Eav {
             'criteria' => $criteria,
         ));
     }
+
 
 }
