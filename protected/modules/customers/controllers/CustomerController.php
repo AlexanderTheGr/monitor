@@ -212,7 +212,16 @@ class CustomerController extends Controller {
             echo $this->translate("Create New Customer");
         }
     }
-
+    public function actionAjaxrulesformtitle() {
+        //$model = $this->loadModel($_POST["id"]);
+        $model = $this->model("Customerrule",$_POST["id"]);
+        if ($model->id > 0) {
+            echo $this->translate("Edit Rule") . ": " . $model->supplier;
+        } else {
+            echo $this->translate("Create New Rule");
+        }
+    }
+    
     public function actionEdit($id = 0) {
         //echo $id;
         $model = $this->loadModel($id);
@@ -222,8 +231,17 @@ class CustomerController extends Controller {
         //print_r($data);
 
         $this->returntomain = "customers/customer";
+        
+        
+        
         $this->addFormField("text", $this->translate("Κωδικός"), "customer_code", "");
+        
+        $this->addFormField("select", $this->translate("Group"), "group", CHtml::listData(Customergroup::model()->findAll(), 'id', 'title'));
+        
         $this->addFormField("text", $this->translate("<b>Επωνυμία</b><span style='color:red'>*</span>"), "customer_name", "");
+        
+        
+        
         $this->addFormField("text", $this->translate("ΑΦΜ"), "customer_afm", "");
 
         $this->addFormField("text", $this->translate("Διεύθυνση"), "customer_address", "");
@@ -247,7 +265,7 @@ class CustomerController extends Controller {
     }
     function createEditTabs($model) {
         $tabs = array();
-        //$tabs[] = array("title"=>"Τιμολογιακή Πολιτική","reg"=>"customers/customer/rules/" . $model->id);
+        $tabs[] = array("title"=>"Τιμολογιακή Πολιτική","reg"=>"customers/customer/rules/" . $model->id);
         if ($model->id > 0) {
             return $tabs;
         }
@@ -270,6 +288,7 @@ class CustomerController extends Controller {
         $this->dataTableId = "customerrule";
         $this->ajaxdelete = "customers/customer/ajaxrulesdelete/";
         //$this->useServerSide = true;
+        $this->ajaxformtitle = "customers/customer/ajaxrulesformtitle/";
         $this->ajaxform = "customers/customer/ajaxrulesform/".$id;
         $this->ajaxformsave = "customers/customer/ajaxforrulesmsave/";
         $this->sfields = true;
@@ -368,7 +387,7 @@ class CustomerController extends Controller {
             
             $model->setFlat();
             
-            $this->saveSoftone($params);
+            //$this->saveSoftone($params);
         }
     }
     

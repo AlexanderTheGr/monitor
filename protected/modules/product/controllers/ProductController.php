@@ -385,34 +385,36 @@ class ProductController extends Controller {
 
         $dataOut[$object] = (array) $objectArr;
         $k = 9000001;
-        $dataOut["ITELINES"] = array();
-        foreach ($products as $product) {
-            $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
-        }
-        //echo "1";
-        //print_r($dataOut);
-        $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,ITELINES:LINEVAL,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
+        /*
+          $dataOut["ITELINES"] = array();
+          foreach ($products as $product) {
+          $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
+          }
+          //echo "1";
+          //print_r($dataOut);
+          $locateinfo = "MTRL,NAME,PRICE,QTY1,VAT;ITELINES:DISC1PRC,ITELINES:LINEVAL,MTRL,MTRL_ITEM_CODE,MTRL_ITEM_CODE1,MTRL_ITEM_NAME,MTRL_ITEM_NAME1,PRICE,QTY1;SALDOC:BUSUNITS,EXPN,TRDR,MTRL,PRICE,QTY1,VAT";
+          $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+          //print_r($out);
+          if (!$out->success) {
+          $dataOut["ITELINES"] = array();
+          foreach ($products as $product) {
+          $ITEM = $softone->getData("ITEM", $product->reference, "", "ITEM:CODE");
+          if ($ITEM->success) {
+          $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
+          } else {
+          $sql = "Delete from product_search where id = '" . $product->id . "'";
+          Yii::app()->db->createCommand($sql)->execute();
+          $product->delete();
 
-        $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-        //print_r($out);
-        if (!$out->success) {
-            $dataOut["ITELINES"] = array();
-            foreach ($products as $product) {
-                $ITEM = $softone->getData("ITEM", $product->reference, "", "ITEM:CODE");
-                if ($ITEM->success) {
-                    $dataOut["ITELINES"][] = array("VAT" => 1310, "LINENUM" => $k++, "MTRL" => $product->reference, "QTY1" => 1);
-                } else {
-                    $sql = "Delete from product_search where id = '" . $product->id . "'";
-                    Yii::app()->db->createCommand($sql)->execute();
-                    $product->delete();
-
-                    //$sql = "Delete from product_search where "
-                }
-            }
-            //print_r($dataOut);
-            $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
-            //print_r($out);
-        }
+          //$sql = "Delete from product_search where "
+          }
+          }
+          //print_r($dataOut);
+          $out = $softone->calculate((array) $dataOut, $object, "", "", $locateinfo);
+          //print_r($out);
+          }
+         * 
+         */
 
 
         $sql = "Select id from `order` where customer = '" . $order->customer . "' AND insdate >= '" . date("Y-m-d") . " 00:00:00' AND insdate < '" . date("Y-m-d") . " 23:59:59'";
@@ -450,14 +452,16 @@ class ProductController extends Controller {
         echo "<th></th>";
         echo "<th></th></tr></thead>";
         echo "<tbody>";
-        foreach ((array) $out->data->ITELINES as $item) {
-            echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='" . $item->MTRL . "' ref='" . $product->id . "'>";
-            $sql = "Select id from product where reference = '" . $item->MTRL . "'";
+        //foreach ((array) $out->data->ITELINES as $item) {
+        foreach ($products as $product) {
+
+            echo "<tr price='" . $product->item_pricer01 . "' class='productitem' mtrl='" . $product->reference . "' ref='" . $product->id . "'>";
+            $sql = "Select id from product where reference = '" . $product->reference . "'";
             $data = Yii::app()->db->createCommand($sql)->queryRow();
             //$product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
-            $product = $this->model("Product", $data["id"]);
+            //$product = $this->model("Product", $data["id"]);
             $i++;
-            $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
+            $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $product->item_code);
             //echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
 
             if ($product->media()) {
@@ -469,19 +473,54 @@ class ProductController extends Controller {
 
 
             echo "<td>" . $item_code . "</td>";
-            echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
+            echo "<td>" . $product->item_name . "</td>";
             echo "<td>" . $product->item_mtrmanfctr . "</td>";
-            echo "<td>" . $product->item_pricew . "</td>";
-            echo "<td>" . $product->item_pricer . "</td>";
-            echo "<td>" . $item->PRICE . "</td>";
-            echo "<td>" . $item->DISC1PRC . "</td>";
-            echo "<td>" . $item->LINEVAL . "</td>";
+            echo "<td>" . $product->item_pricew01 . "</td>";
+            echo "<td>" . $product->item_pricew02 . "</td>";
+            echo "<td>" . $order->_customer_->calculatePrice($product)  . "</td>";
+            echo "<td>" . $order->_customer_->calculateDiscount($product) . "</td>";
+            echo "<td>" . $order->_customer_->calculateDiscountedPrice($product) . "</td>";
             echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
             echo "<td>" . $product->item_mtrplace . "</td>";
-            echo "<td><input lineval='" . $item->LINEVAL . "' disc1prc='" . $item->DISC1PRC . "' price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
+            echo "<td><input lineval='" . $order->_customer_->calculateDiscountedPrice($product) . "' disc1prc='".$order->_customer_->calculateDiscount($product)."' price='" . $order->_customer_->calculatePrice($product)  . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
             echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
             echo "<td>" . implode(",", (array) $itemstoday[$product->id]) . "</td>";
             echo "</tr>";
+
+            /*
+              echo "<tr price='" . $item->PRICE . "' class='productitem' mtrl='" . $item->MTRL . "' ref='" . $product->id . "'>";
+              $sql = "Select id from product where reference = '" . $item->MTRL . "'";
+              $data = Yii::app()->db->createCommand($sql)->queryRow();
+              //$product = Product::model()->findByAttributes(array('reference' => $item->MTRL));
+              $product = $this->model("Product", $data["id"]);
+              $i++;
+              $item_code = str_replace($_POST["terms"], "<b>" . $_POST["terms"] . "</B>", $item->MTRL_ITEM_CODE);
+              //echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
+
+              if ($product->media()) {
+              echo "<td><img  class='product_info' ref='" . $product->id . "' width=100 src='" . $product->media() . "' /></td>";
+              } else {
+              //$json[] = "<a class='product_info' ref='" . $product->id . "'  />Νο Image</a>";
+              echo "<td><a class='product_info' ref='" . $product->id . "'  >Νο Image</a></td>";
+              }
+
+
+              echo "<td>" . $item_code . "</td>";
+              echo "<td>" . $item->MTRL_ITEM_NAME . "</td>";
+              echo "<td>" . $product->item_mtrmanfctr . "</td>";
+              echo "<td>" . $product->item_pricew . "</td>";
+              echo "<td>" . $product->item_pricer . "</td>";
+              echo "<td>" . $item->PRICE . "</td>";
+              echo "<td>" . $item->DISC1PRC . "</td>";
+              echo "<td>" . $item->LINEVAL . "</td>";
+              echo "<td>" . $product->item_mtrl_itemtrdata_qty1 . "</td>";
+              echo "<td>" . $product->item_mtrplace . "</td>";
+              echo "<td><input lineval='" . $item->LINEVAL . "' disc1prc='" . $item->DISC1PRC . "' price='" . $item->PRICE . "' class='productitemqty " . ($i == 1 ? 'first' : "") . "' ref='" . $product->id . "' type='text' value='" . ($i == 1 ? '' : 1) . "' style='width:20px;' ></td>";
+              echo "<td><img width=20 style='width:20px; max-width:20px; display:" . (in_array($product->id, (array) $items) ? "block" : "none") . "' class='tick_" . $product->id . "' src='" . Yii::app()->request->baseUrl . "/img/tick.png'></td>";
+              echo "<td>" . implode(",", (array) $itemstoday[$product->id]) . "</td>";
+              echo "</tr>";
+             * 
+             */
         }
         echo "</tbody></table>";
 
@@ -620,13 +659,33 @@ class ProductController extends Controller {
     public function actionAjaxForm() {
         $model = $this->loadModel($_POST["id"]);
 
-        $this->addFormField("text", $this->translate("Title"), "title");
-        $this->addFormField("text", $this->translate("Erp Code"), "item_code");
-        $this->addFormField("text", $this->translate("Erp Supplier"), "erp_supplier");
-        $this->addFormField("text", $this->translate("Tecdoc Code"), "tecdoc_code");
-        $this->addFormField("select", $this->translate("Tecdoc Supplier"), "tecdoc_supplier_id", CHtml::listData(TecdocSupplier::model()->findAll(), 'id', 'supplier'));
+        //$locateinfo = "MTRSUBSTITUTE:MTRL;";
+        $softone = new Softone();
+        $data = $softone->getData("ITEM", $model->reference, "");
+        //print_r($data);
+
+
+        $sql = "Select id2 from synafies where id1 = '" . $model->id . "'";
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $searchArr = array();
+        foreach ($datas as $data) {
+            $submodel = Product::model()->findByPk($data["id2"]);
+            $searchArr[] = $submodel->item_code;
+        }
+
+        $model->search = implode("\n", $searchArr);
+        $model->gnisia = str_replace("|", "\n", $model->gnisia);
+
+
+        $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
+        $this->addFormField("text", $this->translate("Κωδικός"), "item_code", "", "width:500px");
+        $this->addFormField("text", $this->translate("Erp Supplier"), "item_mtrmanfctr", "", "width:500px");
+
+        $this->addFormField("select", $this->translate("Tecdoc Supplier"), "item_cccfxrelbrand", CHtml::listData(TecdocSupplier::model()->findAll(), 'id', 'supplier'));
+        $this->addFormField("text", $this->translate("Tecdoc Code"), "item_cccfxreltdcode");
 
         $this->addFormField("textarea", $this->translate("Σύνάφιες"), "search");
+        $this->addFormField("textarea", $this->translate("Γνήσια"), "gnisia");
 
         $this->renderPartial('ajaxform', array(
             'model' => $model,
@@ -662,6 +721,7 @@ class ProductController extends Controller {
 
         $this->addFormField("text", $this->translate("Περιγραφή"), "item_name", "", "width:500px");
         $this->addFormField("text", $this->translate("Κωδικός"), "item_code", "", "width:500px");
+
         $this->addFormField("text", $this->translate("Erp Supplier"), "item_mtrmanfctr", "", "width:500px");
 
         $this->addFormField("select", $this->translate("Tecdoc Supplier"), "item_cccfxrelbrand", CHtml::listData(TecdocSupplier::model()->findAll(), 'id', 'supplier'));
@@ -795,106 +855,6 @@ class ProductController extends Controller {
                     }
                 }
             }
-
-            /*
-              while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
-              if ($data[0] != $data[1]) {
-              //$product = Product::model()->findByAttributes(array('item_cccfxcode1' => $data[0]));
-              $sql = "Select id from product where item_cccfxcode1 = '" . $data[0] . "'";
-              $p = Yii::app()->db->createCommand($sql)->queryRow();
-              if ($p["id"] > 0) {
-              $model = $this->model("Product", $p["id"]);
-              $search = str_replace("\n", "|", $model->search);
-              $searchArr = explode("|", $search);
-              $as = explode("-", $model->item_code);
-              if ($as[1] == "")
-              continue;
-
-              $sql = "Select id from product where item_cccfxcode1 = '" . $data[1] . "'";
-              $subp = Yii::app()->db->createCommand($sql)->queryRow();
-              if ($subp["id"] > 0) {
-              $submodel = $this->model("Product", $subp["id"]);
-              $subsearch = str_replace("\n", "|", $submodel->search);
-
-
-              $as = explode("-", $submodel->item_code);
-              if ($as[1] == "")
-              continue;
-
-              $subsearchArr = explode("|", $subsearch);
-
-              if (!in_array($model->item_code, $subsearchArr))
-              $subsearchArr[] = $model->item_code;
-
-              if (!in_array($submodel->item_code, $searchArr))
-              $searchArr[] = $submodel->item_code;
-
-              $searchArr = array_filter(array_unique($searchArr));
-              $subsearchArr = array_filter(array_unique($subsearchArr));
-              $searchArr = array_diff($searchArr, array($model->item_code));
-              $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
-
-              foreach ($searchArr as $srch) {
-              $sql = "Select id from product_search where search LIKE '%" . $srch . "%' OR item_code = '" . $srch . "'  limit 0,30";
-              $srches = Yii::app()->db->createCommand($sql)->queryAll();
-
-              foreach ($srches as $srchs) {
-              if ($srchs["id"] != $model->id) {
-
-              $subsubmodel = $this->model("Product", $srchs["id"]);
-              $subsubsearch = str_replace("\n", "|", $subsubmodel->search);
-              $subsubsearchArr = explode("|", $subsubsearch);
-
-              $as = explode("-", $subsubmodel->item_code);
-              if ($as[1] == "")
-              continue;
-
-
-              if (!in_array($subsubmodel->item_code, $searchArr)) {
-              $searchArr[] = $subsubmodel->item_code;
-              }
-              if (!in_array($model->item_code, $subsubsearchArr)) {
-              $subsubsearchArr[] = $model->item_code;
-              }
-              $subsubsearchArr = array_filter(array_unique($subsubsearchArr));
-              $subsubsearchArr = array_diff($subsubsearchArr, array($subsubmodel->item_code));
-              $subsubmodel->search = implode("|", $subsubsearchArr);
-              $subsubmodel->save();
-              $subsubmodel->setProductSearch();
-
-              echo $model->item_code . "---" . $subsubmodel->item_code . "\n";
-              //print_r($searchArr);
-              //echo "---\n";
-              print_r($subsubsearchArr);
-              echo "---\n";
-              }
-              }
-              }
-              $searchArr = array_filter(array_unique($searchArr));
-              $subsearchArr = array_filter(array_unique($subsearchArr));
-              $searchArr = array_diff($searchArr, array($model->item_code));
-              $subsearchArr = array_diff($subsearchArr, array($submodel->item_code));
-
-              $model->search = implode("|", $searchArr);
-              $submodel->search = implode("|", $subsearchArr);
-              $model->save();
-              $submodel->save();
-              $model->setProductSearch();
-              $submodel->setProductSearch();
-
-
-              echo $model->item_code . "---" . $submodel->item_code . "\n";
-              print_r($searchArr);
-              print_r($subsearchArr);
-              echo "---\n";
-              }
-              //if ($i++ > 100)
-              //    break;
-              }
-              }
-              }
-             * 
-             */
         }
     }
 
@@ -911,67 +871,17 @@ class ProductController extends Controller {
 
 
         $model->search = str_replace("\n", "|", $model->search);
-
+	$model->validationRules["required"] = array("item_name","item_code","item_mtrmanfctr","item_pricer","item_pricew","supplier_code");
+	$model->validationRules["unique"] = array("item_code");
 
         $model->updateSynafies();
 
-        /*
-          $model->gnisia = str_replace("\n", "|", $model->gnisia);
-          $gnisiaArr = explode("|", $model->gnisia);
-          foreach ($gnisiaArr as $gnisia) {
-          if ($gnisia != "") {
-          $sql = "Select id, flat_data from product where gnisia LIKE '%" . $gnisia . "%'   limit 0,20";
-          $datas = Yii::app()->db->createCommand($sql)->queryAll();
-          foreach ($datas as $data) {
-          if ($data["id"] != $model->id) {
-          $submodel = $this->model("Product", $data["id"]);
-          if (!in_array($submodel->item_code, $searchArr)) {
-          $searchArr[] = $submodel->item_code;
-          }
-          $searchArr = array_filter(array_unique($searchArr));
-          $model->search = implode("|", $searchArr);
-          }
-          }
-          }
-          }
-
-          $sql = "Select id from product_search where search LIKE '%" . $model->item_code . "%' limit 0,30";
-          //echo $sql;
-          $datas2 = Yii::app()->db->createCommand($sql)->queryAll();
-          foreach ($searchArr as $search) {
-
-          $as = explode("-", $search);
-          if ($as[1] == "")
-          continue;
-
-          $submodel = Product::model()->findByAttributes(array('item_code' => $search));
-          if ($submodel->id > 0) {
-          $submodel = $this->model("Product", $submodel->id);
-          $subsearchArr = explode("|", $submodel->search);
-
-          foreach ($searchArr as $search1) {
-          if (!in_array($search1, $subsearchArr)) {
-          $subsearchArr[] = $search1;
-          }
-          }
-
-          $subsearchArr = array_filter(array_unique($subsearchArr));
-          $submodel->search = implode("|", $subsearchArr);
-          $submodel->save();
-          }
-          }
-         */
-
-
-
         $model->save();
-
 
 
         $params = array("softone_object" => "ITEM", "eav_model" => "product", "model" => $model, "list" => 'parts');
         //$this->saveSoftone($params);
         //$this->updatetecdoc($model);
-
 
         if (count($model->itemError) > 0)
             echo json_encode($model->itemError) . "|||" . json_encode($model->tabError);
@@ -1136,6 +1046,84 @@ class ProductController extends Controller {
 
         $out["efarmoges"] = unserialize($this->efarmoges($model));
         return $out;
+    }
+
+    public function actionUpload() {
+        $this->render('upload', array(
+            'model' => $model,
+        ));
+    }
+
+    public function actionGoupload() {
+        if ((!empty($_FILES["fileinputname"])) && ($_FILES['fileinputname']['error'] == 0)) {
+            //Check if the file is JPEG image and it's size is less than 350Kb
+            $filename = basename($_FILES['fileinputname']['name']);
+            $ext = substr($filename, strrpos($filename, '.') + 1);
+            if (($ext == "csv")) {
+                //Determine the path to which we want to save this file
+                //$newname = '/home2/partsbox/public_html/monitor/uploads/' . $filename;
+                $newname = 'C:\\xampp\\htdocs\\developing\\monitor\\uploads\\' . $filename;
+
+                @unlink($newname);
+                if (!file_exists($newname)) {
+                    //Attempt to move the uploaded file to it's new place
+                    if ((move_uploaded_file($_FILES['fileinputname']['tmp_name'], $newname))) {
+                        $this->loadProducts($newname);
+                    } else {
+                        echo "Error: A problem occurred during file upload!";
+                    }
+                } else {
+                    echo "Error: File " . $_FILES["fileinputname"]["name"] . " already exists";
+                }
+            } else {
+                echo "Error: Only .jpg images under 350Kb are accepted for upload";
+            }
+        } else {
+            echo "Error: No file uploaded";
+        }
+    }
+
+    public function loadProducts($file) {
+        if (($handle = fopen($file, "r")) !== FALSE) {
+            fgetcsv($handle, 1000000, ";");
+
+            while (($data = fgetcsv($handle, 10000000, ";")) !== FALSE) {
+                $code = $this->clearArticleCode($data[0]) . "-K1000";
+                $model = Product::model()->findByAttributes(array('erp_code' => $code));
+
+                //if ($model->id > 0)
+                //   continue;
+
+                $model = $this->loadModel($model->id);
+
+
+                $model->item_cccfxreltdcode = $this->clearArticleCode($data[4]);
+                $model->erp_code = $code;
+                $model->item_code = $code;
+                $model->tecdoc_code = $this->clearArticleCode($data[4]);
+
+                $model->supplier_code = $this->clearArticleCode($data[2]);
+                $model->erp_supplier = $data[1];
+                $model->item_mtrmanfctr = $data[1];
+
+                $model->item_cccfxrelbrand = $data[5];
+                $model->title = $data[3];
+                $model->item_name = $data[3];
+
+                $model->item_cccfxcode1 = $this->clearArticleCode($data[2]);
+                $model->item_mtrunit1 = 101;
+                $model->item_vat = 1310;
+                $model->save();
+
+
+
+                $this->updatetecdoc($model);
+                $model->updateSynafies();
+                $model->setProductSearch();
+                if ($i++ > 100)
+                    return;
+            }
+        }
     }
 
     public function actionGetProductInfo() {

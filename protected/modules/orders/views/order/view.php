@@ -16,11 +16,14 @@
         <button style="float:left" class="btn btn-primary">Απεσταλμένη</button>
     <?php endif; ?>
     <button class="btn return_to_main_<?php echo $model->className() ?>">Επιστροφή</button>
-    <button ref="<?php echo $model->id; ?>" class="btn calculateOrder">Υπολογισμός Τιμολογιακής Πολιτικής</button>
+    <button ref="<?php echo $model->id; ?>" class="btn printarea">Εκτύπωση</button>
 </div>
 
 <?php echo HtmlWidget::tabber($tabs); ?>
 <script>
+    $(".printarea").click(function(){
+        location.href = '<?php echo Yii::app()->request->baseUrl ?>/orders/order/print/<?php echo $model->id?>';        
+    })
     $(document).ready(function () {
         $(".calculate").click(function () {
             var data = {}

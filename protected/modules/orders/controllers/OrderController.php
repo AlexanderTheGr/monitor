@@ -53,6 +53,9 @@ class OrderController extends Controller {
         $this->retrieveSoftoneData($params);
     }
 
+    
+
+    
     function retrieveSoftoneData($params = array()) {
 
         $params["softone_object"];
@@ -283,7 +286,87 @@ class OrderController extends Controller {
             'tabs' => $tabs,
         ));
     }
+    public function actionPrint($id) {
+        $model = $this->loadModel($id);
+        $this->clearColumns();
+        $this->sfields = false;
+        $this->dataTableId = "orderitem";
+        $this->sAjaxSource = "orders/order/orderitemsprintajaxJson/" . $id;
+        $this->ajaxform = "orders/order/orderitemsajaxform/";
+        $this->ajaxformsave = "orders/order/orderitemsajaxformsave/";
+        $this->ajaxdelete = "orders/order/orderitemsajaxdelete/";
+        $this->bAddnewpos = "''";
+        $this->addColumn(array(
+            "label" => $this->translate("A/A"),
+            "type" => "text",
+                )
+        );
 
+
+        $this->addColumn(array(
+            "label" => $this->translate("Κωδικός"),
+            "aoColumns" => array("sClass"=>"scenter"), 
+            "type" => "text",
+                )
+        );
+
+        $this->addColumn(array(
+            "label" => $this->translate("Περιγραφή"),
+            "aoColumns" => array("sClass"=>"scenter"), 
+            "type" => "text",
+                )
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Ράφι"),
+            "aoColumns" => array("sClass"=>"scenter"), 
+            "type" => "text",
+                )
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Εργοστ"),
+            "aoColumns" => array("sClass"=>"scenter"), 
+            "type" => "text")
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Χονδρ"),
+            "aoColumns" => array("sClass"=>"sright"), 
+            "type" => "text")
+        );
+
+        $this->addColumn(array(
+            "label" => $this->translate("Εκτπωση"),
+            "aoColumns" => array("sClass"=>"sright"), 
+            "type" => "text")
+        );
+
+        $this->addColumn(array(
+            "label" => $this->translate("Νέτη"),
+            "aoColumns" => array("sClass"=>"sright"), 
+            "type" => "text")
+        );
+
+        $this->addColumn(array(
+            "label" => $this->translate("Ποσότητα"),
+            "aoColumns" => array("sClass"=>"sright"), 
+            "type" => "text")
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Αξία"),
+            "aoColumns" => array("sClass"=>"sright"),    
+            "type" => "text")
+        );
+        $this->addColumn(array(
+            "label" => $this->translate("Αξία ΦΠΑ"),
+            "aoColumns" => array("sClass"=>"sright"),
+            "type" => "text")
+        );
+        //$this->useServerSide = true;
+
+        $this->render('print', array("order" => $id, "model" => $model));
+    }
+    
+    
+    
     public function actionEditorderitem() {
         //$order = $this->model("Order", $_POST["order"]);
         //$order->addOrderItem($_POST["product"]);
@@ -495,7 +578,7 @@ class OrderController extends Controller {
         }
 
         $model->seriesnum = $model->id;
-        $model->fincode = "ΠΑΡ-" . $model->id;
+        $model->fincode = $model->noorder == 1 ? "ΠΡΟ-" . $model->id : "ΠΑΡ-" . $model->id ;
         if ($model->id == 0) {
             $model->insdate = date("Y-m-d H:s:i");
         }
@@ -558,7 +641,102 @@ class OrderController extends Controller {
             'model' => $model,
         ));
     }
+    public function actionOrderitemsPrintAjaxJson($id) {
 
+        $_POST["iDisplayLength"];
+        $_POST["iDisplayStart"];
+        $_POST["sSearch"];
+        $_POST["iSortCol_0"];
+        $order = $this->loadModel($id);
+        $sql = "Select id from `orderitem` where `order` = '" . $id . "'";
+
+        $cntPrd = Yii::app()->db->createCommand($sql)->queryAll();
+        $datas = Yii::app()->db->createCommand($sql)->queryAll();
+        $jsonArr = array();
+
+
+
+        $openorderssql = "Select id from `order` where `customer` = '" . $order->customer . "' AND fullytrans = 0 order by id";
+        $openorderdatas = Yii::app()->db->createCommand($openorderssql)->queryAll();
+
+
+        $list[0] = "";
+        foreach ($openorderdatas as $openorderdata) {
+            $list[$openorderdata["id"]] = $openorderdata["id"];
+        }
+        //$monitor = new Monitor();
+        $i=1;
+        foreach ((array) $datas as $data) {
+           
+            $model = OrderItem::model()->findByPk($data["id"]); //$this->model("OrderItem",$data["id"]);
+            $product = $this->model("Product", $model->product);
+            $json = array();
+            $json[] = $i++;
+            $fields = array();
+            //$json[] = "<input " . ($order->fullytrans > 0 OR $this->userrole == "user" ? 'disabled' : '') . " type='checkbox' " . ($model->chk == 1 ? "checked" : "" ) . " ref='" . $model->id . "' field='chk' class='orderitem chk' value='1'/>";
+            $json[] = $product->item_code;
+            $json[] = $product->item_name;
+            $json[] = $product->item_mtrplace;
+            $json[] = $product->item_mtrmanfctr;
+
+
+            $json[] = $model->price;
+            $json[] = $model->disc1prc;
+            $json[] = $model->lineval;
+
+            $json[] = $model->qty;
+
+            $json[] = $model->lineval * $model->qty;
+            $json[] = round($model->lineval * $model->qty * 1.23, 2);
+
+            $json["DT_RowId"] = 'orderitem_' . $model->id;
+            $json["DT_RowClass"] = '';
+            $jsonArr[] = $json;
+            if ($model->chk == 1) {
+                $price += $model->lineval * $model->qty;
+                $qty += $model->qty;
+            }
+        }
+
+        if (count($jsonArr)) {
+            $json = array();
+            $json[] = "<span style='display:none'>1000000</span>";
+            $json[] = "";
+ 
+            $json[] = "";
+            $json[] = "";
+            $json[] = "";
+
+            $json[] = "";
+            $json[] = "";
+            $json[] = "Τεμάχια: " . $qty;
+            $json[] = "Σύνολο";
+            $json[] = $price;
+            $json[] = round($price * 1.23, 2);
+            $jsonArr[] = $json;
+
+
+            $json = array();
+            $json[] = "<span style='display:none'>1000000</span>";
+            $json[] = "";
+            $json[] = "";
+            $json[] = "";
+            $json[] = "";
+
+            $json[] = "";
+            $json[] = "";
+            $json[] = "";
+            $json[] = "Τελικό Σύνολο";
+            $json[] = $price * (1 - ($model->_order_->disc1prc / 100));
+            $json[] = round($price * (1 - ($model->_order_->disc1prc / 100)) * 1.23, 2);
+            $jsonArr[] = $json;
+        }
+        $this->bAddnewpos = "''";
+        $this->bFilter = false;
+
+        echo json_encode(array('iTotalRecords' => count($cntPrd), 'iTotalDisplayRecords' => count($cntPrd), 'aaData' => $jsonArr));
+    }
+    
     public function actionOrderitemsAjaxJson($id) {
 
         $_POST["iDisplayLength"];
@@ -720,7 +898,7 @@ class OrderController extends Controller {
             $order->insdate = date("Y-m-d H:i:s");
             $order->save();
 
-            $order->fincode = "Ξ Ξ‘Ξ΅-" . $order->id;
+            $order->fincode = $model->noorder == 1 ? "ΠΡΟ-" . $model->id : "ΠΑΡ-" . $model->id ;
             $order->seriesnum = $order->id;
             $order->save();
             $orderitem->order = $order->id;
@@ -760,7 +938,7 @@ class OrderController extends Controller {
             echo json_encode($model->itemError) . "|||" . json_encode($model->tabError);
         else {
             $model->seriesnum = $model->id;
-            $model->fincode = "ΠΑΡ-" . $model->id;
+            $model->fincode = $model->noorder == 1 ? "ΠΡΟ-" . $model->id : "ΠΑΡ-" . $model->id ;
             $model->save(false);
             echo $model->id;
         }
@@ -941,6 +1119,7 @@ class OrderController extends Controller {
             $out = $softone->setData((array) $dataOut, $object, (int) 0);
             if ($out->id > 0) {
                 $model->reference = $out->id;
+                $model->fincode = "ΠΑΡ-" . $model->id ;
                 $model->noorder = 0;
                 $model->save();
             }
