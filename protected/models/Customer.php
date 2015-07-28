@@ -77,6 +77,7 @@ class Customer extends Eav {
         return array(
             'orders' => array(self::HAS_MANY, 'Order', 'customer'),
             'customerrules' => array(self::HAS_MANY, 'Customerrule', 'customer'),
+            'customeradresses' => array(self::HAS_MANY, 'Customeradress', 'customer'),
             '_group_' => array(self::BELONGS_TO, 'Customergroup', 'group'),
         );
     }
@@ -116,10 +117,10 @@ class Customer extends Eav {
 
     function calculateDiscount($product) {
         $ru[$product->item_mtrmanfctr] = 0;
-        foreach($this->_group_->_customergrouprules_ as $rule) {
+        foreach((array)$this->_group_->_customergrouprules_ as $rule) {
             $ru[$rule->supplier] = $rule->val;            
         }        
-        foreach($this->customerrules as $rule) {
+        foreach((array)$this->customerrules as $rule) {
             $ru[$rule->supplier] = $rule->val;            
         }
         return number_format($ru[$product->item_mtrmanfctr], 2, ".", "");
@@ -133,10 +134,10 @@ class Customer extends Eav {
         $base_price = $this->_group_->base_price ? $this->_group_->base_price : "item_pricew02";
         $price = $product->$base_price;
         $ru[$product->item_mtrmanfctr] = 1;
-        foreach($this->_group_->_customergrouprules_ as $rule) {
+        foreach((array)$this->_group_->_customergrouprules_ as $rule) {
             $ru[$rule->supplier] = 1-$rule->val/100;            
         }        
-        foreach($this->customerrules as $rule) {
+        foreach((array)$this->customerrules as $rule) {
             $ru[$rule->supplier] = 1-$rule->val/100;            
         }
 

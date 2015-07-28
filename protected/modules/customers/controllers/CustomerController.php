@@ -232,11 +232,18 @@ class CustomerController extends Controller {
 
         $this->returntomain = "customers/customer";
         
-        
+        $trdcategory = array(
+            3000=>"Πελάτες Εσωτερικού Με Κανονικό Φ.Π.Α.",
+            3001=>"Πελάτες Εσωτερικού Με Μειωμένο Φ.Π.Α.",
+            3100=>"Πελάτες Εξωτερικού με ΑΠΑΛΛΑΓΗ ΦΠΑ",
+            );
         
         $this->addFormField("text", $this->translate("Κωδικός"), "customer_code", "");
         
         $this->addFormField("select", $this->translate("Group"), "group", CHtml::listData(Customergroup::model()->findAll(), 'id', 'title'));
+        
+        $this->addFormField("select", $this->translate("Λογ Κατηγορία"), "customer_trdcategory", $trdcategory, 'id', 'title');
+        
         
         $this->addFormField("text", $this->translate("<b>Επωνυμία</b><span style='color:red'>*</span>"), "customer_name", "");
         

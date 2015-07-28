@@ -145,7 +145,18 @@
                         <li><a href="<?php echo Yii::app()->request->baseUrl; ?>"><i class="icon-home"></i><?php echo $this->translate("Αρχική"); ?></a></li>   
                         <li><a class="<?php echo $this->pagename == "Users" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/users/user"><i class="icon-user-md"></i><?php echo $this->translate("Χρήστες"); ?></a></li>  
                         <li><a class="<?php echo $this->pagename == "Products" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/product/product"><i class="icon-cogs"></i><?php echo $this->translate("Προϊόντα"); ?></a></li>  
-                        <li><a class="<?php echo $this->pagename == "Πελάτες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customer"><i class="icon-user"></i><?php echo $this->translate("Πελάτες"); ?></a></li> 
+                        <li>
+                            <!--a class="<?php echo $this->pagename == "Πελάτες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customer"><i class="icon-user"></i><?php echo $this->translate("Πελάτες"); ?></a-->
+                            <a class="<?php echo $this->pagename == "Πελάτες" ? "open" : "" ?>" href="#"><i class="icon-user"></i><?php echo $this->translate("Πελάτες"); ?></a>
+                            <ul>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customer"><?php echo $this->translate("Λίστα Πελατών"); ?></a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="<?php echo Yii::app()->request->baseUrl; ?>/customers/customergroup"><?php echo $this->translate("Κατηγορίες Πελατών"); ?></a>
+                                </li>                             
+                            </ul>                        
+                        </li> 
                         <li>
                             <a class="<?php echo $this->pagename == "Παραγγελίες" ? "open" : "" ?>" href="#"><i class="icon-shopping-cart"></i><?php echo $this->translate("Παραγγελίες"); ?></a>
                             <ul>

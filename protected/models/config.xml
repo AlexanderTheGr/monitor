@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Autoparts_Peanutshipping>
+            <version>0.1.3</version>
+        </Autoparts_Peanutshipping>
+    </modules>
+    
+
+    <global>
+        <carriers>
+            <peanutshipping>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>peanutshipping/carrier_peanutshipping</model>
+                <name>New Module</name>
+                <title>New Module</title>
+                <specificerrmsg>
+                    This peanutshipping method is currently unavailable.
+                    If you would like to ship using this peanutshipping
+                    method, please contact us.
+                </specificerrmsg>
+                <handling_type>F</handling_type>
+            </peanutshipping>
+        </carriers>
+        <models>
+            <peanutshipping>
+                <class>Autoparts_Peanutshipping_Model</class>
+                <resourceModel>peanutshipping_resource</resourceModel>
+            </peanutshipping>
+            <peanutshipping_resource>
+                <class>Autoparts_Peanutshipping_Model_Resource</class>
+                <entities>
+                    <peanutshipping>
+                        <table>autoparts_peanutshipping_entity</table>
+                    </peanutshipping>							
+                </entities>
+            </peanutshipping_resource>
+        </models>
+        
+        <resources>
+            <peanutshipping_setup>
+                <setup>
+                    <module>Autoparts_Peanutshipping</module>
+                    <class>Autoparts_Peanutshipping_Model_Resource_Setup</class>
+                </setup>
+            </peanutshipping_setup>
+        </resources>
+        <blocks>
+            <peanutshipping>
+                <class>Autoparts_Peanutshipping_Block</class>
+            </peanutshipping>
+            <checkout>
+                <rewrite>
+                    <onepage_peanutshipping_method_available>Autoparts_Peanutshipping_Block_Available</onepage_peanutshipping_method_available>
+                </rewrite>
+            </checkout>
+        </blocks>	
+        <helpers>
+            <peanutshipping>
+                <class>Autoparts_Peanutshipping_Helper</class>
+            </peanutshipping>
+        </helpers>
+
+    </global>
+	
+
+    
+    <adminhtml>
+        <layout>
+            <updates>
+                <peanutshipping>
+                    <file>Autoparts_Peanutshipping.xml</file>
+                </peanutshipping>
+            </updates>
+        </layout>
+    </adminhtml>
+	
+
+	
+    <default>
+        <carriers>
+            <peanutshipping>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>peanutshipping/carrier_peanutshipping</model>
+                <name>Peanutshipping</name>
+                <price>5.00</price>
+                <title>Flat Rate</title>
+                <type>I</type>
+                <specificerrmsg>This peanutshipping method is currently unavailable. If you would like to ship using this peanutshipping method, please contact us.</specificerrmsg>
+                <infotext></infotext>
+                <handling_type>F</handling_type>
+            </peanutshipping>
+        </carriers>
+    </default>
+	
+    <frontend>
+        <routers>
+            <peanutshipping>
+                <use>standard</use>
+                <args>
+                    <module>Autoparts_Peanutshipping</module>
+                    <frontName>peanutshipping</frontName>
+                </args>
+            </peanutshipping>
+        </routers>
+        <layout>
+            <updates>
+                <peanutshipping>
+                    <file>autoparts_peanutshipping.xml</file>
+                </peanutshipping>
+            </updates>
+        </layout>
+    </frontend>
+</config>

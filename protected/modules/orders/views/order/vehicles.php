@@ -121,6 +121,7 @@
             });
             jQuery(".brand-select").trigger("chosen:updated")
             jQuery(".brand_model-select").trigger("chosen:updated");
+            jQuery(".brand_model-select").trigger('mousedown');
             jQuery(".brand_model_type-select").trigger("chosen:updated");
             
         });
@@ -157,6 +158,8 @@
             jQuery(".brand-select").trigger("chosen:updated")
             jQuery(".brand_model-select").trigger("chosen:updated");
             jQuery(".brand_model_type-select").trigger("chosen:updated");
+            jQuery(".brand_model_type-select").trigger('mousedown');
+            
         });
     })
     jQuery(".gogo").click(function () {

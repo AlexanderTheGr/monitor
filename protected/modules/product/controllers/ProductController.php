@@ -1088,7 +1088,7 @@ class ProductController extends Controller {
             fgetcsv($handle, 1000000, ";");
 
             while (($data = fgetcsv($handle, 10000000, ";")) !== FALSE) {
-                $code = $this->clearArticleCode($data[0]) . "-K1000";
+                $code = $data[0];
                 $model = Product::model()->findByAttributes(array('erp_code' => $code));
 
                 //if ($model->id > 0)
@@ -1097,25 +1097,23 @@ class ProductController extends Controller {
                 $model = $this->loadModel($model->id);
 
 
-                $model->item_cccfxreltdcode = $this->clearArticleCode($data[4]);
+                $model->item_cccfxreltdcode = $this->clearArticleCode($data[3]);
                 $model->erp_code = $code;
                 $model->item_code = $code;
-                $model->tecdoc_code = $this->clearArticleCode($data[4]);
+                $model->tecdoc_code = $this->clearArticleCode($data[3]);
 
                 $model->supplier_code = $this->clearArticleCode($data[2]);
                 $model->erp_supplier = $data[1];
                 $model->item_mtrmanfctr = $data[1];
 
-                $model->item_cccfxrelbrand = $data[5];
-                $model->title = $data[3];
-                $model->item_name = $data[3];
+                $model->item_cccfxrelbrand = $data[4];
+                $model->title = $data[6];
+                $model->item_name = $data[6];
 
                 $model->item_cccfxcode1 = $this->clearArticleCode($data[2]);
                 $model->item_mtrunit1 = 101;
                 $model->item_vat = 1310;
                 $model->save();
-
-
 
                 $this->updatetecdoc($model);
                 $model->updateSynafies();

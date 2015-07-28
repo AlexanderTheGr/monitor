@@ -99,7 +99,7 @@ class Controller extends CController {
         $this->css[] = "style.css";
         $this->css[] = "widgets.css";
         $this->css[] = "chosen.min.css";
-        
+
         $this->css[] = "bootstrap-responsive.css";
         $this->css[] = "jquery.dataTables.css";
         $this->css[] = "monitor.css";
@@ -138,6 +138,8 @@ class Controller extends CController {
         $this->js[] = "jquery.ui.timepicker.js";
         $this->js[] = "chosen.jquery.min.js";
         $this->js[] = "chosen.proto.min.js";
+        $this->js[] = "jquery.printElement.min.js";
+        
 
 
         $user = $this->model("User", Yii::app()->user->id);
@@ -535,8 +537,8 @@ class Controller extends CController {
     }
 
     function accessFields($model, $item_id, $fieldname, $field) {
-        
-        
+
+
 
         $action = Yii::app()->controller->action->id;
         $controller = Yii::app()->controller->id;
@@ -546,7 +548,7 @@ class Controller extends CController {
 
 
 
-        
+
         switch ($access[$this->userrole]) {
             case "block":
                 return "";
@@ -697,7 +699,7 @@ class Controller extends CController {
         $module = Yii::app()->controller->module->id;
         $access = $model->getAccess($this->userrole, $data["attribute"]);
 
-        
+
 
 
         switch ($access) {
@@ -1106,6 +1108,7 @@ class Controller extends CController {
 
         return $event;
     }
+
     public function articleAttributes($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
@@ -1126,6 +1129,7 @@ class Controller extends CController {
 
         return $data;
     }
+
     public function getArticlesSearch($search) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
@@ -1145,8 +1149,8 @@ class Controller extends CController {
         $data = curl_exec($ch);
 
         return $data;
-    }  
-    
+    }
+
     public function efarmoges($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
@@ -1165,8 +1169,18 @@ class Controller extends CController {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $data = curl_exec($ch);
         return $data;
-    }     
-    
+    }
+
+    function clearArticleCode($search) {
+        $search = str_replace(" ", "", $search);
+        $search = str_replace("'", "", $search);
+        $search = str_replace(".", "", $search);
+        $search = str_replace("-", "", $search);
+        $search = str_replace("/", "", $search);
+        $search = strtoupper($search);
+        return $search;
+    }
+
     public function originals($model) {
         $url = "http://service.fastwebltd.com/";
         $fields = array(
@@ -1186,5 +1200,6 @@ class Controller extends CController {
         $data = curl_exec($ch);
 
         return $data;
-    }    
+    }
+
 }

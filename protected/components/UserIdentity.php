@@ -53,7 +53,7 @@ class UserIdentity extends CUserIdentity {
              * 
              */
             
-            echo self::ERROR_NONE;
+            //echo self::ERROR_NONE;
             $this->errorCode = self::ERROR_NONE;
         }
         return $this->errorCode == self::ERROR_NONE;

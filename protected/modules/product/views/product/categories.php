@@ -72,6 +72,7 @@ $articlesIds = $this->getArticlesIds();
             var data = {};
             data.articleIds = articleIds;
             data.order = '<?php echo $order->id ?>'
+            data.order = '<?php echo $order->id ?>'
 
             ProgressBar.displayProgressBar();
             $.post("<?php echo Yii::app()->request->baseUrl ?>/product/product/fororderajaxjson", data, function (result) {

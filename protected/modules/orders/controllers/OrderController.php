@@ -806,7 +806,7 @@ class OrderController extends Controller {
             $json[] = round($model->lineval * $model->qty * 1.23, 2);
 
             $json["DT_RowId"] = 'orderitem_' . $model->id;
-            $json["DT_RowClass"] = '';
+            if ($product->reference == 0) $json["DT_RowClass"] = 'dt_row_red';
             $jsonArr[] = $json;
             if ($model->chk == 1) {
                 $price += $model->lineval * $model->qty;

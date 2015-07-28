@@ -296,12 +296,6 @@ class Eav extends CActiveRecord {
                             break;
                         }
                         break;
-                    case 'unique':
-                        if (in_array($modelAttr, $attr)) {
-                            //$this->itemError[$modelAttr] = "INVALID_phone";
-                            break;
-                        }
-                        break;
                     default:
                         //$this->itemError[$item->id] = false;
                         break;
